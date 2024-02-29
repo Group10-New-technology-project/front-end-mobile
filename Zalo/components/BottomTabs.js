@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 export function TabsComponent() {
   return (
     <Tab.Navigator
-      initialRouteName="TinNhan"
+      // initialRouteName="TinNhan"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: "blue",
