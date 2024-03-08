@@ -1,11 +1,20 @@
 import React from "react";
-import { View, Image, TextInput } from "react-native";
+import { View, Image, TextInput, SafeAreaView } from "react-native";
 
 export default function SearchBar() {
   return (
-    <View style={{ flexDirection: "row", alignItems: "center" }}>
-      <Image style={{ width: 24, height: 24 }} source={require("../assets/image/search-icon.png")} />
-      <TextInput style={{ fontSize: 17, marginLeft: 15, fontWeight: "400" }} placeholder="Tìm kiếm" placeholderTextColor="white" />
-    </View>
+    <SafeAreaView style={{ justifyContent: "space-around" }}>
+      <View style={{ flexDirection: "row", flex: 2 }}>
+        <Image
+          style={{ width: 22, height: 22 }}
+          source={require("../assets/image/search-icon.png")}
+        />
+        <TextInput
+          style={{ fontSize: 18, marginLeft: 10, fontWeight: "500" }}
+          placeholder="Tìm kiếm"
+          placeholderTextColor="white"
+        />
+      </View>
+    </SafeAreaView>
   );
 }
