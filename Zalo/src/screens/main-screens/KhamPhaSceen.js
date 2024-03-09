@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
-
+import { StyleSheet, Text, View, Image, Dimensions, ScrollView } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 export default function KhamPhaScreen() {
   const iconsData = [
     { imageSource: require("../../../assets/image/Icon Zalo Video.png"), text: "Zalo Video" },
@@ -14,7 +14,7 @@ export default function KhamPhaScreen() {
   ];
   const { width: screenWidth } = Dimensions.get("window");
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header_khampha}>
         <Image
           style={styles.icon_zalo_video}
@@ -22,18 +22,18 @@ export default function KhamPhaScreen() {
         />
         <Text style={styles.text_icon}>Zalo Video</Text>
         <View style={{ position: "absolute", right: 25 }}>
-          <Image source={require("../../../assets/image/Vector.png")} />
+          <Ionicons name="chevron-back" size={20} color="gray" />
         </View>
       </View>
       <View style={styles.container_mini_apps}>
-        <Image
-          style={{ width: 19, height: 19, marginRight: 5 }}
-          source={require("../../../assets/image/Icon Menu.png")}
-        />
-        <Text>Mini Apps yêu thích</Text>
-        <Text style={{ fontWeight: "bold", fontSize: 14, color: "#0085FE", marginLeft: 170 }}>
-          Chỉnh sửa
-        </Text>
+        <View style={{ flexDirection: "row", alignItems: "center" }}>
+          <Image
+            style={{ width: 19, height: 19, marginRight: 5 }}
+            source={require("../../../assets/image/Icon Menu.png")}
+          />
+          <Text>Mini Apps yêu thích</Text>
+        </View>
+        <Text style={{ fontWeight: "bold", fontSize: 14, color: "#0085FE" }}>Chỉnh sửa</Text>
       </View>
       <View style={styles.all_icon}>
         {iconsData.slice(0, 4).map((item, index) => (
@@ -44,7 +44,7 @@ export default function KhamPhaScreen() {
         ))}
       </View>
       <View style={styles.all_icon}>
-        {iconsData.slice(4, 8).map((item, index) => (
+        {iconsData.slice(0, 4).map((item, index) => (
           <View key={index} style={styles.icons}>
             <Image style={{ width: 40, height: 40 }} source={item.imageSource} />
             <Text>{item.text}</Text>
@@ -80,7 +80,7 @@ export default function KhamPhaScreen() {
           <Text style={{ fontSize: 14, marginLeft: 5 }}>Zalo Video</Text>
           <Text style={{ fontSize: 14, color: "#AAAAAA", marginLeft: 5 }}>Gợi ý cho bạn</Text>
           <View style={{ position: "absolute", right: 25 }}>
-            <Image source={require("../../../assets/image/Vector.png")} />
+            <Ionicons name="chevron-back" size={18} color="gray" />
           </View>
         </View>
         <View style={styles.video}>
@@ -90,7 +90,7 @@ export default function KhamPhaScreen() {
           />
         </View>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -121,11 +121,12 @@ const styles = StyleSheet.create({
     marginLeft: 230,
   },
   container_mini_apps: {
-    marginTop: 6,
+    marginTop: 7,
+    padding: 12,
     backgroundColor: "white",
     flexDirection: "row",
     alignItems: "center",
-    padding: 15,
+    justifyContent: "space-between",
   },
   icons: {
     flexDirection: "column",

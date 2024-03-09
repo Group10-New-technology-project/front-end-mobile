@@ -24,6 +24,15 @@ export function TabsComponent() {
 
         tabBarStyle: {
           display: "flex",
+          borderTopWidth: 1,
+          borderTopColor: "",
+        },
+        tabBarLabelStyle: {
+          fontSize: 11,
+          fontWeight: "600",
+        },
+        tabBarIconStyle: {
+          marginBottom: -5,
         },
       }}>
       <Tab.Screen

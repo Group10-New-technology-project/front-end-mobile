@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function CaNhanScreen({ navigation }) {
   handleTaiKhoanScreen = () => {
@@ -7,6 +8,7 @@ export default function CaNhanScreen({ navigation }) {
   handleQuyenRiengTu = () => {
     navigation.navigate("QuyenRiengTuScreen");
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.header_pofile}>
@@ -70,7 +72,7 @@ export default function CaNhanScreen({ navigation }) {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 25 }}>
-            <Image source={require("../../../assets/image/Vector.png")} />
+            <Ionicons name="chevron-back" size={18} color="gray" />
           </View>
         </View>
         <View style={{ paddingVertical: 4, alignItems: "flex-end" }}>
@@ -94,7 +96,7 @@ export default function CaNhanScreen({ navigation }) {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 25 }}>
-            <Image source={require("../../../assets/image/Vector.png")} />
+            <Ionicons name="chevron-back" size={18} color="gray" />
           </View>
         </View>
       </View>
@@ -117,31 +119,33 @@ export default function CaNhanScreen({ navigation }) {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 25 }}>
-            <Image source={require("../../../assets/image/Vector.png")} />
+            <Ionicons name="chevron-back" size={18} color="gray" />
           </View>
         </View>
       </View>
       <View style={styles.container_function}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingVertical: 15,
-            marginLeft: 20,
-          }}>
-          <Image
-            style={{ width: 24, height: 24 }}
-            source={require("../../../assets/image/tai-khoan.png")}
-          />
-          <TouchableOpacity onPress={handleTaiKhoanScreen}>
+        <TouchableOpacity onPress={handleTaiKhoanScreen}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              paddingVertical: 15,
+              marginLeft: 20,
+            }}>
+            <Image
+              style={{ width: 24, height: 24 }}
+              source={require("../../../assets/image/tai-khoan.png")}
+            />
+
             <View style={{ flexDirection: "column", paddingLeft: 15 }}>
               <Text style={{ fontSize: 17, fontWeight: "500" }}>Tài khoản và bảo mật</Text>
             </View>
-          </TouchableOpacity>
-          <View style={{ position: "absolute", right: 25 }}>
-            <Image source={require("../../../assets/image/Vector.png")} />
+
+            <View style={{ position: "absolute", right: 25 }}>
+              <Ionicons name="chevron-back" size={18} color="gray" />
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
         <View style={{ paddingVertical: 4, alignItems: "flex-end" }}>
           <View style={{ borderWidth: 1, borderColor: "#ECECEC", width: 350 }} />
         </View>
@@ -161,7 +165,7 @@ export default function CaNhanScreen({ navigation }) {
               <Text style={{ fontSize: 17, fontWeight: "500" }}>Quyền riêng tư</Text>
             </View>
             <View style={{ position: "absolute", right: 25 }}>
-              <Image source={require("../../../assets/image/Vector.png")} />
+              <Ionicons name="chevron-back" size={18} color="gray" />
             </View>
           </View>
         </TouchableOpacity>
