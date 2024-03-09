@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 export default function DanhBaScreen() {
   return (
     <View style={styles.container}>
-      <Text>DanhBa</Text>
+      <Text>Nhật ký</Text>
     </View>
   );
 }

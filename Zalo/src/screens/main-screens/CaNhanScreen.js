@@ -17,7 +17,7 @@ export default function CaNhanScreen({ navigation }) {
             marginVertical: 12,
             marginLeft: 20,
           }}>
-          <Image source={require("../assets/image/Avatar Zalo.png")} />
+          <Image source={require("../../../assets/image/Avatar Zalo.png")} />
           <View style={{ flexDirection: "column", paddingLeft: 15 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Name</Text>
             <Text style={{ fontSize: 14, color: "#696969", fontWeight: "400" }}>
@@ -26,7 +26,7 @@ export default function CaNhanScreen({ navigation }) {
           </View>
           <Image
             style={{ position: "absolute", right: 25 }}
-            source={require("../assets/image/Icon Trans Account.png")}
+            source={require("../../../assets/image/Icon Trans Account.png")}
           />
         </View>
       </View>
@@ -40,7 +40,7 @@ export default function CaNhanScreen({ navigation }) {
           }}>
           <Image
             style={{ width: 24, height: 24 }}
-            source={require("../assets/image/IMG_9197 1.png")}
+            source={require("../../../assets/image/IMG_9197 1.png")}
           />
           <View style={{ flexDirection: "column", paddingLeft: 15 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Ví QR</Text>
@@ -61,7 +61,7 @@ export default function CaNhanScreen({ navigation }) {
           }}>
           <Image
             style={{ width: 24, height: 24 }}
-            source={require("../assets/image/IMG_9197 1 (1).png")}
+            source={require("../../../assets/image/IMG_9197 1 (1).png")}
           />
           <View style={{ flexDirection: "column", paddingLeft: 15 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Nhạc chờ Zalo</Text>
@@ -70,7 +70,7 @@ export default function CaNhanScreen({ navigation }) {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 25 }}>
-            <Image source={require("../assets/image/Vector.png")} />
+            <Image source={require("../../../assets/image/Vector.png")} />
           </View>
         </View>
         <View style={{ paddingVertical: 4, alignItems: "flex-end" }}>
@@ -85,7 +85,7 @@ export default function CaNhanScreen({ navigation }) {
           }}>
           <Image
             style={{ width: 24, height: 24 }}
-            source={require("../assets/image/cloud-cua-toi.png")}
+            source={require("../../../assets/image/cloud-cua-toi.png")}
           />
           <View style={{ flexDirection: "column", paddingLeft: 15 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Cloud của tôi</Text>
@@ -94,7 +94,7 @@ export default function CaNhanScreen({ navigation }) {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 25 }}>
-            <Image source={require("../assets/image/Vector.png")} />
+            <Image source={require("../../../assets/image/Vector.png")} />
           </View>
         </View>
       </View>
@@ -108,7 +108,7 @@ export default function CaNhanScreen({ navigation }) {
           }}>
           <Image
             style={{ width: 24, height: 24 }}
-            source={require("../assets/image/dung-luong.png")}
+            source={require("../../../assets/image/dung-luong.png")}
           />
           <View style={{ flexDirection: "column", paddingLeft: 15 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Dung lượng và dữ liệu</Text>
@@ -117,7 +117,7 @@ export default function CaNhanScreen({ navigation }) {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 25 }}>
-            <Image source={require("../assets/image/Vector.png")} />
+            <Image source={require("../../../assets/image/Vector.png")} />
           </View>
         </View>
       </View>
@@ -131,7 +131,7 @@ export default function CaNhanScreen({ navigation }) {
           }}>
           <Image
             style={{ width: 24, height: 24 }}
-            source={require("../assets/image/tai-khoan.png")}
+            source={require("../../../assets/image/tai-khoan.png")}
           />
           <TouchableOpacity onPress={handleTaiKhoanScreen}>
             <View style={{ flexDirection: "column", paddingLeft: 15 }}>
@@ -139,7 +139,7 @@ export default function CaNhanScreen({ navigation }) {
             </View>
           </TouchableOpacity>
           <View style={{ position: "absolute", right: 25 }}>
-            <Image source={require("../assets/image/Vector.png")} />
+            <Image source={require("../../../assets/image/Vector.png")} />
           </View>
         </View>
         <View style={{ paddingVertical: 4, alignItems: "flex-end" }}>
@@ -155,13 +155,13 @@ export default function CaNhanScreen({ navigation }) {
             }}>
             <Image
               style={{ width: 24, height: 24 }}
-              source={require("../assets/image/quyen-rieng-tu.png")}
+              source={require("../../../assets/image/quyen-rieng-tu.png")}
             />
             <View style={{ flexDirection: "column", paddingLeft: 15 }}>
               <Text style={{ fontSize: 17, fontWeight: "500" }}>Quyền riêng tư</Text>
             </View>
             <View style={{ position: "absolute", right: 25 }}>
-              <Image source={require("../assets/image/Vector.png")} />
+              <Image source={require("../../../assets/image/Vector.png")} />
             </View>
           </View>
         </TouchableOpacity>

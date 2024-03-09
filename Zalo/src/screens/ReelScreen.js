@@ -10,7 +10,7 @@ const videos = [
   "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
 ];
 
-const DemoScreen = () => {
+const ReelScreen = () => {
   const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(0);
 
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 };
@@ -89,4 +89,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DemoScreen;
+export default ReelScreen;

@@ -24,7 +24,7 @@ export default function TaiKhoanScreen() {
             }}>
             <Image
               style={{ width: 50, height: 50 }}
-              source={require("../assets/image/Avatar Zalo.png")}
+              source={require("../../assets/image/Avatar Zalo.png")}
             />
             <View style={{ flexDirection: "column", paddingLeft: 15 }}>
               <Text style={{ fontSize: 16, fontWeight: "400", color: "#696969" }}>
@@ -33,12 +33,12 @@ export default function TaiKhoanScreen() {
               <Text style={{ fontSize: 17, fontWeight: "500" }}>Name</Text>
             </View>
             <View style={{ position: "absolute", right: 10 }}>
-              <Image source={require("../assets/image/Vector.png")} />
+              <Image source={require("../../assets/image/Vector.png")} />
             </View>
           </View>
         </View>
         <View style={styles.sodienthoai}>
-          <Image style={{ width: 24, height: 24 }} source={require("../assets/image/phone.png")} />
+          <Image style={{ width: 24, height: 24 }} source={require("../../assets/image/phone.png")} />
           <View style={{ flexDirection: "column", paddingLeft: 16 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Số điện thoại</Text>
             <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>
@@ -46,7 +46,7 @@ export default function TaiKhoanScreen() {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
-            <Image source={require("../assets/image/Vector.png")} />
+            <Image source={require("../../assets/image/Vector.png")} />
           </View>
         </View>
         <View style={{ marginTop: 3, alignItems: "flex-end" }}>
@@ -57,7 +57,7 @@ export default function TaiKhoanScreen() {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <Image
                 style={{ width: 24, height: 24 }}
-                source={require("../assets/image/user-search.png")}
+                source={require("../../assets/image/user-search.png")}
               />
               <Text style={{ fontSize: 17, fontWeight: "500", marginHorizontal: 16 }}>
                 Định danh tài khoản
@@ -67,7 +67,7 @@ export default function TaiKhoanScreen() {
               Chưa định danh
             </Text>
             <View style={{ position: "absolute", right: 10 }}>
-              <Image source={require("../assets/image/Vector.png")} />
+              <Image source={require("../../assets/image/Vector.png")} />
             </View>
           </View>
           <View style={{ marginTop: 3, alignItems: "flex-end" }}>
@@ -78,13 +78,13 @@ export default function TaiKhoanScreen() {
           <View style={{ flexDirection: "row", alignItems: "center", paddingVertical: 14 }}>
             <Image
               style={{ width: 24, height: 24 }}
-              source={require("../assets/image/qr-code-a.png")}
+              source={require("../../assets/image/qr-code-a.png")}
             />
             <Text style={{ fontSize: 17, fontWeight: "500", marginHorizontal: 16 }}>
               Mã QR của tôi
             </Text>
             <View style={{ position: "absolute", right: 10 }}>
-              <Image source={require("../assets/image/Vector.png")} />
+              <Image source={require("../../assets/image/Vector.png")} />
             </View>
           </View>
         </View>
@@ -99,7 +99,7 @@ export default function TaiKhoanScreen() {
         <View style={styles.kiemtrabaomat}>
           <Image
             style={{ width: 24, height: 24 }}
-            source={require("../assets/image/shield-check.png")}
+            source={require("../../assets/image/shield-check.png")}
           />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Kiểm tra bảo mật</Text>
@@ -108,7 +108,7 @@ export default function TaiKhoanScreen() {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
-            <Image source={require("../assets/image/Vector.png")} />
+            <Image source={require("../../assets/image/Vector.png")} />
           </View>
         </View>
         <View style={{ marginTop: 3, alignItems: "flex-end" }}>
@@ -116,14 +116,14 @@ export default function TaiKhoanScreen() {
         </View>
         <View style={styles.khoazalo}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Image style={{ width: 24, height: 24 }} source={require("../assets/image/lock.png")} />
+            <Image style={{ width: 24, height: 24 }} source={require("../../assets/image/lock.png")} />
             <Text style={{ fontSize: 17, fontWeight: "500", marginHorizontal: 16 }}>Khóa Zalo</Text>
           </View>
           <Text style={{ fontSize: 16, color: "#696969", fontWeight: "500", marginRight: 40 }}>
             Đang tắt
           </Text>
           <View style={{ position: "absolute", right: 10 }}>
-            <Image source={require("../assets/image/Vector.png")} />
+            <Image source={require("../../assets/image/Vector.png")} />
           </View>
         </View>
       </View>
@@ -135,7 +135,7 @@ export default function TaiKhoanScreen() {
         <View style={styles.kiemtrabaomat}>
           <Image
             style={{ width: 24, height: 24 }}
-            source={require("../assets/image/shield-alert.png")}
+            source={require("../../assets/image/shield-alert.png")}
           />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Bảo mật 2 lớp</Text>
@@ -160,7 +160,7 @@ export default function TaiKhoanScreen() {
         <View style={styles.thietbidangnhap}>
           <Image
             style={{ width: 24, height: 24 }}
-            source={require("../assets/image/smartphone.png")}
+            source={require("../../assets/image/smartphone.png")}
           />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Thiết bị đăng nhập</Text>
@@ -169,7 +169,7 @@ export default function TaiKhoanScreen() {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
-            <Image source={require("../assets/image/Vector.png")} />
+            <Image source={require("../../assets/image/Vector.png")} />
           </View>
         </View>
         <View style={{ marginTop: 3, alignItems: "flex-end" }}>
@@ -178,21 +178,21 @@ export default function TaiKhoanScreen() {
         <View style={styles.mat_khau}>
           <Image
             style={{ width: 24, height: 24 }}
-            source={require("../assets/image/unlock-keyhole.png")}
+            source={require("../../assets/image/unlock-keyhole.png")}
           />
           <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Mật khẩu</Text>
           <View style={{ position: "absolute", right: 10 }}>
-            <Image source={require("../assets/image/Vector.png")} />
+            <Image source={require("../../assets/image/Vector.png")} />
           </View>
         </View>
       </View>
       <View style={{ height: 7, backgroundColor: "#E6E6E6" }}></View>
 
       <View style={styles.xoa_tai_khoan}>
-        <Image style={{ width: 24, height: 24 }} source={require("../assets/image/badge-x.png")} />
+        <Image style={{ width: 24, height: 24 }} source={require("../../assets/image/badge-x.png")} />
         <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Xóa tài khoản</Text>
         <View style={{ position: "absolute", right: 10 + 12 }}>
-          <Image source={require("../assets/image/Vector.png")} />
+          <Image source={require("../../assets/image/Vector.png")} />
         </View>
       </View>
     </ScrollView>
