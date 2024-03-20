@@ -7,7 +7,7 @@ import CustomBackButton from "../components/CustomBackButton";
 //-------------------------------------
 import TaiKhoanVaBaoMat from "../screens/canhan-screens/TaiKhoanVaBaoMat";
 import QuyenRiengTu from "../screens/canhan-screens/QuyenRiengTu";
-import ReelScreen from "../screens/other-screens/ReelScreen";
+import ReelScreen from "../screens/khampha-screens/ReelScreen";
 import DemoScreen from "../screens/other-screens/DemoScreen";
 //Utils
 import Button from "../utils/Button";
