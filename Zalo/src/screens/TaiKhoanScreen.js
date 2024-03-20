@@ -34,7 +34,7 @@ export default function TaiKhoanScreen() {
           <Image style={{ width: 24, height: 24 }} source={require("../../assets/image/phone.png")} />
           <View style={{ flexDirection: "column", paddingLeft: 16 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Số điện thoại</Text>
-            <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>(+84) 787 787 787</Text>
+            <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>(+84) 111 000 000</Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
             <Image source={require("../../assets/image/Vector.png")} />
