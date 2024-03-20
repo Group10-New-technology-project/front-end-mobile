@@ -5,10 +5,10 @@ import { TabsComponent } from "../components/BottomTabs";
 import SearchBar from "../components/SearchBar";
 import CustomBackButton from "../components/CustomBackButton";
 //-------------------------------------
-import TaiKhoanScreen from "../screens/TaiKhoanScreen";
-import QuyenRiengTuScreen from "../screens/QuyenRiengTuScreen";
-import ReelScreen from "../screens/ReelScreen";
-import DemoScreen from "../screens/DemoScreen";
+import TaiKhoanVaBaoMat from "../screens/canhan-screens/TaiKhoanVaBaoMat";
+import QuyenRiengTu from "../screens/canhan-screens/QuyenRiengTu";
+import ReelScreen from "../screens/other-screens/ReelScreen";
+import DemoScreen from "../screens/other-screens/DemoScreen";
 //Utils
 import Button from "../utils/Button";
 //-------------------------------------
@@ -19,33 +19,28 @@ export function StackNavigator() {
     <Stack.Navigator
       screenOptions={{
         headerStyle: { backgroundColor: "#0091FF" },
-        initialRouteName: "Button",
+        headerTitle: "",
+        headerShown: true,
       }}>
       <Stack.Screen
         name="Tabs"
         component={TabsComponent}
         options={{
-          headerShown: true,
-          headerTitle: "",
           headerLeft: () => <SearchBar />,
         }}
       />
       <Stack.Screen
-        name="TaiKhoanScreen"
-        component={TaiKhoanScreen}
+        name="TaiKhoanVaBaoMat"
+        component={TaiKhoanVaBaoMat}
         options={{
-          headerShown: true,
-          headerTitle: "",
-          headerLeft: () => <CustomBackButton />,
+          headerLeft: () => <CustomBackButton routeName="Tài khoản và bảo mật" />,
         }}
       />
       <Stack.Screen
-        name="QuyenRiengTuScreen"
-        component={QuyenRiengTuScreen}
+        name="QuyenRiengTu"
+        component={QuyenRiengTu}
         options={{
-          headerShown: true,
-          headerTitle: "",
-          headerLeft: () => <CustomBackButton />,
+          headerLeft: () => <CustomBackButton routeName="Quyền riêng tư" />,
         }}
       />
       <Stack.Screen name="ReelScreen" component={ReelScreen} />

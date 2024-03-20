@@ -21,7 +21,6 @@ export function TabsComponent() {
         tabBarActiveTintColor: "#3366ff", // Màu sắc của tab khi được chọn
         tabBarInactiveTintColor: "gray", // Màu sắc của tab khi không được chọn
         tabBarShowLabel: true, // Hiển thị nhãn cho tab
-
         tabBarStyle: {
           display: "flex",
           borderTopWidth: 1,

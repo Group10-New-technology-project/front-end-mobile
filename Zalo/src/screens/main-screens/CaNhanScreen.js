@@ -3,10 +3,10 @@ import { Ionicons } from "@expo/vector-icons";
 
 export default function CaNhanScreen({ navigation }) {
   handleTaiKhoanScreen = () => {
-    navigation.navigate("TaiKhoanScreen");
+    navigation.navigate("TaiKhoanVaBaoMat");
   };
   handleQuyenRiengTu = () => {
-    navigation.navigate("QuyenRiengTuScreen");
+    navigation.navigate("QuyenRiengTu");
   };
 
   return (
