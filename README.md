@@ -1,2 +1,4 @@
 # front-end-mobile
-front-end-mobile for zalo application
+- Phan Lương Trung Chánh
+- Nguyễn Minh Duy
+- Nguyễn Trường Tuấn Kiệt
