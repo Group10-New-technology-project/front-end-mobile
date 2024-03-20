@@ -1,170 +1,107 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function CaNhanScreen({ navigation }) {
-  handleTaiKhoanScreen = () => {
+  handleTKVBM = () => {
     navigation.navigate("TaiKhoanVaBaoMat");
   };
   handleQuyenRiengTu = () => {
     navigation.navigate("QuyenRiengTu");
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.header_pofile}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginVertical: 12,
-            marginLeft: 20,
-          }}>
-          <Image source={require("../../../assets/image/Avatar Zalo.png")} />
-          <View style={{ flexDirection: "column", paddingLeft: 15 }}>
-            <Text style={{ fontSize: 17, fontWeight: "500" }}>Name</Text>
-            <Text style={{ fontSize: 14, color: "#696969", fontWeight: "400" }}>
-              Xem trang cá nhân
-            </Text>
-          </View>
+        <View style={styles.tabs_menu}>
           <Image
-            style={{ position: "absolute", right: 25 }}
-            source={require("../../../assets/image/Icon Trans Account.png")}
+            style={{ width: 50, height: 50, borderRadius: 50 }}
+            source={require("./image/Abstract1998.png")}
           />
+          <View style={styles.view_title}>
+            <Text style={styles.title}>Name</Text>
+            <Text style={styles.title2}>Xem trang cá nhân</Text>
+          </View>
+          <View style={styles.vector_location}>
+            <MaterialCommunityIcons name="account-sync" size={25} color="#0091FF" />
+          </View>
         </View>
       </View>
-      <View style={styles.container_menu}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingVertical: 12,
-            marginLeft: 20,
-          }}>
-          <Image
-            style={{ width: 24, height: 24 }}
-            source={require("../../../assets/image/IMG_9197 1.png")}
-          />
-          <View style={{ flexDirection: "column", paddingLeft: 15 }}>
-            <Text style={{ fontSize: 17, fontWeight: "500" }}>Ví QR</Text>
-            <Text style={{ fontSize: 14, color: "#696969", fontWeight: "400" }}>
-              Lưu trữ và xuất trình các mã QR quan trọng
-            </Text>
+      <View style={styles.line2}></View>
+      {/* -------------------- */}
+      <View style={styles.container_menu1}>
+        <View style={styles.tabs_menu}>
+          <MaterialCommunityIcons name="wallet-travel" size={24} color="#0091FF" />
+          <View style={styles.view_title}>
+            <Text style={styles.title}>Ví QR</Text>
+            <Text style={styles.title2}>Lưu trữ và xuất trình các mã QR quan trọng</Text>
           </View>
         </View>
-        <View style={{ paddingVertical: 4, alignItems: "flex-end" }}>
-          <View style={{ borderWidth: 1, borderColor: "#ECECEC", width: 350 }} />
+        <View style={styles.line_view1}>
+          <View style={styles.line} />
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingVertical: 12,
-            marginLeft: 20,
-          }}>
-          <Image
-            style={{ width: 24, height: 24 }}
-            source={require("../../../assets/image/IMG_9197 1 (1).png")}
-          />
-          <View style={{ flexDirection: "column", paddingLeft: 15 }}>
-            <Text style={{ fontSize: 17, fontWeight: "500" }}>Nhạc chờ Zalo</Text>
-            <Text style={{ fontSize: 14, color: "#696969", fontWeight: "400" }}>
-              Đăng ký nhạc chờ, thể hiện cá tính
-            </Text>
+        <View style={styles.tabs_menu}>
+          <MaterialCommunityIcons name="music" size={24} color="#0091FF" />
+          <View style={styles.view_title}>
+            <Text style={styles.title}>Nhạc chờ Zalo</Text>
+            <Text style={styles.title2}>Đăng ký nhạc chờ, thể hiện cá tính</Text>
           </View>
-          <View style={{ position: "absolute", right: 25 }}>
+          <View style={styles.vector_location}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
-        <View style={{ paddingVertical: 4, alignItems: "flex-end" }}>
-          <View style={{ borderWidth: 1, borderColor: "#ECECEC", width: 350 }} />
+        <View style={styles.line_view1}>
+          <View style={styles.line} />
         </View>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingVertical: 12,
-            marginLeft: 20,
-          }}>
-          <Image
-            style={{ width: 24, height: 24 }}
-            source={require("../../../assets/image/cloud-cua-toi.png")}
-          />
-          <View style={{ flexDirection: "column", paddingLeft: 15 }}>
-            <Text style={{ fontSize: 17, fontWeight: "500" }}>Cloud của tôi</Text>
-            <Text style={{ fontSize: 14, color: "#696969", fontWeight: "400" }}>
-              Lưu trữ các tin nhắn quan trọng
-            </Text>
+        <View style={styles.tabs_menu}>
+          <MaterialCommunityIcons name="cloud-download-outline" size={24} color="#0091FF" />
+          <View style={styles.view_title}>
+            <Text style={styles.title}>Cloud của tôi</Text>
+            <Text style={styles.title2}>Lưu trữ các tin nhắn quan trọng</Text>
           </View>
-          <View style={{ position: "absolute", right: 25 }}>
+          <View style={styles.vector_location}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
       </View>
-      <View style={styles.container_cloud}>
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            paddingVertical: 16,
-            marginLeft: 20,
-          }}>
-          <Image
-            style={{ width: 24, height: 24 }}
-            source={require("../../../assets/image/dung-luong.png")}
-          />
-          <View style={{ flexDirection: "column", paddingLeft: 15 }}>
-            <Text style={{ fontSize: 17, fontWeight: "500" }}>Dung lượng và dữ liệu</Text>
-            <Text style={{ fontSize: 14, color: "#696969", fontWeight: "400" }}>
-              Quản lý dữ liệu Zalo của bạn
-            </Text>
+      <View style={styles.line2}></View>
+      {/* -------------------- */}
+      <View style={styles.container_menu2}>
+        <View style={styles.tabs_menu}>
+          <MaterialCommunityIcons name="archive-sync-outline" size={24} color="#0091FF" />
+          <View style={styles.view_title}>
+            <Text style={styles.title}>Dung lượng và dữ liệu</Text>
+            <Text style={styles.title2}>Quản lý dữ liệu Zalo của bạn</Text>
           </View>
-          <View style={{ position: "absolute", right: 25 }}>
+          <View style={styles.vector_location}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
       </View>
-      <View style={styles.container_function}>
-        <TouchableOpacity onPress={handleTaiKhoanScreen}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: 15,
-              marginLeft: 20,
-            }}>
-            <Image
-              style={{ width: 24, height: 24 }}
-              source={require("../../../assets/image/tai-khoan.png")}
-            />
-
-            <View style={{ flexDirection: "column", paddingLeft: 15 }}>
-              <Text style={{ fontSize: 17, fontWeight: "500" }}>Tài khoản và bảo mật</Text>
+      <View style={styles.line2}></View>
+      {/* -------------------- */}
+      <View style={styles.container_menu3}>
+        <TouchableOpacity onPress={handleTKVBM}>
+          <View style={styles.tabs_menu}>
+            <MaterialCommunityIcons name="shield-lock-open-outline" size={24} color="#0091FF" />
+            <View style={styles.view_title}>
+              <Text style={styles.title1}>Tài khoản và bảo mật</Text>
             </View>
-
-            <View style={{ position: "absolute", right: 25 }}>
+            <View style={styles.vector_location}>
               <Ionicons name="chevron-forward" size={18} color="gray" />
             </View>
           </View>
         </TouchableOpacity>
-        <View style={{ paddingVertical: 4, alignItems: "flex-end" }}>
-          <View style={{ borderWidth: 1, borderColor: "#ECECEC", width: 350 }} />
+
+        <View style={styles.line_view2}>
+          <View style={styles.line} />
         </View>
+
         <TouchableOpacity onPress={handleQuyenRiengTu}>
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              paddingVertical: 15,
-              marginLeft: 20,
-            }}>
-            <Image
-              style={{ width: 24, height: 24 }}
-              source={require("../../../assets/image/quyen-rieng-tu.png")}
-            />
-            <View style={{ flexDirection: "column", paddingLeft: 15 }}>
-              <Text style={{ fontSize: 17, fontWeight: "500" }}>Quyền riêng tư</Text>
+          <View style={styles.tabs_menu}>
+            <MaterialCommunityIcons name="lock-outline" size={24} color="#0091FF" />
+            <View style={styles.view_title}>
+              <Text style={styles.title1}>Quyền riêng tư</Text>
             </View>
-            <View style={{ position: "absolute", right: 25 }}>
+            <View style={styles.vector_location}>
               <Ionicons name="chevron-forward" size={18} color="gray" />
             </View>
           </View>
@@ -176,21 +113,35 @@ export default function CaNhanScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#E6E6E6",
+    backgroundColor: "white",
   },
   header_pofile: {
-    backgroundColor: "white",
+    paddingLeft: 18,
+    marginVertical: 14,
   },
-  container_menu: {
-    backgroundColor: "white",
-    marginTop: 8,
+  container_menu1: {
+    paddingLeft: 18,
+    marginVertical: 14,
   },
-  container_function: {
-    backgroundColor: "white",
-    marginTop: 8,
+  container_menu2: {
+    paddingLeft: 18,
+    marginVertical: 14,
   },
-  container_cloud: {
-    backgroundColor: "white",
-    marginTop: 8,
+  container_menu3: {
+    paddingLeft: 18,
+    marginVertical: 16,
   },
+  tabs_menu: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  title: { fontSize: 17, fontWeight: "500", marginBottom: 10 },
+  title1: { fontSize: 17, fontWeight: "500" },
+  title2: { fontSize: 14, color: "#696969", fontWeight: "400" },
+  line: { borderWidth: 1, borderColor: "#ECECEC", width: 360 },
+  line2: { borderWidth: 4, borderColor: "#ECECEC", width: "100%" },
+  line_view1: { paddingVertical: 15, alignItems: "flex-end" },
+  line_view2: { paddingVertical: 16, alignItems: "flex-end" },
+  vector_location: { position: "absolute", right: 18 },
+  view_title: { flexDirection: "column", paddingLeft: 16 },
 });

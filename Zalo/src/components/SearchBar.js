@@ -5,8 +5,10 @@ import { Feather } from "@expo/vector-icons";
 export default function SearchBar() {
   return (
     <SafeAreaView>
-      <View style={{ marginLeft: 5, flexDirection: "row", alignItems: "center" }}>
-        <Feather name="search" size={22} color="white" />
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View style={{ marginRight: 10 }}>
+          <Feather name="search" size={22} color="white" />
+        </View>
         <TextInput
           style={styles.input_search}
           placeholder="Tìm kiếm"
@@ -20,7 +22,6 @@ export default function SearchBar() {
 const styles = StyleSheet.create({
   input_search: {
     fontSize: 18,
-    marginLeft: 10,
     fontWeight: "500",
     color: "white",
   },

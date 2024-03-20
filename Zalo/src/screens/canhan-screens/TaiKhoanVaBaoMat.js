@@ -24,8 +24,8 @@ export default function TaiKhoanVaBaoMat() {
               marginLeft: 15,
             }}>
             <Image
-              style={{ width: 50, height: 50 }}
-              source={require("../../../assets/image/Avatar Zalo.png")}
+              style={{ width: 50, height: 50, borderRadius: 50 }}
+              source={require("../main-screens/image/Abstract1998.png")}
             />
             <View style={{ flexDirection: "column", paddingLeft: 15 }}>
               <Text style={{ fontSize: 16, fontWeight: "400", color: "#696969" }}>
