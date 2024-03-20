@@ -3,7 +3,7 @@ import { useState } from "react";
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import ToggleSwitch from "toggle-switch-react-native";
 
-import { FontAwesome, EvilIcons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 export default function QuyenRiengTu() {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const onToggle = () => {
@@ -22,7 +22,7 @@ export default function QuyenRiengTu() {
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Sinh nhật</Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
-            <Image source={require("../../../assets/image/Vector.png")} />
+            <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
         <View style={{ marginTop: 3, alignItems: "flex-end" }}>
@@ -40,7 +40,7 @@ export default function QuyenRiengTu() {
               Đang bật
             </Text>
             <View style={{ position: "absolute", right: 10 }}>
-              <Image source={require("../../../assets/image/Vector.png")} />
+              <Ionicons name="chevron-forward" size={18} color="gray" />
             </View>
           </View>
           <View style={{ marginTop: 3, alignItems: "flex-end" }}></View>
@@ -67,7 +67,7 @@ export default function QuyenRiengTu() {
             Đang bật
           </Text>
           <View style={{ position: "absolute", right: 10 }}>
-            <Image source={require("../../../assets/image/Vector.png")} />
+            <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
         <View style={{ marginTop: 3, alignItems: "flex-end" }}>
@@ -85,7 +85,7 @@ export default function QuyenRiengTu() {
             Đang tắt
           </Text>
           <View style={{ position: "absolute", right: 10 }}>
-            <Image source={require("../../../assets/image/Vector.png")} />
+            <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
       </View>
@@ -134,7 +134,7 @@ export default function QuyenRiengTu() {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
-            <Image source={require("../../../assets/image/Vector.png")} />
+            <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
         <View style={{ marginTop: 3, alignItems: "flex-end" }}>
@@ -147,7 +147,7 @@ export default function QuyenRiengTu() {
           />
           <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Mật khẩu</Text>
           <View style={{ position: "absolute", right: 10 }}>
-            <Image source={require("../../../assets/image/Vector.png")} />
+            <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
       </View>
@@ -161,7 +161,7 @@ export default function QuyenRiengTu() {
         />
         <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Xóa tài khoản</Text>
         <View style={{ position: "absolute", right: 10 + 12 }}>
-          <Image source={require("../../../assets/image/Vector.png")} />
+          <Ionicons name="chevron-forward" size={18} color="gray" />
         </View>
       </View>
     </ScrollView>

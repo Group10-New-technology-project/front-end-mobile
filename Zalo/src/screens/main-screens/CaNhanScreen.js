@@ -72,7 +72,7 @@ export default function CaNhanScreen({ navigation }) {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 25 }}>
-            <Ionicons name="chevron-back" size={18} color="gray" />
+            <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
         <View style={{ paddingVertical: 4, alignItems: "flex-end" }}>
@@ -96,7 +96,7 @@ export default function CaNhanScreen({ navigation }) {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 25 }}>
-            <Ionicons name="chevron-back" size={18} color="gray" />
+            <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
       </View>
@@ -119,7 +119,7 @@ export default function CaNhanScreen({ navigation }) {
             </Text>
           </View>
           <View style={{ position: "absolute", right: 25 }}>
-            <Ionicons name="chevron-back" size={18} color="gray" />
+            <Ionicons name="chevron-forward" size={18} color="gray" />
           </View>
         </View>
       </View>
@@ -142,7 +142,7 @@ export default function CaNhanScreen({ navigation }) {
             </View>
 
             <View style={{ position: "absolute", right: 25 }}>
-              <Ionicons name="chevron-back" size={18} color="gray" />
+              <Ionicons name="chevron-forward" size={18} color="gray" />
             </View>
           </View>
         </TouchableOpacity>
@@ -165,7 +165,7 @@ export default function CaNhanScreen({ navigation }) {
               <Text style={{ fontSize: 17, fontWeight: "500" }}>Quyền riêng tư</Text>
             </View>
             <View style={{ position: "absolute", right: 25 }}>
-              <Ionicons name="chevron-back" size={18} color="gray" />
+              <Ionicons name="chevron-forward" size={18} color="gray" />
             </View>
           </View>
         </TouchableOpacity>
