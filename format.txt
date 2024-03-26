@@ -1,0 +1,5 @@
+size icon 24
+paddingLeft: 16
+paddingRight: 16
+size image avatar 50 50 50
+<Ionicons name="chevron-forward" size={18} color="gray" />

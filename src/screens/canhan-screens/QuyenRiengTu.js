@@ -2,8 +2,8 @@ import React from "react";
 import { useState } from "react";
 import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
 import ToggleSwitch from "toggle-switch-react-native";
-
 import { FontAwesome, Ionicons } from "@expo/vector-icons";
+
 export default function QuyenRiengTu() {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const onToggle = () => {

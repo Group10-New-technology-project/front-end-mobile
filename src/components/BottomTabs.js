@@ -18,17 +18,17 @@ export function TabsComponent() {
       initialRouteName="TinNhan" // Tên màn hình ban đầu khi khởi động ứng dụng
       screenOptions={{
         headerShown: false, // Ẩn header trong các màn hình của tab
-        tabBarActiveTintColor: "#3366ff", // Màu sắc của tab khi được chọn
-        tabBarInactiveTintColor: "gray", // Màu sắc của tab khi không được chọn
+        tabBarActiveTintColor: "#0091FF", // Màu sắc của tab khi được chọn
+        tabBarInactiveTintColor: "black", // Màu sắc của tab khi không được chọn
         tabBarShowLabel: true, // Hiển thị nhãn cho tab
         tabBarStyle: {
           display: "flex",
           borderTopWidth: 1,
-          borderTopColor: "",
+          borderTopColor: "rgba(0, 0, 0, 0.1)",
         },
         tabBarLabelStyle: {
-          fontSize: 11,
-          fontWeight: "600",
+          fontSize: 10,
+          fontWeight: "500",
         },
         tabBarIconStyle: {
           marginBottom: -5,
