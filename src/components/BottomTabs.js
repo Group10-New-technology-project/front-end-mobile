@@ -7,9 +7,8 @@ import CaNhanScreen from "../screens/main-screens/CaNhanScreen";
 import TinNhanScreen from "../screens/main-screens/TinNhanScreen";
 import NhatKyScreen from "../screens/main-screens/NhatKyScreen";
 // --------------
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-
+import { AntDesign, Feather } from "@expo/vector-icons";
+// --------------
 const Tab = createBottomTabNavigator();
 
 export function TabsComponent() {

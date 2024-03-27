@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-export default function DemoScreen() {
+export default function QRCodeScreen() {
   return (
     <View style={styles.container}>
-      <Text>Demo</Text>
+      <Text>QR Code</Text>
     </View>
   );
 }

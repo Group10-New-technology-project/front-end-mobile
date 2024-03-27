@@ -10,11 +10,9 @@ const videos = [
   "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
 ];
 
-const ReelScreen = () => {
-  const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(0);
-
+export default function ReelScreen() {
+  const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(1);
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 };
-
   const onViewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length > 0) {
       setCurrentViewableItemIndex(viewableItems[0].index ?? 0);
@@ -27,9 +25,7 @@ const ReelScreen = () => {
     <View style={styles.container}>
       <FlatList
         data={videos}
-        renderItem={({ item, index }) => (
-          <Item item={item} shouldPlay={index === currentViewableItemIndex} />
-        )}
+        renderItem={({ item, index }) => <Item item={item} shouldPlay={index === currentViewableItemIndex} />}
         keyExtractor={(item) => item}
         pagingEnabled
         horizontal={false}
@@ -38,7 +34,7 @@ const ReelScreen = () => {
       />
     </View>
   );
-};
+}
 
 const Item = ({ item, shouldPlay }) => {
   const videoRef = useRef(null);
@@ -46,7 +42,6 @@ const Item = ({ item, shouldPlay }) => {
 
   useEffect(() => {
     if (!videoRef.current) return;
-
     if (shouldPlay) {
       videoRef.current.playAsync();
     } else {
@@ -56,10 +51,7 @@ const Item = ({ item, shouldPlay }) => {
   }, [shouldPlay]);
 
   return (
-    <Pressable
-      onPress={() =>
-        status?.isPlaying ? videoRef.current?.pauseAsync() : videoRef.current?.playAsync()
-      }>
+    <Pressable onPress={() => (status?.isPlaying ? videoRef.current?.pauseAsync() : videoRef.current?.playAsync())}>
       <View style={styles.videoContainer}>
         <Video
           ref={videoRef}
@@ -88,5 +80,3 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
-
-export default ReelScreen;
