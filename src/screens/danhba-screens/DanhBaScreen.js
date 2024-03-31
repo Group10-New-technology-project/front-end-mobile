@@ -7,15 +7,15 @@ import { FontAwesome6 } from '@expo/vector-icons';
 
 export default function DanhBaScreen() {
     const [data, setData] = React.useState([
-        {key:"1", name: "DyyBin", image: require('../../../assets/image/DyyDiBien.jpg')},
+        {key:"1", name: "DyyBin", image: require('../../../assets/image/Cristiano.jpg')},
         {key:"2", name: "Anh 7", image: require('../../../assets/image/Cristiano.jpg')},
-        {key:"3", name: "Chú Tư", image: require('../../../assets/image/DyyDiBien.jpg')},
-        {key:"4", name: "Cậu 5", image: require('../../../assets/image/DyyDiBien.jpg')},
-        {key:"5", name: "Cristiano Bình Dương", image: require('../../../assets/image/DyyDiBien.jpg')},
-        {key:"6", name: "Fan M.U", image: require('../../../assets/image/img/DyyDiBien.jpg')},
-        {key:"7", name: "Cục Dàng Trôi Sông", image: require('../../../assets/image/img/DyyDiBien.jpg')},
-        {key:"8", name: "Vợ", image: require('../../../assets/image/img/DyyDiBien.jpg')},
-        {key:"9", name: "Em Yêu ", image: require('../../../assets/image/img/DyyDiBien.jpg')},
+        {key:"3", name: "Chú Tư", image: require('../../../assets/image/Cristiano.jpg')},
+        {key:"4", name: "Cậu 5", image: require('../../../assets/image/Cristiano.jpg')},
+        {key:"5", name: "Cristiano Bình Dương", image: require('../../../assets/image/Cristiano.jpg')},
+        {key:"6", name: "Fan M.U", image: require('../../../assets/image/Cristiano.jpg')},
+        {key:"7", name: "Cục Dàng Trôi Sông", image: require('../../../assets/image/Cristiano.jpg')},
+        {key:"8", name: "Vợ", image: require('../../../assets/image/Cristiano.jpg')},
+        {key:"9", name: "Em Yêu ", image: require('../../../assets/image/Cristiano.jpg')},
        
     ]);
     const [sumUser, setSumUser] = useState(0);
@@ -137,7 +137,7 @@ export default function DanhBaScreen() {
                     
                 </TouchableOpacity>
             </View>
-            <ScrollView   style = {{height:500,width:'100%'}}>  
+           
             <View style = {styles.options}>
                 <TouchableOpacity style = {styles.subOptions}>
                      <View style = {styles.border_options}>
@@ -194,7 +194,7 @@ export default function DanhBaScreen() {
     keyExtractor={(item, index) => index.toString()}
 />
 
-      </ScrollView> 
+   
            
         </View>
     )

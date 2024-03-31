@@ -2,11 +2,12 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 // --------------
 import KhamPhaScreen from "../screens/main-screens/KhamPhaSceen";
-import DanhBaScreen from "../screens/main-screens/DanhBaScreen";
+// import DanhBaScreen from "../screens/main-screens/DanhBaScreen";
 import CaNhanScreen from "../screens/main-screens/CaNhanScreen";
 import TinNhanScreen from "../screens/main-screens/TinNhanScreen";
 import NhatKyScreen from "../screens/main-screens/NhatKyScreen";
 import TinNhan from "../screens/tinnhan-screens/TinNhanScreen";
+import DanhBaScreen from "../screens/danhba-screens/DanhBaScreen";
 // --------------
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";

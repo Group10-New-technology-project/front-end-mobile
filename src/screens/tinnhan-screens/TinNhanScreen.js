@@ -65,7 +65,7 @@ export default function TinNhanScreen({ navigation }) {
     
     return (
         <View style={styles.container}>
-            <ScrollView style = {{width:'100%', flexGrow:1}}>
+           
                 <FlatList
                         data={data}
                         keyExtractor={item=>item.id.toString()}
@@ -88,7 +88,7 @@ export default function TinNhanScreen({ navigation }) {
                 >
 
                 </FlatList>
-            </ScrollView>
+          
         </View>
     );
 }
