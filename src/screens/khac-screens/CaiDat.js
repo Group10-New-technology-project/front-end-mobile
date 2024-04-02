@@ -2,7 +2,10 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { Ionicons, MaterialCommunityIcons, AntDesign, Feather } from "@expo/vector-icons";
 
-export default function CaiDat() {
+export default function CaiDat({ navigation }) {
+  const handle_dangxuat = () => {
+    navigation.navigate("TrangChu");
+  };
   return (
     <ScrollView style={styles.container}>
       <View style={styles.menu_1}>
@@ -140,7 +143,7 @@ export default function CaiDat() {
         </View>
       </View>
       <View style={styles.logout}>
-        <TouchableOpacity style={styles.btn_logout}>
+        <TouchableOpacity style={styles.btn_logout} onPress={handle_dangxuat}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
             <MaterialCommunityIcons name="logout" size={22} color="gray" />
             <Text style={styles.title1}>Đăng xuất</Text>

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-
-export default function ChonAnhDaiDien() {
+// const navigation = useNavigation();
+export default function ChonAnhDaiDien({ navigation }) {
   const [imageUri, setImageUri] = useState(
     "https://image.lexica.art/full_webp/7e2d7ae0-c3ae-49fd-9dec-ce2663635054"
   );
@@ -19,6 +19,9 @@ export default function ChonAnhDaiDien() {
       setImageUri(result.uri);
     }
   };
+  const handle_tinNhan = () => {
+    navigation.navigate("Tabs");
+  };
 
   return (
     <View style={styles.container}>
@@ -33,7 +36,7 @@ export default function ChonAnhDaiDien() {
         <TouchableOpacity style={styles.btn_chonanh} onPress={pickImage}>
           <Text style={styles.text_4}>Chọn ảnh</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn_chonanh}>
+        <TouchableOpacity style={styles.btn_chonanh} onPress={handle_tinNhan}>
           <Text style={styles.text_4}>Bỏ qua</Text>
         </TouchableOpacity>
       </View>
