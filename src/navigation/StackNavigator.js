@@ -29,7 +29,7 @@ const Stack = createNativeStackNavigator();
 export function StackNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="TrangChu"
+      initialRouteName="Tabs"
       screenOptions={{
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
@@ -93,6 +93,7 @@ export function StackNavigator() {
         options={{
           headerLeft: () => <CustomBackButton routeName="Name" />,
           headerShown: true,
+          headerStyle: { backgroundColor: "gray" },
         }}
       />
     </Stack.Navigator>

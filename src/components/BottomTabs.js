@@ -14,11 +14,11 @@ const Tab = createBottomTabNavigator();
 export function TabsComponent() {
   return (
     <Tab.Navigator
-      initialRouteName="TinNhan" // Tên màn hình ban đầu khi khởi động ứng dụng
+      // initialRouteName="TinNhan"
       screenOptions={{
-        headerShown: false, // Ẩn header trong các màn hình của tab
+        headerShown: false,
         tabBarActiveTintColor: "#0091FF", // Màu sắc của tab khi được chọn
-        tabBarInactiveTintColor: "black", // Màu sắc của tab khi không được chọn
+        tabBarInactiveTintColor: "#B7B7B7", // Màu sắc của tab khi không được chọn
         tabBarShowLabel: true, // Hiển thị nhãn cho tab
         tabBarStyle: {
           display: "flex",
