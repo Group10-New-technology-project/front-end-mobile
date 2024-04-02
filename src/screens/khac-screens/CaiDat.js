@@ -1,6 +1,12 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import { Ionicons, MaterialCommunityIcons, AntDesign, Feather } from "@expo/vector-icons";
+import {
+  Ionicons,
+  MaterialCommunityIcons,
+  AntDesign,
+  Feather,
+  FontAwesome,
+} from "@expo/vector-icons";
 
 export default function CaiDat({ navigation }) {
   const handle_dangxuat = () => {
@@ -60,7 +66,7 @@ export default function CaiDat({ navigation }) {
           <View style={styles.line}></View>
         </View>
         <View style={styles.title_1}>
-          <Feather name="message-circle" size={24} color="#0091FF" />
+          <MaterialCommunityIcons name="chat-outline" size={24} color="#0091FF" />
           <Text style={styles.title1}>Tin nhắn</Text>
           <View style={styles.vector_location}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -70,7 +76,7 @@ export default function CaiDat({ navigation }) {
           <View style={styles.line}></View>
         </View>
         <View style={styles.title_1}>
-          <MaterialCommunityIcons name="shield-lock-open-outline" size={24} color="#0091FF" />
+          <MaterialCommunityIcons name="phone-in-talk-outline" size={24} color="#0091FF" />
           <Text style={styles.title1}>Cuộc gọi</Text>
           <View style={styles.vector_location}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -80,7 +86,7 @@ export default function CaiDat({ navigation }) {
           <View style={styles.line}></View>
         </View>
         <View style={styles.title_1}>
-          <MaterialCommunityIcons name="shield-lock-open-outline" size={24} color="#0091FF" />
+          <MaterialCommunityIcons name="clock-outline" size={24} color="#0091FF" />
           <Text style={styles.title1}>Nhật ký</Text>
           <View style={styles.vector_location}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -90,7 +96,7 @@ export default function CaiDat({ navigation }) {
           <View style={styles.line}></View>
         </View>
         <View style={styles.title_1}>
-          <MaterialCommunityIcons name="shield-lock-open-outline" size={24} color="#0091FF" />
+          <MaterialCommunityIcons name="shield-account-outline" size={24} color="#0091FF" />
           <Text style={styles.title1}>Danh bạ</Text>
           <View style={styles.vector_location}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -100,7 +106,7 @@ export default function CaiDat({ navigation }) {
           <View style={styles.line}></View>
         </View>
         <View style={styles.title_1}>
-          <MaterialCommunityIcons name="shield-lock-open-outline" size={24} color="#0091FF" />
+          <MaterialCommunityIcons name="alpha-l-circle-outline" size={24} color="#0091FF" />
           <Text style={styles.title1}>Giao diện và ngôn ngữ</Text>
           <View style={styles.vector_location}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -110,7 +116,7 @@ export default function CaiDat({ navigation }) {
       <View style={styles.line2}></View>
       <View style={styles.menu_4}>
         <View style={styles.title_1}>
-          <MaterialCommunityIcons name="shield-lock-open-outline" size={24} color="#0091FF" />
+          <MaterialCommunityIcons name="alpha-i-circle-outline" size={24} color="#0091FF" />
           <Text style={styles.title1}>Thông tin về Zalo</Text>
           <View style={styles.vector_location}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -120,7 +126,7 @@ export default function CaiDat({ navigation }) {
           <View style={styles.line}></View>
         </View>
         <View style={styles.title_1}>
-          <MaterialCommunityIcons name="shield-lock-open-outline" size={24} color="#0091FF" />
+          <MaterialCommunityIcons name="send-circle-outline" size={24} color="#0091FF" />
           <Text style={styles.title1}>Liên hệ hỗ trợ</Text>
           <View style={styles.vector_location}>
             <TouchableOpacity style={{ padding: 5, backgroundColor: "#C5C5C5", borderRadius: 18 }}>
@@ -132,7 +138,7 @@ export default function CaiDat({ navigation }) {
       <View style={styles.line2}></View>
       <View style={styles.menu_5}>
         <View style={styles.title_1}>
-          <MaterialCommunityIcons name="shield-lock-open-outline" size={24} color="#0091FF" />
+          <MaterialCommunityIcons name="account-sync" size={24} color="#0091FF" />
           <Text style={styles.title1}>Chuyển tài khoản</Text>
           <View style={styles.vector_location}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
