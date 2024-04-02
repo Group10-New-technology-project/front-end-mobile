@@ -11,6 +11,9 @@ import ReelScreen from "../screens/khampha-screens/ReelScreen";
 import DemoScreen from "../screens/other-screens/DemoScreen";
 import CaiDat from "../screens/canhan-screens/CaiDat";
 import QRCodeScreen from "../screens/canhan-screens/QRCodeScreen";
+import TaoMatKhau from "../screens/sign-up-screens/TaoMatKhau";
+import ChonAnhDaiDien from "../screens/sign-up-screens/ChonAnhDaiDien";
+import ChonTen from "../screens/sign-up-screens/ChonTen";
 //Utils
 import Button from "../utils/Button";
 //-------------------------------------
@@ -19,11 +22,11 @@ const Stack = createNativeStackNavigator();
 export function StackNavigator() {
   return (
     <Stack.Navigator
+      initialRouteName="TaoMatKhau"
       screenOptions={{
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
-        headerShown: true,
-        initialRouteName: "DemoScreen",
+        headerShown: false,
       }}>
       <Stack.Screen
         name="Tabs"
@@ -37,6 +40,7 @@ export function StackNavigator() {
         component={TaiKhoanVaBaoMat}
         options={{
           headerLeft: () => <CustomBackButton routeName="Tài khoản và bảo mật" />,
+          headerShown: true,
         }}
       />
       <Stack.Screen
@@ -57,6 +61,9 @@ export function StackNavigator() {
       <Stack.Screen name="ReelScreen" component={ReelScreen} />
       <Stack.Screen name="DemoScreen" component={DemoScreen} />
       <Stack.Screen name="Button" component={Button} />
+      <Stack.Screen name="TaoMatKhau" component={TaoMatKhau} />
+      <Stack.Screen name="ChonTen" component={ChonTen} />
+      <Stack.Screen name="ChonAnhDaiDien" component={ChonAnhDaiDien} />
     </Stack.Navigator>
   );
 }

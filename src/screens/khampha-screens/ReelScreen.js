@@ -11,7 +11,7 @@ const videos = [
 ];
 
 export default function ReelScreen() {
-  const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(1);
+  const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(0);
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 };
   const onViewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length > 0) {
@@ -40,13 +40,23 @@ const Item = ({ item, shouldPlay }) => {
   const videoRef = useRef(null);
   const [status, setStatus] = useState(null);
 
+  // useEffect(() => {
+  //   if (!videoRef.current) return;
+  //   if (shouldPlay) {
+  //     videoRef.current.playAsync();
+  //   } else {
+  //     videoRef.current.pauseAsync();
+  //     videoRef.current.setPositionAsync(0);
+  //   }
+  // }, [shouldPlay]);
+
   useEffect(() => {
     if (!videoRef.current) return;
     if (shouldPlay) {
-      videoRef.current.playAsync();
+      videoRef.current.playAsync().catch((error) => console.error("Error while playing video:", error)); // Xử lý lỗi khi phát video
     } else {
-      videoRef.current.pauseAsync();
-      videoRef.current.setPositionAsync(0);
+      videoRef.current.pauseAsync().catch((error) => console.error("Error while pausing video:", error)); // Xử lý lỗi khi tạm dừng video
+      videoRef.current.setPositionAsync(0).catch((error) => console.error("Error while setting video position:", error)); // Xử lý lỗi khi đặt vị trí video
     }
   }, [shouldPlay]);
 
