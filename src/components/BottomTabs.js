@@ -14,7 +14,7 @@ const Tab = createBottomTabNavigator();
 export function TabsComponent() {
   return (
     <Tab.Navigator
-      // initialRouteName="TinNhan" // Tên màn hình ban đầu khi khởi động ứng dụng
+      initialRouteName="TinNhan" // Tên màn hình ban đầu khi khởi động ứng dụng
       screenOptions={{
         headerShown: false, // Ẩn header trong các màn hình của tab
         tabBarActiveTintColor: "#0091FF", // Màu sắc của tab khi được chọn

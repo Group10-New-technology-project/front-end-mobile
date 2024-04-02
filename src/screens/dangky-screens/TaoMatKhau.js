@@ -21,7 +21,7 @@ export default function TaoMatKhauScreen({ navigation }) {
     setPasswordsMatch(password === text);
   };
   const hanlde_chonTen = () => {
-    navigation.navigate("ChonTen");
+    navigation.navigate("ThongTinCaNhan");
   };
 
   return (
