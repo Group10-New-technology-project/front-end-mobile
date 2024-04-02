@@ -11,6 +11,7 @@ export default function QuyenRiengTu() {
   };
   return (
     <ScrollView style={styles.container}>
+      
       <View style={styles.container_canhan}>
         <Text style={{ fontSize: 15, fontWeight: "bold", color: "#0008C0", marginVertical: 10 }}>
           Cá nhân

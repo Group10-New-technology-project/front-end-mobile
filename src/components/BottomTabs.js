@@ -7,15 +7,14 @@ import CaNhanScreen from "../screens/main-screens/CaNhanScreen";
 import TinNhanScreen from "../screens/main-screens/TinNhanScreen";
 import NhatKyScreen from "../screens/main-screens/NhatKyScreen";
 // --------------
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
-
+import { AntDesign, Feather } from "@expo/vector-icons";
+// --------------
 const Tab = createBottomTabNavigator();
 
 export function TabsComponent() {
   return (
     <Tab.Navigator
-      initialRouteName="TinNhan" // Tên màn hình ban đầu khi khởi động ứng dụng
+      // initialRouteName="TinNhan" // Tên màn hình ban đầu khi khởi động ứng dụng
       screenOptions={{
         headerShown: false, // Ẩn header trong các màn hình của tab
         tabBarActiveTintColor: "#0091FF", // Màu sắc của tab khi được chọn

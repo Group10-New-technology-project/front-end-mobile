@@ -10,11 +10,9 @@ const videos = [
   "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4",
 ];
 
-const ReelScreen = () => {
+export default function ReelScreen() {
   const [currentViewableItemIndex, setCurrentViewableItemIndex] = useState(0);
-
   const viewabilityConfig = { viewAreaCoveragePercentThreshold: 50 };
-
   const onViewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length > 0) {
       setCurrentViewableItemIndex(viewableItems[0].index ?? 0);
@@ -27,9 +25,7 @@ const ReelScreen = () => {
     <View style={styles.container}>
       <FlatList
         data={videos}
-        renderItem={({ item, index }) => (
-          <Item item={item} shouldPlay={index === currentViewableItemIndex} />
-        )}
+        renderItem={({ item, index }) => <Item item={item} shouldPlay={index === currentViewableItemIndex} />}
         keyExtractor={(item) => item}
         pagingEnabled
         horizontal={false}
@@ -38,28 +34,34 @@ const ReelScreen = () => {
       />
     </View>
   );
-};
+}
 
 const Item = ({ item, shouldPlay }) => {
   const videoRef = useRef(null);
   const [status, setStatus] = useState(null);
 
+  // useEffect(() => {
+  //   if (!videoRef.current) return;
+  //   if (shouldPlay) {
+  //     videoRef.current.playAsync();
+  //   } else {
+  //     videoRef.current.pauseAsync();
+  //     videoRef.current.setPositionAsync(0);
+  //   }
+  // }, [shouldPlay]);
+
   useEffect(() => {
     if (!videoRef.current) return;
-
     if (shouldPlay) {
-      videoRef.current.playAsync();
+      videoRef.current.playAsync().catch((error) => console.error("Error while playing video:", error)); // Xử lý lỗi khi phát video
     } else {
-      videoRef.current.pauseAsync();
-      videoRef.current.setPositionAsync(0);
+      videoRef.current.pauseAsync().catch((error) => console.error("Error while pausing video:", error)); // Xử lý lỗi khi tạm dừng video
+      videoRef.current.setPositionAsync(0).catch((error) => console.error("Error while setting video position:", error)); // Xử lý lỗi khi đặt vị trí video
     }
   }, [shouldPlay]);
 
   return (
-    <Pressable
-      onPress={() =>
-        status?.isPlaying ? videoRef.current?.pauseAsync() : videoRef.current?.playAsync()
-      }>
+    <Pressable onPress={() => (status?.isPlaying ? videoRef.current?.pauseAsync() : videoRef.current?.playAsync())}>
       <View style={styles.videoContainer}>
         <Video
           ref={videoRef}
@@ -88,5 +90,3 @@ const styles = StyleSheet.create({
     height: "100%",
   },
 });
-
-export default ReelScreen;
