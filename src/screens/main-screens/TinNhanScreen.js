@@ -14,7 +14,7 @@ export default function TinNhanScreen({ navigation }) {
     id: 111,
     name: "Cris",
     message: [{}],
-    img: require("../main-screens/image/Abstract1998.png"),
+    image: require("../main-screens/image/Abstract1998.png"),
   };
   const [data, setData] = React.useState([
     {
@@ -130,7 +130,7 @@ export default function TinNhanScreen({ navigation }) {
   ]);
 
   const handleContactPress = (contact) => {
-    navigation.navigate("ChatScreen", { userCurrent: user_Curren, contact: contact });
+    navigation.navigate("ChatScreen", { userCurrent: user_Curren, contact: contact, message: contact.message});
     console.log(contact);
   };
 
