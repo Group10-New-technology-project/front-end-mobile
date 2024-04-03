@@ -5,6 +5,7 @@ export const styles_chanh = StyleSheet.create({
     color: "#FFFFFF",
     fontWeight: "500",
     fontSize: 18,
+    marginLeft: 10,
   },
   icon_s22: {
     width: 22,

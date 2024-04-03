@@ -9,7 +9,6 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native"; // Import Text từ react-native
-import { LinearGradient } from "expo-linear-gradient";
 import Modal from "react-native-modal";
 import { useRoute } from "@react-navigation/native";
 
@@ -34,9 +33,10 @@ export default function See({ navigation }) {
             justifyContent: "space-between",
             height: 40,
             flexDirection: "row",
+            marginTop: 50,
           }}>
           <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Text style={{ color: "#ffff", marginLeft: 10 }}>Đóng</Text>
+            <Text style={{ color: "#ffff", marginLeft: 10, fontSize: 16 }}>Đóng</Text>
           </TouchableOpacity>
 
           <View style={{ alignItems: "center" }}>

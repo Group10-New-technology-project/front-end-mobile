@@ -7,30 +7,7 @@ export default function Login({ navigation }) {
   const [password, setPassword] = useState("");
   return (
     <View style={styles.container}>
-      <LinearGradient
-        colors={["#0085FE", "#00ACF4"]}
-        start={{ x: 0, y: 0 }} // Điểm bắt đầu (trái)
-        end={{ x: 1, y: 0 }} // Điểm kết thúc (phải)
-        style={styles.background}
-      />
-
       <View>
-        <View style={{ height: 45, alignItems: "center", flexDirection: "row" }}>
-          <TouchableOpacity onPress={() => navigation.navigate("TrangChu")}>
-            <Image
-              source={require("../../../assets/img/back.png")}
-              resizeMode="contain"
-              style={{
-                marginLeft: 17,
-                height: 25,
-                width: 25,
-              }}
-            />
-          </TouchableOpacity>
-          <Text style={{ fontSize: 16, fontWeight: 500, color: "#ffff", marginLeft: 15 }}>
-            Đăng nhập
-          </Text>
-        </View>
         <View style={{ height: 39, backgroundColor: "#F9FAFE", justifyContent: "center" }}>
           <Text
             style={{
