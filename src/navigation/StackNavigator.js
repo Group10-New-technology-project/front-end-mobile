@@ -21,6 +21,8 @@ import NhapSoDienThoai from "../screens/dangky-screens/NhapSoDienThoai";
 import MaXacThuc from "../screens/dangky-screens/MaXacThuc";
 import ThongTinCaNhan from "../screens/dangky-screens/ThongTinCaNhan";
 import ChatScreen from "../screens/tinnhan-screens/ChatScreen";
+import CodeXacThuc from "../screens/dangky-screens/CodeXacThuc";
+
 //Utils
 import Button from "../utils/Button";
 //-------------------------------------
@@ -29,7 +31,7 @@ const Stack = createNativeStackNavigator();
 export function StackNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="Tabs"
+      initialRouteName="TrangChu"
       screenOptions={{
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
@@ -82,9 +84,24 @@ export function StackNavigator() {
       <Stack.Screen name="ChonTen" component={ChonTen} />
       <Stack.Screen name="ChonAnhDaiDien" component={ChonAnhDaiDien} />
       <Stack.Screen name="TrangChu" component={TrangChu} />
-      <Stack.Screen name="DangNhap" component={DangNhap} />
+      <Stack.Screen
+        name="DangNhap"
+        component={DangNhap}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Đăng nhập" />,
+        }}
+      />
       <Stack.Screen name="See" component={See} />
-      <Stack.Screen name="NhapSoDienThoai" component={NhapSoDienThoai} />
+      <Stack.Screen
+        name="NhapSoDienThoai"
+        component={NhapSoDienThoai}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="" />,
+          // headerStyle: { backgroundColor: "gray" },
+        }}
+      />
       <Stack.Screen name="MaXacThuc" component={MaXacThuc} />
       <Stack.Screen name="ThongTinCaNhan" component={ThongTinCaNhan} />
       <Stack.Screen
@@ -96,6 +113,7 @@ export function StackNavigator() {
           headerStyle: { backgroundColor: "gray" },
         }}
       />
+      <Stack.Screen name="CodeXacThuc" component={CodeXacThuc} />
     </Stack.Navigator>
   );
 }
