@@ -31,11 +31,22 @@ const Dropdown = ({ onSelect }) => {
   );
 };
 
-export default function NhapThongTinCaNhan({ navigation }) {
+export default function NhapThongTinCaNhan({ navigation, route }) {
+  const { password, SoDienThoai } = route.params;
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false); // State để kiểm soát hiển thị dropdown
   const [selectedGender, setSelectedGender] = useState(null);
+  const handle_NhapTen = () => {
+    console.log(selectedDate);
+    console.log(selectedGender);
+    navigation.navigate("NhapTenNguoiDung", {
+      birthday: selectedDate ? selectedDate.toISOString() : null, 
+      Gender: selectedGender,
+      password: password,
+      SoDienThoai: SoDienThoai,
+    });
+  };
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -160,7 +171,7 @@ export default function NhapThongTinCaNhan({ navigation }) {
       <View
         style={{ marginBottom: 40, height: 39, justifyContent: "center", alignItems: "center" }}>
         {selectedDate && selectedGender ? (
-          <TouchableOpacity onPress={() => navigation.navigate("NhapTenNguoDung")}>
+          <TouchableOpacity onPress={handle_NhapTen}>
             <View
               style={{
                 height: 44,

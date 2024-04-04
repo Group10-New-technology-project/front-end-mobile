@@ -13,12 +13,12 @@ export default function NhapSoDienThoai({ navigation }) {
     } else {
       formattedPhoneNumber = "+84" + SoDienThoai;
     }
-    navigation.navigate("NhapMaXacThuc", {
+    navigation.navigate("TaoMatKhau", {
       phone2: formattedPhoneNumber.slice(3),
       SoDienThoai: formattedPhoneNumber,
     });
   };
-  
+
 
   return (
     <View style={styles.container}>
@@ -141,8 +141,8 @@ export default function NhapSoDienThoai({ navigation }) {
           <View
             style={{ marginTop: 30, height: 39, justifyContent: "center", alignItems: "center" }}>
             {(SoDienThoai.length === 9 || SoDienThoai.length === 10) &&
-            DieuKhoan &&
-            DieuKhoanMang ? (
+              DieuKhoan &&
+              DieuKhoanMang ? (
               <TouchableOpacity onPress={sendVerification}>
                 <View
                   style={{
