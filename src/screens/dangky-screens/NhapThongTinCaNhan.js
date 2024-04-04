@@ -31,7 +31,7 @@ const Dropdown = ({ onSelect }) => {
   );
 };
 
-export default function NhapSoDienThoai({ navigation }) {
+export default function NhapThongTinCaNhan({ navigation }) {
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [dropdownVisible, setDropdownVisible] = useState(false); // State để kiểm soát hiển thị dropdown
@@ -160,7 +160,7 @@ export default function NhapSoDienThoai({ navigation }) {
       <View
         style={{ marginBottom: 40, height: 39, justifyContent: "center", alignItems: "center" }}>
         {selectedDate && selectedGender ? (
-          <TouchableOpacity onPress={() => navigation.navigate("ChonTen")}>
+          <TouchableOpacity onPress={() => navigation.navigate("NhapTenNguoDung")}>
             <View
               style={{
                 height: 44,

@@ -1,21 +1,29 @@
 import React, { useState, useEffect, useRef } from "react";
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Image,
-  Text,
-  TouchableOpacity,
-  TextInput,
-} from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
+import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert } from "react-native";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import firebase from "firebase/compat/app";
+import "firebase/compat/auth";
+import { firebaseConfig } from "../../config/config";
 
-const { width } = Dimensions.get("window");
-
-export default function NhapSoDienThoai({ navigation }) {
+export default function NhapMaXacThuc({ navigation, route }) {
+  const { SoDienThoai, phone2 } = route.params;
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
   const refs = useRef([...Array(6)].map(() => React.createRef()));
   const [countdown, setCountdown] = useState(60);
+  const [verificationId, setVerificationId] = useState(null);
+  const recaptchaVerifier = useRef(null);
+
+  const sendVerification = () => {
+    console.log("Đã gửi đến số:", SoDienThoai);
+    console.log("sdt", phone2);
+    const phoneProvider = new firebase.auth.PhoneAuthProvider();
+    phoneProvider
+      .verifyPhoneNumber(SoDienThoai, recaptchaVerifier.current)
+      .then((id) => setVerificationId(id));
+  };
+  useEffect(() => {
+    sendVerification();
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -28,7 +36,6 @@ export default function NhapSoDienThoai({ navigation }) {
   }, [countdown]);
 
   useEffect(() => {
-    // Focus vào ô nhập đầu tiên khi màn hình được mở lên
     refs.current[0].current.focus();
   }, []);
 
@@ -43,21 +50,30 @@ export default function NhapSoDienThoai({ navigation }) {
     setOTP(newOTP);
   };
 
+  function convertArrayToString(array) {
+    return array.join("");
+  }
+
+  const confirmCode = () => {
+    const otpString = convertArrayToString(otp);
+    const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, otpString);
+    firebase
+      .auth()
+      .signInWithCredential(credential)
+      .then(() => {
+        navigation.navigate("TaoMatKhau", {
+          SoDienThoai: SoDienThoai,
+        });
+      })
+      .catch(() => {
+        Alert.alert("Mã xác thực không đúng, vui lòng nhập lại");
+        setOTP(["", "", "", "", "", ""]);
+      });
+  };
+
   return (
     <View style={styles.container}>
       <View>
-        <LinearGradient
-          colors={["#0085FE", "#00ACF4"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.background}
-        />
-        <LinearGradient
-          colors={["#0085FE", "#00ACF4"]}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 0 }}
-          style={styles.background}
-        />
         <View style={{ justifyContent: "center", alignContent: "center" }}>
           <View style={{ height: 45, alignItems: "center", flexDirection: "row" }}>
             <TouchableOpacity onPress={() => navigation.navigate("home")}>
@@ -80,14 +96,18 @@ export default function NhapSoDienThoai({ navigation }) {
             <Text style={{ fontSize: 24, fontWeight: "700", textAlign: "center" }}>
               Nhập mã xác thực
             </Text>
+            <FirebaseRecaptchaVerifierModal
+              ref={recaptchaVerifier}
+              firebaseConfig={firebaseConfig}
+            />
           </View>
           <View style={{ height: 30, alignItems: "center" }}>
             <Text style={{ fontWeight: 500, fontSize: 14, color: "#444444" }}>
               Nhập dãy 6 số được gửi đến số điện thoại
             </Text>
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontWeight: 500, fontSize: 19 }}>(+45) </Text>
-              <Text style={{ fontWeight: 500, fontSize: 19 }}>0909898765</Text>
+              <Text style={{ fontWeight: 500, fontSize: 19 }}>(+84) </Text>
+              <Text style={{ fontWeight: 500, fontSize: 19 }}>{phone2}</Text>
             </View>
           </View>
           <View style={{ width: "100%", alignItems: "center", marginTop: 20 }}>
@@ -116,7 +136,7 @@ export default function NhapSoDienThoai({ navigation }) {
           <View
             style={{ marginTop: 25, height: 39, justifyContent: "center", alignItems: "center" }}>
             {otp.every((val) => val.length === 1) ? (
-              <TouchableOpacity onPress={() => navigation.navigate("TaoMatKhau")}>
+              <TouchableOpacity onPress={confirmCode}>
                 <View
                   style={{
                     height: 44,
