@@ -10,6 +10,7 @@ export const firebaseConfig = {
   messagingSenderId: "972347611845",
   appId: "1:972347611845:web:c06c1a68d6716c7b9daeac",
   measurementId: "G-F7GQD72CDE",
+  //-----------------------------------------
   // apiKey: "AIzaSyCxp0eHJNEuBYXIzna0heQjBMI8ohrOQM8",
   // authDomain: "zalo-af621.firebaseapp.com",
   // projectId: "zalo-af621",

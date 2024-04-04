@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert } from "react-native"; // Import Text từ react-native
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Login({ navigation }) {
+export default function DangNhap({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
