@@ -6,6 +6,12 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "packagerOpts": {
+      "hostType": "lan",
+      "lanType": "ipv4",
+      "lanIp": "192.168.1.100",
+      "devPort": 8082
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",

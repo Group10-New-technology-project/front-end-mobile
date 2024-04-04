@@ -21,7 +21,7 @@ import NhapSoDienThoai from "../screens/dangky-screens/NhapSoDienThoai";
 import NhapMaXacThuc from "../screens/dangky-screens/NhapMaXacThuc";
 import NhapThongTinCaNhan from "../screens/dangky-screens/NhapThongTinCaNhan";
 import ChatScreen from "../screens/tinnhan-screens/ChatScreen";
-
+import DoiMatKhauScreen from "../screens/khac-screens/DoiMatKhauScreen";
 //Utils
 import Button from "../utils/Button";
 //-------------------------------------
@@ -109,6 +109,14 @@ export function StackNavigator() {
           headerLeft: () => <CustomBackButton routeName="Name" />,
           headerShown: true,
           headerStyle: { backgroundColor: "gray" },
+        }}
+      />
+       <Stack.Screen
+        name="DoiMatKhauScreen"
+        component={DoiMatKhauScreen}
+        options={{
+          headerLeft: () => <CustomBackButton routeName="Đổi mật khẩu" />,
+          headerShown: true,
         }}
       />
     </Stack.Navigator>

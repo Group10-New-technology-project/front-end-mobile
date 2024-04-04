@@ -192,10 +192,7 @@ export default function DanhBaScreen() {
         </>
     )}
     keyExtractor={(item, index) => index.toString()}
-/>
-
-   
-           
+/>       
         </View>
     )
 }
