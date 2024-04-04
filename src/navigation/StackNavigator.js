@@ -21,7 +21,8 @@ import NhapSoDienThoai from "../screens/dangky-screens/NhapSoDienThoai";
 import NhapMaXacThuc from "../screens/dangky-screens/NhapMaXacThuc";
 import NhapThongTinCaNhan from "../screens/dangky-screens/NhapThongTinCaNhan";
 import ChatScreen from "../screens/tinnhan-screens/ChatScreen";
-
+import ImagePickerExample from "../screens/dangky-screens/ImagePickerExample";
+import DoiMatKhauScreen from "../screens/khac-screens/DoiMatKhauScreen";
 //Utils
 import Button from "../utils/Button";
 //-------------------------------------
@@ -111,6 +112,15 @@ export function StackNavigator() {
           headerStyle: { backgroundColor: "gray" },
         }}
       />
+      <Stack.Screen
+        name="DoiMatKhauScreen"
+        component={DoiMatKhauScreen}
+        options={{
+          headerLeft: () => <CustomBackButton routeName="Đổi mật khẩu" />,
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen name="ImagePickerExample" component={ImagePickerExample} />
     </Stack.Navigator>
   );
 }

@@ -1,14 +1,38 @@
-import React from "react";
-import { useState } from "react";
-import { View, Text, StyleSheet, Image, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from "react-native";
 import ToggleSwitch from "toggle-switch-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import React, { useState, useEffect } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
-export default function TaiKhoanVaBaoMat() {
+export default function TaiKhoanVaBaoMat({ navigation }) {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
+  const [userData, setUserData] = useState(null);
   const onToggle = () => {
     setIsSwitchOn(!isSwitchOn);
   };
+
+  const handleMatKhau = () => {
+    navigation.navigate("DoiMatKhauScreen");
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const storedUserData = await AsyncStorage.getItem("userData");
+        if (storedUserData) {
+          const user = JSON.parse(storedUserData);
+          console.log("Thông tin người dùng đã đăng nhập:", user);
+          setUserData(user);
+        } else {
+          console.log("Không có thông tin người dùng được lưu");
+        }
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin người dùng:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <ScrollView style={styles.container}>
       <View style={styles.container_taikhoan}>
@@ -23,15 +47,25 @@ export default function TaiKhoanVaBaoMat() {
               paddingVertical: 12,
               marginLeft: 15,
             }}>
-            <Image
-              style={{ width: 50, height: 50, borderRadius: 50 }}
-              source={require("../main-screens/image/Abstract1998.png")}
-            />
+            {userData && userData.avatar ? (
+              <Image
+                style={{ width: 50, height: 50, borderRadius: 50 }}
+                source={{ uri: userData.avatar }}
+              />
+            ) : (
+              <Image
+                style={{ width: 50, height: 50, borderRadius: 50 }}
+                source={require("../main-screens/image/Abstract1998.png")}
+              />
+            )}
+
             <View style={{ flexDirection: "column", paddingLeft: 15 }}>
               <Text style={{ fontSize: 16, fontWeight: "400", color: "#696969" }}>
                 Thông tin cá nhân
               </Text>
-              <Text style={{ fontSize: 17, fontWeight: "500" }}>Name</Text>
+              <Text style={{ fontSize: 17, fontWeight: "500" }}>
+                {userData ? userData.name : "Name"}
+              </Text>
             </View>
             <View style={{ position: "absolute", right: 10 }}>
               <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -46,7 +80,7 @@ export default function TaiKhoanVaBaoMat() {
           <View style={{ flexDirection: "column", paddingLeft: 16 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Số điện thoại</Text>
             <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>
-              (+84) 111 000 000
+              {userData ? userData.username : "Số điện thoại"}
             </Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
@@ -182,16 +216,18 @@ export default function TaiKhoanVaBaoMat() {
         <View style={{ marginTop: 3, alignItems: "flex-end" }}>
           <View style={{ borderWidth: 1, borderColor: "#ECECEC", width: 345 }} />
         </View>
-        <View style={styles.mat_khau}>
-          <Image
-            style={{ width: 24, height: 24 }}
-            source={require("../../../assets/image/unlock-keyhole.png")}
-          />
-          <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Mật khẩu</Text>
-          <View style={{ position: "absolute", right: 10 }}>
-            <Ionicons name="chevron-forward" size={18} color="gray" />
+        <TouchableOpacity onPress={handleMatKhau}>
+          <View style={styles.mat_khau}>
+            <Image
+              style={{ width: 24, height: 24 }}
+              source={require("../../../assets/image/unlock-keyhole.png")}
+            />
+            <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Mật khẩu</Text>
+            <View style={{ position: "absolute", right: 10 }}>
+              <Ionicons name="chevron-forward" size={18} color="gray" />
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={{ height: 7, backgroundColor: "#E6E6E6" }}></View>
 

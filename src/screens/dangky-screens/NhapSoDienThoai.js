@@ -9,16 +9,16 @@ export default function NhapSoDienThoai({ navigation }) {
   const sendVerification = () => {
     let formattedPhoneNumber = "";
     if (SoDienThoai.length === 10) {
-      formattedPhoneNumber = "+84" + (SoDienThoai.startsWith("0") ? SoDienThoai.slice(1) : SoDienThoai);
+      formattedPhoneNumber =
+        "+84" + (SoDienThoai.startsWith("0") ? SoDienThoai.slice(1) : SoDienThoai);
     } else {
       formattedPhoneNumber = "+84" + SoDienThoai;
     }
-    navigation.navigate("NhapMaXacThuc", {
+    navigation.navigate("TaoMatKhau", {
       phone2: formattedPhoneNumber.slice(3),
       SoDienThoai: formattedPhoneNumber,
     });
   };
-  
 
   return (
     <View style={styles.container}>

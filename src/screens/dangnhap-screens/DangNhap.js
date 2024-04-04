@@ -1,10 +1,59 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput } from "react-native"; // Import Text từ react-native
-import { LinearGradient } from "expo-linear-gradient";
+import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert } from "react-native"; // Import Text từ react-native
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Login({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  const handleLogin = async () => {
+    try {
+      // Kiểm tra xem username và password đã được nhập hay chưa
+      if (!username || !password) {
+        Alert.alert("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu");
+        return;
+      }
+
+      // Tạo đối tượng JSON chứa thông tin đăng nhập
+      const userData = {
+        username: username,
+        password: password,
+      };
+
+      // Lưu đối tượng JSON vào AsyncStorage
+      await AsyncStorage.setItem("userData", JSON.stringify(userData));
+      console.log("Đã lưu thông tin đăng nhập vào AsyncStorage");
+      console.log("userdata", userData);
+
+      // Gửi yêu cầu đăng nhập đến máy chủ API
+      const response = await fetch("http://192.168.3.226:3000/api/v1/users/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      // console.log(response);
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      const data = await response.json();
+      console.log("Data", data);
+      if (data.user) {
+        // Đăng nhập thành công, điều hướng tới màn hình Tabs
+        await AsyncStorage.setItem("userData", JSON.stringify(data.user));
+        navigation.navigate("Tabs");
+      } else {
+        // Đăng nhập không thành công, hiển thị thông báo lỗi
+        Alert.alert("Tên đăng nhập hoặc mật khẩu không đúng");
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View>
@@ -31,8 +80,7 @@ export default function Login({ navigation }) {
               borderBottomWidth: 1,
               borderBottomColor: "#F1F3F4",
               color: "black",
-              backgroundColor: "#fff",
-              // outlineColor: 'transparent', // Đặt màu viền trong suốt
+              backgroundColor: "#fff", // outlineColor: 'transparent', // Đặt màu viền trong suốt
               // outlineWidth: 0, // Đặt độ rộng của viền là 0
             }}
             onChangeText={(text) => setUsername(text)}
@@ -68,7 +116,7 @@ export default function Login({ navigation }) {
           <View
             style={{ marginTop: 5, height: 39, justifyContent: "center", alignItems: "center" }}>
             {username.length > 0 && password.length > 0 ? (
-              <TouchableOpacity onPress={() => navigation.navigate("Tabs")}>
+              <TouchableOpacity onPress={handleLogin}>
                 <View
                   style={{
                     height: 37,
