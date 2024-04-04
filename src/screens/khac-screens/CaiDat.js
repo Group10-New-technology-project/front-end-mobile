@@ -12,16 +12,22 @@ export default function CaiDat({ navigation }) {
   const handle_dangxuat = () => {
     navigation.navigate("TrangChu");
   };
+
+  const handle_taikhoanvabaomat = () => {
+    navigation.navigate("TaiKhoanVaBaoMat");
+  };
   return (
     <ScrollView style={styles.container}>
       <View style={styles.menu_1}>
-        <View style={styles.title_1}>
-          <MaterialCommunityIcons name="shield-lock-open-outline" size={24} color="#0091FF" />
-          <Text style={styles.title1}>Tài khoản và bảo mật</Text>
-          <View style={styles.vector_location}>
-            <Ionicons name="chevron-forward" size={18} color="gray" />
+        <TouchableOpacity onPress={handle_taikhoanvabaomat}>
+          <View style={[styles.title_1, {}]}>
+            <MaterialCommunityIcons name="shield-lock-open-outline" size={24} color="#0091FF" />
+            <Text style={styles.title1}>Tài khoản và bảo mật</Text>
+            <View style={styles.vector_location}>
+              <Ionicons name="chevron-forward" size={18} color="gray" />
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
         <View style={styles.location_line}>
           <View style={styles.line}></View>
         </View>

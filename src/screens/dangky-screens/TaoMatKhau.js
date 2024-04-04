@@ -4,7 +4,6 @@ import { AntDesign } from "@expo/vector-icons";
 
 export default function TaoMatKhau({ navigation, route }) {
   const { SoDienThoai } = route.params;
-  console.log(SoDienThoai);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(false); // Trạng thái để kiểm tra xem hai mật khẩu đã nhập có khớp nhau không
@@ -22,8 +21,17 @@ export default function TaoMatKhau({ navigation, route }) {
     // Kiểm tra xem mật khẩu nhập lại có khớp với mật khẩu ban đầu không
     setPasswordsMatch(password === text);
   };
-  const hanlde_chonTen = () => {
-    navigation.navigate("NhapNhapThongTinCaNhan");
+
+  const hanlde_chonTen = async () => {
+    navigation.navigate("NhapThongTinCaNhan", {
+      password: password,
+      SoDienThoai: SoDienThoai,
+    });
+  };
+
+  const isPasswordValid = (password) => {
+    // Kiểm tra mật khẩu có đủ 8 kí tự trở lên, có ít nhất 1 chữ cái và 1 chữ số
+    return /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(password);
   };
 
   return (
@@ -68,12 +76,13 @@ export default function TaoMatKhau({ navigation, route }) {
         )}
       </View>
       <View style={styles.title_password}>
-        <Text style={styles.text_3}>•Mật khẩu của bạn phải chứa ít nhất 8 ký tự</Text>
-        <Text style={styles.text_3}>•Mật khẩu của bạn phải chứa ít nhất 1 chữ cái và 1 số</Text>
-        <Text style={styles.text_3}>•Mật khẩu của bạn không được chứa khoảng trắng</Text>
+        <Text style={styles.text_3}>
+          • Mật khẩu của bạn phải chứa ít nhất 8 ký tự, bao gồm ít nhất 1 chữ cái và 1 số.
+        </Text>
+        <Text style={styles.text_3}>• Mật khẩu của bạn không được chứa khoảng trắng.</Text>
       </View>
       <TouchableOpacity
-        style={[styles.btn_next, passwordsMatch && styles.btnSuccess]}
+        style={[styles.btn_next, isPasswordValid(password) && passwordsMatch && styles.btnSuccess]}
         onPress={hanlde_chonTen}>
         <Text style={styles.text_1}>Tiếp tục</Text>
       </TouchableOpacity>

@@ -5,16 +5,29 @@ import {
   Dimensions,
   Image,
   Text,
+  Alert,
   TouchableOpacity,
   TextInput,
 } from "react-native"; // Import Text từ react-native
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
-export default function NhapTenNguoiDung({ navigation }) {
+export default function NhapTenNguoiDung({ navigation, route }) {
+  const { password, SoDienThoai, birthday, Gender } = route.params;
   const [name, setName] = useState("");
   const handle_chonAnh = () => {
-    navigation.navigate("ChonAnhDaiDien");
+    if (name.length < 2 || name.length > 40) {
+      // Show an alert if name length is not within the required range
+      Alert.alert("Tên Zalo phải từ 2-40 ký tự");
+    } else {
+      navigation.navigate("ChonAnhDaiDien", {
+        birthday: birthday,
+        Gender: Gender,
+        password: password,
+        SoDienThoai: SoDienThoai,
+        name: name,
+      });
+    }
   };
   return (
     <View style={styles.container}>

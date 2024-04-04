@@ -4,6 +4,7 @@
     "slug": "Zalo",
     "version": "1.0.0",
     "orientation": "portrait",
+    "plugins": ["expo-image-picker"],
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "packagerOpts": {

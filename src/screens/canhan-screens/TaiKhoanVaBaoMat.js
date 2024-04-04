@@ -1,11 +1,10 @@
-// 
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from "react-native";
 import ToggleSwitch from "toggle-switch-react-native";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect } from "react";
 
 import { Ionicons } from "@expo/vector-icons";
-export default function TaiKhoanVaBaoMat( {navigation} ) {
+export default function TaiKhoanVaBaoMat({ navigation }) {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [userData, setUserData] = useState(null);
   const onToggle = () => {
@@ -19,19 +18,19 @@ export default function TaiKhoanVaBaoMat( {navigation} ) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const storedUserData = await AsyncStorage.getItem('userData');
+        const storedUserData = await AsyncStorage.getItem("userData");
         if (storedUserData) {
           const user = JSON.parse(storedUserData);
-          console.log('Thông tin người dùng đã đăng nhập:', user);
+          console.log("Thông tin người dùng đã đăng nhập:", user);
           setUserData(user);
         } else {
-          console.log('Không có thông tin người dùng được lưu');
+          console.log("Không có thông tin người dùng được lưu");
         }
       } catch (error) {
-        console.error('Lỗi khi lấy thông tin người dùng:', error);
+        console.error("Lỗi khi lấy thông tin người dùng:", error);
       }
     };
-  
+
     fetchData();
   }, []);
   return (
@@ -48,23 +47,25 @@ export default function TaiKhoanVaBaoMat( {navigation} ) {
               paddingVertical: 12,
               marginLeft: 15,
             }}>
-               {userData && userData.avatar ? (
-            <Image
-              style={{ width: 50, height: 50, borderRadius: 50 }}
-              source={{ uri: userData.avatar }}
-            />
-          ) : (
-            <Image
-              style={{ width: 50, height: 50, borderRadius: 50 }}
-              source={require("../main-screens/image/Abstract1998.png")}
-            />
-          )}
-            
+            {userData && userData.avatar ? (
+              <Image
+                style={{ width: 50, height: 50, borderRadius: 50 }}
+                source={{ uri: userData.avatar }}
+              />
+            ) : (
+              <Image
+                style={{ width: 50, height: 50, borderRadius: 50 }}
+                source={require("../main-screens/image/Abstract1998.png")}
+              />
+            )}
+
             <View style={{ flexDirection: "column", paddingLeft: 15 }}>
               <Text style={{ fontSize: 16, fontWeight: "400", color: "#696969" }}>
                 Thông tin cá nhân
               </Text>
-              <Text style={{ fontSize: 17, fontWeight: "500" }}>{userData ? userData.name : "Name"}</Text>
+              <Text style={{ fontSize: 17, fontWeight: "500" }}>
+                {userData ? userData.name : "Name"}
+              </Text>
             </View>
             <View style={{ position: "absolute", right: 10 }}>
               <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -79,7 +80,7 @@ export default function TaiKhoanVaBaoMat( {navigation} ) {
           <View style={{ flexDirection: "column", paddingLeft: 16 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Số điện thoại</Text>
             <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>
-            {userData ? userData.username : "Số điện thoại"}
+              {userData ? userData.username : "Số điện thoại"}
             </Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>

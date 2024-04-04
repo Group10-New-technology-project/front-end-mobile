@@ -1,26 +1,98 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-// const navigation = useNavigation();
-export default function ChonAnhDaiDien({ navigation }) {
-  const [imageUri, setImageUri] = useState(
-    "https://image.lexica.art/full_webp/7e2d7ae0-c3ae-49fd-9dec-ce2663635054"
+import { S3 } from "aws-sdk";
+import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME } from "@env";
+import mime from "mime";
+const s3 = new S3({
+  accessKeyId: ACCESS_KEY_ID,
+  secretAccessKey: SECRET_ACCESS_KEY,
+  region: REGION,
+});
+
+export default function ChonAnhDaiDien({ navigation, route }) {
+  const { password, SoDienThoai, name, birthday, Gender } = route.params;
+  console.log("Chon Anh Dai Dien", password, SoDienThoai, name, birthday, Gender);
+
+  const [image, setImage] = useState(
+    "https://media-cdn-v2.laodong.vn/storage/newsportal/2023/8/26/1233821/Giai-Nhat--Dem-Sai-G.jpg"
   );
+
+  const [imimageUrl, setimageAvatar] = useState("");
+
+  const handle_signup = async () => {
+    console.log("Fest", password, SoDienThoai, name, birthday, Gender, imimageUrl);
+    try {
+      const response = await fetch("http://192.168.3.226:3000/api/v1/users/sinup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: SoDienThoai,
+          password: password,
+          name: name,
+          birthday: birthday,
+          gender: Gender,
+          imageAvatar: imimageUrl,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to sign up");
+      }
+      // Nếu tạo người dùng thành công, chuyển hướng tới màn hình nhập thông tin cá nhân
+      navigation.navigate("Tabs");
+    } catch (error) {
+      console.error("Error signing up:", error);
+      // Xử lý lỗi (ví dụ: hiển thị thông báo lỗi)
+    }
+  };
+
+  const uploadImageToS3 = async (imageUri) => {
+    try {
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      const originalFileName = imageUri.split("/").pop(); // Lấy tên file từ đường dẫn
+      const timestamp = Date.now(); // Lấy timestamp hiện tại
+      const fileName = `image_${timestamp}_${originalFileName}`; // Thêm timestamp vào tên tệp gốc
+
+      const params = {
+        Bucket: S3_BUCKET_NAME,
+        Key: fileName,
+        Body: blob,
+        ACL: "public-read", // Đảm bảo ảnh được tải lên có thể được truy cập công khai
+      };
+
+      const uploadResponse = await s3.upload(params).promise();
+      console.log("Tải lên thành công", uploadResponse.Location);
+
+      // Gán giá trị mới cho imageAvatar và thực hiện công việc cần thiết
+      const imageUrl = uploadResponse.Location.toString();
+      setimageAvatar(imageUrl);
+      console.log("URL Ảnh của bạn là:", imageUrl);
+      return imageUrl;
+    } catch (error) {
+      console.error("Error uploading image", error);
+      throw error;
+    }
+  };
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [1, 1],
+      aspect: [4, 3],
       quality: 1,
     });
-
-    if (!result.cancelled) {
-      setImageUri(result.uri);
+    console.log(result);
+    Alert.alert("Chọn ảnh thành công");
+    //Đẩy lên S3
+    uploadImageToS3(result.assets[0].uri);
+    if (!result.canceled) {
+      setImage(result.assets[0].uri);
     }
-  };
-  const handle_tinNhan = () => {
-    navigation.navigate("Tabs");
+    // console.log(result);
   };
 
   return (
@@ -30,14 +102,16 @@ export default function ChonAnhDaiDien({ navigation }) {
         <Text style={styles.text_3}>Đặt ảnh đại diện để mọi người nhận ra bạn</Text>
       </View>
       <View style={styles.container_image}>
-        <Image source={{ uri: imageUri }} style={styles.image} />
+        {image && <Image source={{ uri: image }} style={styles.image} />}
       </View>
       <View style={styles.container_button}>
         <TouchableOpacity style={styles.btn_chonanh} onPress={pickImage}>
           <Text style={styles.text_4}>Chọn ảnh</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.btn_chonanh} onPress={handle_tinNhan}>
-          <Text style={styles.text_4}>Bỏ qua</Text>
+        <TouchableOpacity
+          style={[styles.btn_chonanh, { backgroundColor: "gray" }]}
+          onPress={handle_signup}>
+          <Text style={styles.text_4}>Tiếp tục</Text>
         </TouchableOpacity>
       </View>
     </View>

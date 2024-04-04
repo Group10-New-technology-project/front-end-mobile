@@ -111,7 +111,7 @@ export function StackNavigator() {
           headerStyle: { backgroundColor: "gray" },
         }}
       />
-       <Stack.Screen
+      <Stack.Screen
         name="DoiMatKhauScreen"
         component={DoiMatKhauScreen}
         options={{
