@@ -13,15 +13,14 @@ import CaiDat from "../screens/khac-screens/CaiDat";
 import QRCodeScreen from "../screens/khac-screens/QRCodeScreen";
 import TaoMatKhau from "../screens/dangky-screens/TaoMatKhau";
 import ChonAnhDaiDien from "../screens/dangky-screens/ChonAnhDaiDien";
-import ChonTen from "../screens/dangky-screens/ChonTen";
+import NhapTenNguoiDung from "../screens/dangky-screens/NhapTenNguoiDung";
 import TrangChu from "../screens/trangchu-screens/TrangChu";
 import DangNhap from "../screens/dangnhap-screens/DangNhap";
 import See from "../screens/nhatky-screens/See";
 import NhapSoDienThoai from "../screens/dangky-screens/NhapSoDienThoai";
-import MaXacThuc from "../screens/dangky-screens/MaXacThuc";
-import ThongTinCaNhan from "../screens/dangky-screens/ThongTinCaNhan";
+import NhapMaXacThuc from "../screens/dangky-screens/NhapMaXacThuc";
+import NhapThongTinCaNhan from "../screens/dangky-screens/NhapThongTinCaNhan";
 import ChatScreen from "../screens/tinnhan-screens/ChatScreen";
-import CodeXacThuc from "../screens/dangky-screens/CodeXacThuc";
 
 //Utils
 import Button from "../utils/Button";
@@ -81,7 +80,7 @@ export function StackNavigator() {
       <Stack.Screen name="DemoScreen" component={DemoScreen} />
       <Stack.Screen name="Button" component={Button} />
       <Stack.Screen name="TaoMatKhau" component={TaoMatKhau} />
-      <Stack.Screen name="ChonTen" component={ChonTen} />
+      <Stack.Screen name="NhapTenNguoiDung" component={NhapTenNguoiDung} />
       <Stack.Screen name="ChonAnhDaiDien" component={ChonAnhDaiDien} />
       <Stack.Screen name="TrangChu" component={TrangChu} />
       <Stack.Screen
@@ -99,11 +98,10 @@ export function StackNavigator() {
         options={{
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="" />,
-          // headerStyle: { backgroundColor: "gray" },
         }}
       />
-      <Stack.Screen name="MaXacThuc" component={MaXacThuc} />
-      <Stack.Screen name="ThongTinCaNhan" component={ThongTinCaNhan} />
+      <Stack.Screen name="NhapMaXacThuc" component={NhapMaXacThuc} />
+      <Stack.Screen name="NhapThongTinCaNhan" component={NhapThongTinCaNhan} />
       <Stack.Screen
         name="ChatScreen"
         component={ChatScreen}
@@ -113,7 +111,6 @@ export function StackNavigator() {
           headerStyle: { backgroundColor: "gray" },
         }}
       />
-      <Stack.Screen name="CodeXacThuc" component={CodeXacThuc} />
     </Stack.Navigator>
   );
 }

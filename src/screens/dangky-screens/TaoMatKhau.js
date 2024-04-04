@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, Dimensions, TouchableOpacity } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-export default function TaoMatKhauScreen({ navigation }) {
+export default function TaoMatKhau({ navigation, route }) {
+  const { SoDienThoai } = route.params;
+  console.log(SoDienThoai);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordsMatch, setPasswordsMatch] = useState(false); // Trạng thái để kiểm tra xem hai mật khẩu đã nhập có khớp nhau không
@@ -21,7 +23,7 @@ export default function TaoMatKhauScreen({ navigation }) {
     setPasswordsMatch(password === text);
   };
   const hanlde_chonTen = () => {
-    navigation.navigate("ThongTinCaNhan");
+    navigation.navigate("NhapNhapThongTinCaNhan");
   };
 
   return (

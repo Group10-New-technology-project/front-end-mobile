@@ -1,31 +1,24 @@
-import React, { useState, useRef } from "react";
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Image,
-  Text,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import firebase from "firebase/compat/app";
-import "firebase/compat/auth";
-import { firebaseConfig } from "./config";
-const { width } = Dimensions.get("window");
+import React, { useState } from "react";
+import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from "react-native";
 
 export default function NhapSoDienThoai({ navigation }) {
   const [SoDienThoai, setSoDienThoai] = useState("");
   const [DieuKhoan, setDieuKhoan] = useState(false);
   const [DieuKhoanMang, setDieuKhoanMang] = useState(false);
-  
 
   const sendVerification = () => {
-    const formattedPhoneNumber = "+84" + SoDienThoai;
-    navigation.navigate("CodeXacThuc", {
+    let formattedPhoneNumber = "";
+    if (SoDienThoai.length === 10) {
+      formattedPhoneNumber = "+84" + (SoDienThoai.startsWith("0") ? SoDienThoai.slice(1) : SoDienThoai);
+    } else {
+      formattedPhoneNumber = "+84" + SoDienThoai;
+    }
+    navigation.navigate("NhapMaXacThuc", {
+      phone2: formattedPhoneNumber.slice(3),
       SoDienThoai: formattedPhoneNumber,
     });
   };
+  
 
   return (
     <View style={styles.container}>
@@ -147,7 +140,9 @@ export default function NhapSoDienThoai({ navigation }) {
           </View>
           <View
             style={{ marginTop: 30, height: 39, justifyContent: "center", alignItems: "center" }}>
-            {SoDienThoai.length === 9 && DieuKhoan && DieuKhoanMang ? (
+            {(SoDienThoai.length === 9 || SoDienThoai.length === 10) &&
+            DieuKhoan &&
+            DieuKhoanMang ? (
               <TouchableOpacity onPress={sendVerification}>
                 <View
                   style={{

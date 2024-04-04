@@ -11,7 +11,7 @@ import {
 import { LinearGradient } from "expo-linear-gradient";
 import { AntDesign } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
-export default function ChonTen({ navigation }) {
+export default function NhapTenNguoiDung({ navigation }) {
   const [name, setName] = useState("");
   const handle_chonAnh = () => {
     navigation.navigate("ChonAnhDaiDien");
