@@ -3,7 +3,7 @@ import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert } fro
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
-import { firebaseConfig } from "../../config/config";
+import { firebaseConfig } from "../../config/FirebaseConfig";
 
 export default function NhapMaXacThuc({ navigation, route }) {
   const { SoDienThoai, phone2 } = route.params;
