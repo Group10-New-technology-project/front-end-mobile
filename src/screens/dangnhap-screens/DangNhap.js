@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert } from "react-native"; // Import Text từ react-native
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "@env";
 
 export default function DangNhap({ navigation }) {
   const [username, setUsername] = useState("");
@@ -26,7 +27,7 @@ export default function DangNhap({ navigation }) {
       console.log("userdata", userData);
 
       // Gửi yêu cầu đăng nhập đến máy chủ API
-      const response = await fetch("http://172.20.10.2:3000/api/v1/users/login", {
+      const response = await fetch(`${API_URL}/api/v1/users/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,8 +38,8 @@ export default function DangNhap({ navigation }) {
       // console.log(response);
 
       if (!response.ok) {
-        Alert.alert("Sai mật khẩu");
-        throw new Error("Network response was not ok");
+        Alert.alert("Sai tên người dùng hoặc mật khẩu");
+        // throw new Error("Network response was not ok");
       }
       const data = await response.json();
       console.log("Data", data);
@@ -48,7 +49,7 @@ export default function DangNhap({ navigation }) {
         navigation.navigate("Tabs");
       } else {
         // Đăng nhập không thành công, hiển thị thông báo lỗi
-        Alert.alert("Sai mật khẩu");
+        console.log("Đăng nhập không thành công");
       }
     } catch (error) {
       console.error("There was an error!", error);

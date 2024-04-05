@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "@env";
+
 export default function DoiMatKhauScreen({ navigation }) {
   const [userData, setUserData] = useState(null);
   const [passwordOld, setPasswordOld] = useState("");
@@ -30,7 +32,7 @@ export default function DoiMatKhauScreen({ navigation }) {
   handleUpdate = async () => {
     try {
       // Gọi API để cập nhật mật khẩu
-      const response = await fetch("http://172.20.10.2:3000/api/v1/users/updateMK", {
+      const response = await fetch(`${API_URL}/api/v1/users/updateMK`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
