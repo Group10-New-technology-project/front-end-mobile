@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Alert } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { S3 } from "aws-sdk";
-import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME } from "@env";
+import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME, API_URL } from "@env";
 
 const s3 = new S3({
   accessKeyId: ACCESS_KEY_ID,
@@ -13,6 +13,8 @@ const s3 = new S3({
 console.log(ACCESS_KEY_ID);
 console.log(SECRET_ACCESS_KEY);
 console.log(REGION);
+console.log(S3_BUCKET_NAME);
+console.log(API_URL);
 
 export default function ChonAnhDaiDien({ navigation, route }) {
   const { password, SoDienThoai, name, birthday, Gender } = route.params;
@@ -25,7 +27,7 @@ export default function ChonAnhDaiDien({ navigation, route }) {
   const handle_signup = async () => {
     console.log("Fest", password, SoDienThoai, name, birthday, Gender, imimageUrl);
     try {
-      const response = await fetch("http://172.20.10.2:3000/api/v1/users/sinup", {
+      const response = await fetch(`${API_URL}/api/v1/users/sinup`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
