@@ -10,7 +10,7 @@ export default function DangNhap({ navigation }) {
     try {
       // Kiểm tra xem username và password đã được nhập hay chưa
       if (!username || !password) {
-        Alert.alert("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu");
+        Alert.alert("Failed");
         return;
       }
 
@@ -26,7 +26,7 @@ export default function DangNhap({ navigation }) {
       console.log("userdata", userData);
 
       // Gửi yêu cầu đăng nhập đến máy chủ API
-      const response = await fetch("http://192.168.3.226:3000/api/v1/users/login", {
+      const response = await fetch("http://172.20.10.2:3000/api/v1/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,6 +37,7 @@ export default function DangNhap({ navigation }) {
       // console.log(response);
 
       if (!response.ok) {
+        Alert.alert("Sai mật khẩu");
         throw new Error("Network response was not ok");
       }
       const data = await response.json();
@@ -47,13 +48,16 @@ export default function DangNhap({ navigation }) {
         navigation.navigate("Tabs");
       } else {
         // Đăng nhập không thành công, hiển thị thông báo lỗi
-        Alert.alert("Tên đăng nhập hoặc mật khẩu không đúng");
+        Alert.alert("Sai mật khẩu");
       }
     } catch (error) {
       console.error("There was an error!", error);
     }
   };
 
+  const hanlde_layMatKhau = () => {
+    navigation.navigate("LayLaiMatKhau");
+  };
   return (
     <View style={styles.container}>
       <View>
@@ -106,7 +110,7 @@ export default function DangNhap({ navigation }) {
           />
         </View>
         <View style={{ height: 50, justifyContent: "center" }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={hanlde_layMatKhau}>
             <Text style={{ marginLeft: 10, color: "#0F8EF9", fontSize: 14, fontWeight: 400 }}>
               Lấy lại mật khẩu
             </Text>

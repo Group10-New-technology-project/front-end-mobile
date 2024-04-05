@@ -3,27 +3,29 @@ import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Alert } fr
 import * as ImagePicker from "expo-image-picker";
 import { S3 } from "aws-sdk";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME } from "@env";
-import mime from "mime";
+
 const s3 = new S3({
   accessKeyId: ACCESS_KEY_ID,
   secretAccessKey: SECRET_ACCESS_KEY,
   region: REGION,
 });
 
+console.log(ACCESS_KEY_ID);
+console.log(SECRET_ACCESS_KEY);
+console.log(REGION);
+
 export default function ChonAnhDaiDien({ navigation, route }) {
   const { password, SoDienThoai, name, birthday, Gender } = route.params;
-  console.log("Chon Anh Dai Dien", password, SoDienThoai, name, birthday, Gender);
+  console.log("Da nhan", password, SoDienThoai, name, birthday, Gender);
 
-  const [image, setImage] = useState(
-    "https://media-cdn-v2.laodong.vn/storage/newsportal/2023/8/26/1233821/Giai-Nhat--Dem-Sai-G.jpg"
-  );
+  const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/demo3.png");
 
   const [imimageUrl, setimageAvatar] = useState("");
 
   const handle_signup = async () => {
     console.log("Fest", password, SoDienThoai, name, birthday, Gender, imimageUrl);
     try {
-      const response = await fetch("http://192.168.3.226:3000/api/v1/users/sinup", {
+      const response = await fetch("http://172.20.10.2:3000/api/v1/users/sinup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -51,11 +53,25 @@ export default function ChonAnhDaiDien({ navigation, route }) {
 
   const uploadImageToS3 = async (imageUri) => {
     try {
+      // const response = await fetch(imageUri);
+      // const blob = await response.blob();
+      // const originalFileName = imageUri.split("/").pop(); // Lấy tên file từ đường dẫn
+      // const timestamp = Date.now(); // Lấy timestamp hiện tại
+      // const fileName = `image_${timestamp}_${originalFileName}`; // Thêm timestamp vào tên tệp gốc
+      // const response = await fetch(imageUri);
+      // const blob = await response.blob();
+      // // Lấy ngày hiện tại và định dạng theo yêu cầu
+      // const currentDate = new Date();
+      // const formattedDate = currentDate.toISOString().slice(0, 10); // Lấy ngày tháng theo định dạng YYYY-MM-DD
+      // // Tạo tên file mới với định dạng 'IMG_Ngày hiện tại'
+      // const fileName = `IMG_${formattedDate}`;
       const response = await fetch(imageUri);
       const blob = await response.blob();
-      const originalFileName = imageUri.split("/").pop(); // Lấy tên file từ đường dẫn
-      const timestamp = Date.now(); // Lấy timestamp hiện tại
-      const fileName = `image_${timestamp}_${originalFileName}`; // Thêm timestamp vào tên tệp gốc
+      // Lấy ngày hiện tại và định dạng theo yêu cầu
+      const currentDate = new Date().toISOString().slice(0, 10); // Lấy ngày tháng theo định dạng YYYY-MM-DD
+      const currentHour = new Date().toISOString().slice(11, 19).replace(/:/g, "-"); // Lấy giờ theo định dạng HH-mm-ss
+      // Tạo tên file mới với định dạng 'IMG_Ngày hiện tại_Giờ'
+      const fileName = `IMG_${currentDate}_${currentHour}`;
 
       const params = {
         Bucket: S3_BUCKET_NAME,
