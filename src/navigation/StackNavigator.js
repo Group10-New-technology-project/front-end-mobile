@@ -22,6 +22,10 @@ import NhapMaXacThuc from "../screens/dangky-screens/NhapMaXacThuc";
 import NhapThongTinCaNhan from "../screens/dangky-screens/NhapThongTinCaNhan";
 import ChatScreen from "../screens/tinnhan-screens/ChatScreen";
 import DoiMatKhauScreen from "../screens/khac-screens/DoiMatKhauScreen";
+import DangNhapThanhCong from "../screens/dangnhap-screens/DangNhapThanhCong";
+import LayLaiMatKhau from "../screens/dangnhap-screens/LayLaiMatKhau";
+import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiMatKhau";
+
 //Utils
 import Button from "../utils/Button";
 //-------------------------------------
@@ -119,6 +123,16 @@ export function StackNavigator() {
           headerShown: true,
         }}
       />
+      <Stack.Screen name="DangNhapThanhCong" component={DangNhapThanhCong} />
+      <Stack.Screen
+        name="LayLaiMatKhau"
+        component={LayLaiMatKhau}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Nhập số điện thoại" />,
+        }}
+      />
+      <Stack.Screen name="MaXacThucLayLaiMatKhau" component={MaXacThucLayLaiMatKhau} />
     </Stack.Navigator>
   );
 }
