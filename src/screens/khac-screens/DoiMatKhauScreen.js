@@ -31,7 +31,7 @@ export default function DoiMatKhauScreen({navigation}) {
         try {
       
           // Gọi API để cập nhật mật khẩu
-          const response = await fetch('http://192.168.3.226:3000/api/v1/users/updateMK', {
+          const response = await fetch('http://192.168.1.9:3000/api/v1/users/updateMK', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',

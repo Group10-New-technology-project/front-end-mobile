@@ -26,7 +26,7 @@ export default function DangNhap({ navigation }) {
       console.log("userdata", userData);
 
       // Gửi yêu cầu đăng nhập đến máy chủ API
-      const response = await fetch("http://192.168.3.226:3000/api/v1/users/login", {
+      const response = await fetch("http://192.168.1.9:3000/api/v1/users/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

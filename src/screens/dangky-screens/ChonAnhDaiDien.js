@@ -3,16 +3,20 @@ import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Alert } fr
 import * as ImagePicker from "expo-image-picker";
 import { S3 } from "aws-sdk";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME } from "@env";
-import mime from "mime";
+
 const s3 = new S3({
   accessKeyId: ACCESS_KEY_ID,
   secretAccessKey: SECRET_ACCESS_KEY,
   region: REGION,
 });
 
+console.log(ACCESS_KEY_ID);
+console.log(SECRET_ACCESS_KEY);
+console.log(REGION);
+
 export default function ChonAnhDaiDien({ navigation, route }) {
   const { password, SoDienThoai, name, birthday, Gender } = route.params;
-  console.log("Chon Anh Dai Dien", password, SoDienThoai, name, birthday, Gender);
+  console.log("Da nhan", password, SoDienThoai, name, birthday, Gender);
 
   const [image, setImage] = useState(
     "https://media-cdn-v2.laodong.vn/storage/newsportal/2023/8/26/1233821/Giai-Nhat--Dem-Sai-G.jpg"
@@ -23,7 +27,7 @@ export default function ChonAnhDaiDien({ navigation, route }) {
   const handle_signup = async () => {
     console.log("Fest", password, SoDienThoai, name, birthday, Gender, imimageUrl);
     try {
-      const response = await fetch("http://192.168.3.226:3000/api/v1/users/sinup", {
+      const response = await fetch("http://192.168.1.9:3000/api/v1/users/sinup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

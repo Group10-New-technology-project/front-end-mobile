@@ -9,7 +9,7 @@ import TaiKhoanVaBaoMat from "../screens/canhan-screens/TaiKhoanVaBaoMat";
 import QuyenRiengTu from "../screens/canhan-screens/QuyenRiengTu";
 import ReelScreen from "../screens/khampha-screens/ReelScreen";
 import DemoScreen from "../screens/khac-screens/DemoScreen";
-import CaiDat from "../screens/khac-screens/CaiDat";
+import CaiDat from "../screens/khac-screens/CaiDatNhanh";
 import QRCodeScreen from "../screens/khac-screens/QRCodeScreen";
 import TaoMatKhau from "../screens/dangky-screens/TaoMatKhau";
 import ChonAnhDaiDien from "../screens/dangky-screens/ChonAnhDaiDien";

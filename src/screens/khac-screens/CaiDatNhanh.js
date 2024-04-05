@@ -8,7 +8,7 @@ import {
   FontAwesome,
 } from "@expo/vector-icons";
 
-export default function CaiDat({ navigation }) {
+export default function CaiDatNhanh({ navigation }) {
   const handle_dangxuat = () => {
     navigation.navigate("TrangChu");
   };
