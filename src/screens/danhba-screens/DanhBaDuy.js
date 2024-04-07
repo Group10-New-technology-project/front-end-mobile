@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from "react
 import React, { useState, useEffect } from "react";
 import { FontAwesome5, FontAwesome6, Feather, AntDesign } from "@expo/vector-icons";
 
-export default function DanhBaScreen() {
+export default function DanhBaDuy() {
   const [data, setData] = React.useState([
     { key: "1", name: "DyyBin", image: require("../../../assets/image/Cristiano.jpg") },
     { key: "2", name: "Anh 7", image: require("../../../assets/image/Cristiano.jpg") },

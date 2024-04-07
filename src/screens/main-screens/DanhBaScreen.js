@@ -123,7 +123,7 @@ export default function DanhBaScreen({ navigation }) {
                 </View>
               </View>
             </View>
-            <SafeAreaView style={{ height: 8, backgroundColor: "#DBDBDB" }} />
+            <SafeAreaView style={styles.line} />
             <View style={styles.header_contacts}>
               <Text style={styles.content_totalUsers}>Tất cả {totalUsers}</Text>
               <Text style={styles.content_totalUsers}>Bạn mới 1</Text>
@@ -135,11 +135,11 @@ export default function DanhBaScreen({ navigation }) {
           {isFirstInGroup && <Text style={styles.text_group_header}>{item.name[0]}</Text>}
           <View style={styles.one_contact}>
             <View style={styles.user_contacts}>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={styles.container_user}>
                 <Image source={{ uri: item.imageAvatar }} style={styles.avatar_user} />
-                <Text style={{ fontSize: 17, fontWeight: "400", marginLeft: 12 }}>{item.name}</Text>
+                <Text style={styles.content_3}>{item.name}</Text>
               </View>
-              <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <View style={styles.container_user}>
                 <Feather style={{ marginHorizontal: 15 }} name="phone" size={20} color="gray" />
                 <AntDesign name="videocamera" size={20} color="gray" />
               </View>
@@ -203,6 +203,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontWeight: "500",
     margin: 10,
+  },
+  content_3: {
+    fontSize: 17,
+    fontWeight: "400",
+    marginLeft: 12,
+  },
+  container_user: {
+    flexDirection: "row",
+    alignItems: "center",
   },
   text_group_header: {
     fontSize: 18,
@@ -275,5 +284,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  loimoiketban: { flexDirection: "row", alignItems: "center", paddingVertical: 14 },
+  loimoiketban: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 14,
+  },
+  line: {
+    height: 8,
+    backgroundColor: "#DBDBDB",
+  },
 });
