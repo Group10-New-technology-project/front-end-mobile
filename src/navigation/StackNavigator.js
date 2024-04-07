@@ -1,12 +1,25 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-//Components
+//COMPONENTS
 import { TabsComponent } from "../components/BottomTabs";
 import SearchBar from "../components/SearchBar";
 import CustomBackButton from "../components/CustomBackButton";
-//Screens
+//UTILS
+import Button from "../utils/Button";
+//SCREENS
+//CA NHAN
 import TaiKhoanVaBaoMat from "../screens/canhan-screens/TaiKhoanVaBaoMat";
 import QuyenRiengTu from "../screens/canhan-screens/QuyenRiengTu";
+//DANG KY
+//DANG NHAP
+//DANH BA
+//KHAC
+//KHAM PHA
+//KHAM PHA
+//MAIN
+//NHAT KY
+//TIN NHAN
+//TRANG CHU
 import ReelScreen from "../screens/khampha-screens/ReelScreen";
 import DemoScreen from "../screens/khac-screens/DemoScreen";
 import CaiDat from "../screens/khac-screens/CaiDatNhanh";
@@ -28,15 +41,13 @@ import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiM
 import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
 import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
 
-//Utils
-import Button from "../utils/Button";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 
 export function StackNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="Tabs"
+      initialRouteName="TrangChu"
       screenOptions={{
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
@@ -88,7 +99,14 @@ export function StackNavigator() {
       <Stack.Screen name="TaoMatKhau" component={TaoMatKhau} />
       <Stack.Screen name="NhapTenNguoiDung" component={NhapTenNguoiDung} />
       <Stack.Screen name="ChonAnhDaiDien" component={ChonAnhDaiDien} />
-      <Stack.Screen name="TrangChu" component={TrangChu} />
+      <Stack.Screen
+        name="TrangChu"
+        component={TrangChu}
+        options={{
+          headerShown: false,
+          headerStyle: { backgroundColor: "white" },
+        }}
+      />
       <Stack.Screen
         name="DangNhap"
         component={DangNhap}
@@ -103,7 +121,7 @@ export function StackNavigator() {
         component={NhapSoDienThoai}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomBackButton routeName="" />,
+          headerLeft: () => <CustomBackButton routeName="Đăng ký tài khoản mới" />,
         }}
       />
       <Stack.Screen name="NhapMaXacThuc" component={NhapMaXacThuc} />

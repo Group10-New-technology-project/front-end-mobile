@@ -9,8 +9,7 @@ export default function NhapSoDienThoai({ navigation }) {
   const sendVerification = () => {
     let formattedPhoneNumber = "";
     if (SoDienThoai.length === 10) {
-      formattedPhoneNumber =
-        "+84" + (SoDienThoai.startsWith("0") ? SoDienThoai.slice(1) : SoDienThoai);
+      formattedPhoneNumber = "+84" + (SoDienThoai.startsWith("0") ? SoDienThoai.slice(1) : SoDienThoai);
     } else {
       formattedPhoneNumber = "+84" + SoDienThoai;
     }
@@ -32,9 +31,7 @@ export default function NhapSoDienThoai({ navigation }) {
               alignItems: "center",
               marginTop: 20,
             }}>
-            <Text style={{ fontSize: 28, fontWeight: "700", textAlign: "center" }}>
-              Nhập số điện thoại
-            </Text>
+            <Text style={{ fontSize: 28, fontWeight: "700", textAlign: "center" }}>Nhập số điện thoại</Text>
           </View>
           <View style={{ width: "100%", alignItems: "center" }}>
             <View
@@ -72,8 +69,7 @@ export default function NhapSoDienThoai({ navigation }) {
 
           <View style={{ height: 60, marginTop: 5, marginLeft: 5 }}>
             <View style={{ flexDirection: "row", height: 30, alignItems: "center" }}>
-              <View
-                style={{ marginLeft: 20, flexDirection: "row", height: 30, alignItems: "center" }}>
+              <View style={{ marginLeft: 20, flexDirection: "row", height: 30, alignItems: "center" }}>
                 <TouchableOpacity onPress={() => setDieuKhoan(!DieuKhoan)}>
                   {DieuKhoan ? (
                     <View>
@@ -98,16 +94,13 @@ export default function NhapSoDienThoai({ navigation }) {
                       }}></View>
                   )}
                 </TouchableOpacity>
-                <Text style={{ fontWeight: 500, fontSize: 14, marginLeft: 4 }}>
-                  Tôi đồng ý với{" "}
-                </Text>
+                <Text style={{ fontWeight: 500, fontSize: 14, marginLeft: 4 }}>Tôi đồng ý với </Text>
                 <Text style={{ fontWeight: 700, fontSize: 14, marginLeft: 3, color: "#0187F9" }}>
-                  điều khoản Mạng xã hội Zalo
+                  điều khoản Mạng xã hội Zelo
                 </Text>
               </View>
             </View>
-            <View
-              style={{ marginLeft: 20, flexDirection: "row", height: 30, alignItems: "center" }}>
+            <View style={{ marginLeft: 20, flexDirection: "row", height: 30, alignItems: "center" }}>
               <TouchableOpacity onPress={() => setDieuKhoanMang(!DieuKhoanMang)}>
                 {DieuKhoanMang ? (
                   <View>
@@ -134,15 +127,12 @@ export default function NhapSoDienThoai({ navigation }) {
               </TouchableOpacity>
               <Text style={{ fontWeight: 500, fontSize: 14, marginLeft: 4 }}>Tôi đồng ý với </Text>
               <Text style={{ fontWeight: 700, fontSize: 14, marginLeft: 3, color: "#0187F9" }}>
-                điều khoản Mạng xã hội Zalo
+                chính sách bảo mật Zelo
               </Text>
             </View>
           </View>
-          <View
-            style={{ marginTop: 30, height: 39, justifyContent: "center", alignItems: "center" }}>
-            {(SoDienThoai.length === 9 || SoDienThoai.length === 10) &&
-            DieuKhoan &&
-            DieuKhoanMang ? (
+          <View style={{ marginTop: 30, height: 39, justifyContent: "center", alignItems: "center" }}>
+            {(SoDienThoai.length === 9 || SoDienThoai.length === 10) && DieuKhoan && DieuKhoanMang ? (
               <TouchableOpacity onPress={sendVerification}>
                 <View
                   style={{
@@ -153,10 +143,7 @@ export default function NhapSoDienThoai({ navigation }) {
                     alignItems: "center",
                     justifyContent: "center",
                   }}>
-                  <Text
-                    style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>
-                    Tiếp tục
-                  </Text>
+                  <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>Tiếp tục</Text>
                 </View>
               </TouchableOpacity>
             ) : (
@@ -169,10 +156,7 @@ export default function NhapSoDienThoai({ navigation }) {
                   alignItems: "center",
                   justifyContent: "center",
                 }}>
-                <Text
-                  style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>
-                  Tiếp tục
-                </Text>
+                <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>Tiếp tục</Text>
               </View>
             )}
           </View>
@@ -187,9 +171,7 @@ export default function NhapSoDienThoai({ navigation }) {
         }}>
         <Text style={{ fontWeight: 500, fontSize: 15 }}>Bạn đã có tài khoản?</Text>
         <TouchableOpacity onPress={() => navigation.navigate("DangNhap")}>
-          <Text style={{ fontWeight: 500, fontSize: 15, color: "#0187F9", marginLeft: 4 }}>
-            Đăng nhập ngay
-          </Text>
+          <Text style={{ fontWeight: 500, fontSize: 15, color: "#0187F9", marginLeft: 4 }}>Đăng nhập ngay</Text>
         </TouchableOpacity>
       </View>
     </View>
