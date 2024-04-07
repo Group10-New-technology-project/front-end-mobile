@@ -1,18 +1,6 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Image,
-  Text,
-  Button,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
-import { LinearGradient } from "expo-linear-gradient";
-
+import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-const { width } = Dimensions.get("window");
 
 // Component Dropdown
 const Dropdown = ({ onSelect }) => {
@@ -41,7 +29,7 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
     console.log(selectedDate);
     console.log(selectedGender);
     navigation.navigate("NhapTenNguoiDung", {
-      birthday: selectedDate ? selectedDate.toISOString() : null, 
+      birthday: selectedDate ? selectedDate.toISOString() : null,
       Gender: selectedGender,
       password: password,
       SoDienThoai: SoDienThoai,
@@ -83,8 +71,7 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
               alignItems: "center",
               marginTop: 10,
             }}>
-            <Text
-              style={{ fontSize: 24, fontWeight: "700", textAlign: "center", color: "#3D3D3D" }}>
+            <Text style={{ fontSize: 24, fontWeight: "700", textAlign: "center", color: "#3D3D3D" }}>
               Thêm thông tin cá nhân
             </Text>
           </View>
@@ -104,9 +91,7 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
                 borderRadius: 8,
               }}>
               {!selectedDate && (
-                <Text style={{ fontSize: 20, fontWeight: 500, color: "#343434", marginLeft: 20 }}>
-                  Sinh Nhật
-                </Text>
+                <Text style={{ fontSize: 20, fontWeight: 500, color: "#343434", marginLeft: 20 }}>Sinh Nhật</Text>
               )}
               <View>
                 <DateTimePickerModal
@@ -153,9 +138,7 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
                   {selectedGender}
                 </Text>
               ) : (
-                <Text style={{ fontSize: 20, fontWeight: 500, color: "#343434", marginLeft: 20 }}>
-                  Giới tính
-                </Text>
+                <Text style={{ fontSize: 20, fontWeight: 500, color: "#343434", marginLeft: 20 }}>Giới tính</Text>
               )}
               <TouchableOpacity onPress={toggleDropdown}>
                 <Image
@@ -168,8 +151,7 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
           </View>
         </View>
       </View>
-      <View
-        style={{ marginBottom: 40, height: 39, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ marginBottom: 40, height: 39, justifyContent: "center", alignItems: "center" }}>
         {selectedDate && selectedGender ? (
           <TouchableOpacity onPress={handle_NhapTen}>
             <View
@@ -181,9 +163,7 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
                 alignItems: "center",
                 justifyContent: "center",
               }}>
-              <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>
-                Tiếp tục
-              </Text>
+              <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>Tiếp tục</Text>
             </View>
           </TouchableOpacity>
         ) : (
@@ -196,9 +176,7 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
               alignItems: "center",
               justifyContent: "center",
             }}>
-            <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>
-              Tiếp tục
-            </Text>
+            <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>Tiếp tục</Text>
           </View>
         )}
       </View>

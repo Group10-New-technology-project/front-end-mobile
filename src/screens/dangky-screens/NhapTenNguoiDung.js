@@ -1,17 +1,8 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Image,
-  Text,
-  Alert,
-  TouchableOpacity,
-  TextInput,
-} from "react-native"; // Import Text từ react-native
+import { View, StyleSheet, Dimensions, Text, Alert, TouchableOpacity, TextInput } from "react-native"; // Import Text từ react-native
 import { LinearGradient } from "expo-linear-gradient";
-import { AntDesign } from "@expo/vector-icons";
 const { width } = Dimensions.get("window");
+
 export default function NhapTenNguoiDung({ navigation, route }) {
   const { password, SoDienThoai, birthday, Gender } = route.params;
   const [name, setName] = useState("");
@@ -45,9 +36,7 @@ export default function NhapTenNguoiDung({ navigation, route }) {
       />
       <View style={{ paddingTop: 50 }}>
         <View style={{ height: 45, justifyContent: "center" }}>
-          <Text style={{ fontSize: 18, fontWeight: 700, marginLeft: 12, marginTop: 20 }}>
-            Tên Zalo
-          </Text>
+          <Text style={{ fontSize: 18, fontWeight: 700, marginLeft: 12, marginTop: 20 }}>Tên Zalo</Text>
         </View>
         <View style={{ height: 50, alignItems: "center" }}>
           <TextInput
@@ -69,9 +58,7 @@ export default function NhapTenNguoiDung({ navigation, route }) {
           />
         </View>
         <View style={{ height: 30 }}>
-          <Text style={{ fontSize: 16, marginLeft: 12, marginTop: 10, fontWeight: 500 }}>
-            Lưu ý khi đặt tên:
-          </Text>
+          <Text style={{ fontSize: 16, marginLeft: 12, marginTop: 10, fontWeight: 500 }}>Lưu ý khi đặt tên:</Text>
         </View>
         <View style={{ height: 60, marginTop: 5 }}>
           <View style={{ marginLeft: 20, flexDirection: "row", height: 30, alignItems: "center" }}>
@@ -109,7 +96,7 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     top: 0,
-    height: 45, // Chiều cao của phần header
+    height: 45,
   },
   text_4: {
     fontSize: 16,
@@ -125,7 +112,6 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     marginBottom: 10,
   },
-
   container_button: {
     paddingBottom: 40,
   },

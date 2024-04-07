@@ -22,10 +22,10 @@ export default function ChonAnhDaiDien({ navigation, route }) {
 
   const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/demo3.png");
 
-  const [imimageUrl, setimageAvatar] = useState("");
+  const [imageURL, setimageAvatar] = useState("");
 
   const handle_signup = async () => {
-    console.log("Fest", password, SoDienThoai, name, birthday, Gender, imimageUrl);
+    console.log("Fest", password, SoDienThoai, name, birthday, Gender, imageURL);
     try {
       const response = await fetch(`${API_URL}/api/v1/users/sinup`, {
         method: "POST",
@@ -38,7 +38,7 @@ export default function ChonAnhDaiDien({ navigation, route }) {
           name: name,
           birthday: birthday,
           gender: Gender,
-          imageAvatar: imimageUrl,
+          imageAvatar: imageURL,
         }),
       });
 
@@ -70,10 +70,14 @@ export default function ChonAnhDaiDien({ navigation, route }) {
       const response = await fetch(imageUri);
       const blob = await response.blob();
       // Lấy ngày hiện tại và định dạng theo yêu cầu
+      var now = new Date();
+      // Lấy giờ, phút và giây hiện tại
+      var hours = now.getHours();
+      var minutes = now.getMinutes();
+      var seconds = now.getSeconds();
       const currentDate = new Date().toISOString().slice(0, 10); // Lấy ngày tháng theo định dạng YYYY-MM-DD
-      const currentHour = new Date().toISOString().slice(11, 19).replace(/:/g, "-"); // Lấy giờ theo định dạng HH-mm-ss
       // Tạo tên file mới với định dạng 'IMG_Ngày hiện tại_Giờ'
-      const fileName = `IMG_${currentDate}_${currentHour}`;
+      const fileName = `IMG_${currentDate}_${hours}-${minutes}-${seconds}.png`;
 
       const params = {
         Bucket: S3_BUCKET_NAME,
@@ -119,16 +123,12 @@ export default function ChonAnhDaiDien({ navigation, route }) {
         <Text style={styles.text_2}>Chọn Ảnh Đại Diện</Text>
         <Text style={styles.text_3}>Đặt ảnh đại diện để mọi người nhận ra bạn</Text>
       </View>
-      <View style={styles.container_image}>
-        {image && <Image source={{ uri: image }} style={styles.image} />}
-      </View>
+      <View style={styles.container_image}>{image && <Image source={{ uri: image }} style={styles.image} />}</View>
       <View style={styles.container_button}>
         <TouchableOpacity style={styles.btn_chonanh} onPress={pickImage}>
           <Text style={styles.text_4}>Chọn ảnh</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.btn_chonanh, { backgroundColor: "gray" }]}
-          onPress={handle_signup}>
+        <TouchableOpacity style={[styles.btn_chonanh, { backgroundColor: "gray" }]} onPress={handle_signup}>
           <Text style={styles.text_4}>Tiếp tục</Text>
         </TouchableOpacity>
       </View>

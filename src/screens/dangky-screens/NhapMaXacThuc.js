@@ -17,9 +17,8 @@ export default function NhapMaXacThuc({ navigation, route }) {
     console.log("Đã gửi đến số:", SoDienThoai);
     console.log("sdt", phone2);
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
-    phoneProvider
-      .verifyPhoneNumber(SoDienThoai, recaptchaVerifier.current)
-      .then((id) => setVerificationId(id));
+    phoneProvider.verifyPhoneNumber(SoDienThoai, recaptchaVerifier.current).then((id) => setVerificationId(id));
+    Alert.alert("Mã xác thực đã được gửi đến số điện thoại của bạn");
   };
   useEffect(() => {
     sendVerification();
@@ -93,13 +92,8 @@ export default function NhapMaXacThuc({ navigation, route }) {
               alignItems: "center",
               marginTop: 10,
             }}>
-            <Text style={{ fontSize: 24, fontWeight: "700", textAlign: "center" }}>
-              Nhập mã xác thực
-            </Text>
-            <FirebaseRecaptchaVerifierModal
-              ref={recaptchaVerifier}
-              firebaseConfig={firebaseConfig}
-            />
+            <Text style={{ fontSize: 24, fontWeight: "700", textAlign: "center" }}>Nhập mã xác thực</Text>
+            <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
           </View>
           <View style={{ height: 30, alignItems: "center" }}>
             <Text style={{ fontWeight: 500, fontSize: 14, color: "#444444" }}>
@@ -133,8 +127,7 @@ export default function NhapMaXacThuc({ navigation, route }) {
               ))}
             </View>
           </View>
-          <View
-            style={{ marginTop: 25, height: 39, justifyContent: "center", alignItems: "center" }}>
+          <View style={{ marginTop: 25, height: 39, justifyContent: "center", alignItems: "center" }}>
             {otp.every((val) => val.length === 1) ? (
               <TouchableOpacity onPress={confirmCode}>
                 <View
@@ -146,10 +139,7 @@ export default function NhapMaXacThuc({ navigation, route }) {
                     alignItems: "center",
                     justifyContent: "center",
                   }}>
-                  <Text
-                    style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>
-                    Tiếp tục
-                  </Text>
+                  <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>Tiếp tục</Text>
                 </View>
               </TouchableOpacity>
             ) : (
@@ -162,10 +152,7 @@ export default function NhapMaXacThuc({ navigation, route }) {
                   alignItems: "center",
                   justifyContent: "center",
                 }}>
-                <Text
-                  style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>
-                  Tiếp tục
-                </Text>
+                <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>Tiếp tục</Text>
               </View>
             )}
           </View>

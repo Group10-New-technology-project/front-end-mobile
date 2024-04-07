@@ -6,12 +6,8 @@ export default function Home({ navigation }) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <Image
-          source={require("../../../assets/img/logozalo.png")}
-          resizeMode="contain"
-          style={{ height: 36, width: 97, marginTop: 60 }}
-        />
+      <View style={[styles.header, {}]}>
+        <Text style={{ fontSize: 50, fontWeight: "900", color: "#0091FF" }}>ZELO</Text>
         <Image
           source={require("../../../assets/img/bannerzalo.png")}
           resizeMode="contain"
@@ -94,6 +90,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header: {
+    paddingTop: 90,
     alignItems: "center",
     flex: 5.5,
     justifyContent: "space-between",
