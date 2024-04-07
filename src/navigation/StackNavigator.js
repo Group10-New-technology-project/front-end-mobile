@@ -25,6 +25,8 @@ import DoiMatKhauScreen from "../screens/khac-screens/DoiMatKhauScreen";
 import DangNhapThanhCong from "../screens/dangnhap-screens/DangNhapThanhCong";
 import LayLaiMatKhau from "../screens/dangnhap-screens/LayLaiMatKhau";
 import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiMatKhau";
+import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
+import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
 
 //Utils
 import Button from "../utils/Button";
@@ -34,7 +36,7 @@ const Stack = createNativeStackNavigator();
 export function StackNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="TrangChu"
+      initialRouteName="Tabs"
       screenOptions={{
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
@@ -133,6 +135,22 @@ export function StackNavigator() {
         }}
       />
       <Stack.Screen name="MaXacThucLayLaiMatKhau" component={MaXacThucLayLaiMatKhau} />
+      <Stack.Screen
+        name="DanhBaMay"
+        component={DanhBaMay}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Danh bạ máy" />,
+        }}
+      />
+      <Stack.Screen
+        name="LoiMoiKetBan"
+        component={LoiMoiKetBan}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Lời mời kết bạn" />,
+        }}
+      />
     </Stack.Navigator>
   );
 }

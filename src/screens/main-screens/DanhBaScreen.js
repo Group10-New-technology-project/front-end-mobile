@@ -1,348 +1,279 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  FlatList,
-} from "react-native";
-import React, { useState, useEffect } from "react";
-import { Feather } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { FontAwesome6 } from "@expo/vector-icons";
+import SegmentedControl from "@react-native-segmented-control/segmented-control";
+import React, { useEffect, useState } from "react";
+import { Dimensions, StyleSheet, Text, View, FlatList, Image, SafeAreaView, TouchableOpacity } from "react-native";
+import { FontAwesome5, FontAwesome, Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 
-export default function DanhBaScreen() {
-  const [data, setData] = React.useState([
-    { key: "1", name: "DyyBin", image: require("../main-screens/image/Abstract1998.png") },
-    { key: "2", name: "Anh 7", image: require("../main-screens/image/Abstract1998.png") },
-    { key: "3", name: "Chú Tư", image: require("../main-screens/image/Abstract1998.png") },
-    { key: "4", name: "Cậu 5", image: require("../main-screens/image/Abstract1998.png") },
+export default function DanhBaScreen({ navigation }) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const goDanhBaMay = () => {
+    navigation.navigate("DanhBaMay");
+    console.log("Danh bạ máy");
+  };
+  const goLoiMoiKetBan = () => {
+    navigation.navigate("LoiMoiKetBan");
+    console.log("Lời mời kết bạn");
+  };
+  const phoneBook = [
     {
-      key: "5",
-      name: "Cristiano Bình Dương",
-      image: require("../main-screens/image/Abstract1998.png"),
+      id: 1,
+      name: "A Name 1",
+      imageAvatar: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/2017_12_01_09_08_IMG_2742.JPG",
     },
-    { key: "6", name: "Fan M.U", image: require("../main-screens/image/Abstract1998.png") },
     {
-      key: "7",
-      name: "Cục Dàng Trôi Sông",
-      image: require("../main-screens/image/Abstract1998.png"),
+      id: 2,
+      name: "A Name 2",
+      imageAvatar: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/2017_12_01_09_08_IMG_2742.JPG",
     },
-    { key: "8", name: "Vợ", image: require("../main-screens/image/Abstract1998.png") },
-    { key: "9", name: "Em Yêu ", image: require("../main-screens/image/Abstract1998.png") },
-  ]);
-  const [sumUser, setSumUser] = useState(0);
-  useEffect(() => {
-    setSumUser(data.length);
-  }, [data]);
+    {
+      id: 3,
+      name: "D Name 3",
+      imageAvatar: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/2017_12_01_09_08_IMG_2742.JPG",
+    },
+    {
+      id: 4,
+      name: "C Name 4",
+      imageAvatar: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/2017_12_01_09_08_IMG_2742.JPG",
+    },
+    {
+      id: 5,
+      name: "M Name 5",
+      imageAvatar: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/2017_12_01_09_08_IMG_2742.JPG",
+    },
+    {
+      id: 6,
+      name: "F Name 6",
+      imageAvatar: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/2017_12_01_09_08_IMG_2742.JPG",
+    },
+    {
+      id: 7,
+      name: "K Name 7",
+      imageAvatar: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/2017_12_01_09_08_IMG_2742.JPG",
+    },
+    {
+      id: 8,
+      name: "L Name 8",
+      imageAvatar: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/2017_12_01_09_08_IMG_2742.JPG",
+    },
+    {
+      id: 9,
+      name: "H Name 9",
+      imageAvatar: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/2017_12_01_09_08_IMG_2742.JPG",
+    },
+    {
+      id: 10,
+      name: "I Name 10",
+      imageAvatar: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/2017_12_01_09_08_IMG_2742.JPG",
+    },
+  ];
 
-  const [colorText1, setColorText1] = useState("#000");
-  const [colorText2, setColorText2] = useState("#645C5C");
-  const [colorText3, setColorText3] = useState("#645C5C");
-
-  const [borderBottom1, setBoderBottom1] = useState("blue");
-  const [borderBottom2, setBoderBottom2] = useState("gray");
-  const [borderBottom3, setBoderBottom3] = useState("gray");
-
-  const [groupedData, setGroupedData] = useState([]);
-
-  const sortAndGroupDataByName = () => {
-    // Sắp xếp dữ liệu theo tên
-    const sortedData = [...data].sort((a, b) => a.name.localeCompare(b.name));
-
-    // Phân loại dữ liệu theo chữ cái
-    const groupedData = [];
-    let currentChar = "";
-    let currentGroup = [];
-    sortedData.forEach((item) => {
-      const firstChar = item.name.charAt(0).toUpperCase();
-      if (firstChar !== currentChar) {
-        if (currentGroup.length > 0) {
-          groupedData.push({ char: currentChar, items: currentGroup });
-        }
-        currentChar = firstChar;
-        currentGroup = [item];
-      } else {
-        currentGroup.push(item);
-      }
-    });
-    // Thêm nhóm cuối cùng vào mảng
-    if (currentGroup.length > 0) {
-      groupedData.push({ char: currentChar, items: currentGroup });
+  const sortedData = phoneBook.sort((a, b) => a.name.localeCompare(b.name));
+  const totalUsers = phoneBook.length;
+  let isAllShown = false; // Biến để kiểm tra xem phần tử "Tất cả" đã được hiển thị hay chưa
+  const renderItem = ({ item, index }) => {
+    // Kiểm tra nếu đây là phần tử đầu tiên của một nhóm, thêm chữ cái đầu nhóm
+    const isFirstInGroup = index === 0 || sortedData[index - 1].name[0] !== item.name[0];
+    let isFirstItem = false;
+    // Nếu là phần tử đầu tiên trong danh sách, hoặc phần tử này là phần tử "Tất cả" và chưa được hiển thị
+    if (index === 0 && !isAllShown) {
+      isFirstItem = true;
+      isAllShown = true; // Đánh dấu rằng phần tử "Tất cả" đã được hiển thị
     }
 
-    // Cập nhật dữ liệu
-    setGroupedData(groupedData);
-  };
-
-  useEffect(() => {
-    sortAndGroupDataByName();
-  }, []);
-
-  console.log(groupedData);
-  return (
-    <View style={styles.container}>
-      <View style={styles.submenu}>
-        {/* <TouchableOpacity style = {styles.btn} 
-                        onPress = {() => {
-                            setType("All")
-                            setColorText1("rgba(233, 65, 65, 1)")
-                            setColorText2("rgba(190, 182, 182, 1)")
-                            setColorText3("rgba(190, 182, 182, 1)")
-                        }}
-                    >
-                        <Text style = {[styles.textbtn, {color : colorText1}]}>ALL</Text>
-                    </TouchableOpacity> */}
-        <TouchableOpacity
-          style={styles.submenu_btn}
-          onPress={() => {
-            setColorText2("#645C5C");
-            setColorText3("#645C5C");
-            setColorText1("#000");
-            setBoderBottom1("blue");
-            setBoderBottom2("gray");
-            setBoderBottom3("gray");
-          }}>
-          <View style={[styles.lineBottom_main, { borderColor: borderBottom1 }]}>
-            <Text style={[styles.submenu_text_main, { color: colorText1 }]}>Bạn bè</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.submenu_btn}
-          onPress={() => {
-            setColorText1("#645C5C");
-            setColorText2("#000");
-            setColorText3("#645C5C");
-            setBoderBottom1("gray");
-            setBoderBottom2("blue");
-            setBoderBottom3("gray");
-          }}>
-          <View style={[styles.lineBottom, { borderColor: borderBottom2 }]}>
-            <Text style={[styles.submenu_text, { color: colorText2 }]}>Nhóm</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.submenu_btn}
-          onPress={() => {
-            setColorText1("#645C5C");
-            setColorText3("#000");
-            setColorText2("#645C5C");
-            setBoderBottom3("blue");
-            setBoderBottom2("gray");
-            setBoderBottom1("gray");
-          }}>
-          <View style={[styles.lineBottom, { borderColor: borderBottom3 }]}>
-            <Text style={[styles.submenu_text, { color: colorText3 }]}>OA</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.options}>
-        <TouchableOpacity style={styles.subOptions}>
-          <View style={styles.border_options}>
-            <FontAwesome5 name="user-friends" size={20} color="white" />
-          </View>
-
-          <Text style={styles.options_text}>Lời mời kết bạn</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.subOptions}>
-          <View style={styles.border_options}>
-            <FontAwesome6 name="address-book" size={24} color="white" />
-          </View>
-          <Text style={styles.options_text}>Danh bạ máy</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.broken}></View>
-      <View style={styles.fill}>
-        <TouchableOpacity style={styles.fill_all}>
-          <Text style={styles.submenu_text_main}>Tất cả</Text>
-          <Text style={styles.text_count_main}>{sumUser}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.fill_dn}>
-          <Text style={styles.submenu_text}>Mới truy cập</Text>
-          <Text style={styles.submenu_text}>{sumUser}</Text>
-        </TouchableOpacity>
-      </View>
-
-      <FlatList
-        data={groupedData}
-        renderItem={({ item }) => (
-          <>
-            <Text style={styles.header}>{item.char}</Text>
-            {item.items.map((contact) => (
-              <TouchableOpacity key={contact.key}>
-                <View
-                  style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    justifyContent: "space-evenly",
-                    height: 70,
-                    paddingLeft: 10,
-                  }}>
-                  <Image style={styles.img_danhba} source={contact.image} />
-                  <View>
-                    <Text style={styles.text_danhba}>{contact.name}</Text>
-                  </View>
-                  <View style={styles.call_sections}>
-                    <TouchableOpacity>
-                      <Feather name="phone" size={20} color="gray" />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                      <AntDesign name="videocamera" size={20} color="gray" />
-                    </TouchableOpacity>
+    return (
+      <View style={styles.contacts_container}>
+        {isFirstItem && (
+          <View style={styles.function_contacts}>
+            <View style={{ paddingLeft: 12 }}>
+              <TouchableOpacity onPress={goLoiMoiKetBan}>
+                <View style={styles.function_loimoiketban}>
+                  <View style={styles.loimoiketban}>
+                    <View style={styles.icon_contacts}>
+                      <FontAwesome5 name="user-friends" size={17} color="white" />
+                    </View>
+                    <View style={{ flexDirection: "column" }}>
+                      <Text style={styles.content_1}>Lời mời kết bạn</Text>
+                    </View>
                   </View>
                 </View>
               </TouchableOpacity>
-            ))}
-          </>
+
+              <TouchableOpacity onPress={goDanhBaMay}>
+                <View style={styles.function_danhbamay}>
+                  <View style={styles.loimoiketban}>
+                    <View style={styles.icon_contacts}>
+                      <MaterialIcons name="perm-contact-cal" size={22} color="white" />
+                    </View>
+                    <View style={{ flexDirection: "column" }}>
+                      <Text style={styles.content_1}>Danh bạ máy</Text>
+                      <Text style={styles.content_2}>Liên hệ có dùng Zalo</Text>
+                    </View>
+                  </View>
+                </View>
+              </TouchableOpacity>
+
+              <View style={styles.function_lichsinhnhat}>
+                <View style={styles.loimoiketban}>
+                  <View style={styles.icon_contacts}>
+                    <FontAwesome name="birthday-cake" size={17} color="white" />
+                  </View>
+                  <View style={{ flexDirection: "column" }}>
+                    <Text style={styles.content_1}>Lịch sinh nhật</Text>
+                    <Text style={styles.content_2}>Theo dõi sinh nhật của bạn bè</Text>
+                  </View>
+                </View>
+              </View>
+            </View>
+            <SafeAreaView style={{ height: 8, backgroundColor: "#DBDBDB" }} />
+            <View style={styles.header_contacts}>
+              <Text style={styles.content_totalUsers}>Tất cả {totalUsers}</Text>
+              <Text style={styles.content_totalUsers}>Bạn mới 1</Text>
+            </View>
+          </View>
         )}
-        keyExtractor={(item, index) => index.toString()}
-      />
+
+        <View style={styles.contacts}>
+          {isFirstInGroup && <Text style={styles.text_group_header}>{item.name[0]}</Text>}
+          <View style={styles.one_contact}>
+            <View style={styles.user_contacts}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Image source={{ uri: item.imageAvatar }} style={styles.avatar_user} />
+                <Text style={{ fontSize: 17, fontWeight: "400", marginLeft: 12 }}>{item.name}</Text>
+              </View>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Feather style={{ marginHorizontal: 15 }} name="phone" size={20} color="gray" />
+                <AntDesign name="videocamera" size={20} color="gray" />
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
+  const onChange = (event) => {
+    setSelectedIndex(event.nativeEvent.selectedSegmentIndex);
+  };
+
+  const renderContentView = () => {
+    switch (selectedIndex) {
+      case 0:
+        return (
+          <View style={{}}>
+            <FlatList data={phoneBook} renderItem={renderItem} keyExtractor={(item) => item.id.toString()} />
+          </View>
+        );
+      case 1:
+        return (
+          <View style={[styles.contentView, {}]}>
+            <Text style={styles.contentText}>View 2</Text>
+            <Text style={styles.contentText}>Nhóm</Text>
+          </View>
+        );
+      case 2:
+        return (
+          <View style={[styles.contentView, {}]}>
+            <Text style={styles.contentText}>View 3</Text>
+            <Text style={styles.contentText}>OTA</Text>
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.segmentContainer}>
+        <SegmentedControl
+          style={styles.segment_control}
+          values={["Bạn bè", "Nhóm", "OA"]}
+          selectedIndex={selectedIndex}
+          onChange={onChange}
+          fontStyle={{ fontSize: 16 }}
+        />
+      </View>
+      {renderContentView()}
     </View>
   );
 }
+
 const styles = StyleSheet.create({
+  text: {
+    fontSize: 14,
+    textAlign: "center",
+    fontWeight: "500",
+    margin: 10,
+  },
+  text_group_header: {
+    fontSize: 18,
+    fontWeight: "bold",
+    paddingHorizontal: 12,
+  },
+  segmentContainer: {},
   container: {
     flex: 1,
   },
-  submenu: {
-    position: "relative",
+  user_contacts: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    height: 50,
-    width: "100%",
-    backgroundColor: "#D9D9D9",
-    borderWidth: 1,
-    borderColor: "grey",
+    justifyContent: "space-between",
+    width: Dimensions.get("window").width * 0.92,
   },
-  submenu_btn: {
-    height: 50,
-    width: 100,
+  contentView: {
+    flex: 1,
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "center",
-  },
-  lineBottom_main: {
-    position: "absolute",
-    top: 10,
-    bottom: 0,
-    borderBottomWidth: 1,
-    borderColor: "blue",
-  },
-  lineBottom: {
-    position: "absolute",
-    top: 10,
-    bottom: 0,
-    borderBottomWidth: 1,
-    borderColor: "gray",
-  },
-  submenu_text: {
-    color: "#645C5C",
-    fontSize: 20,
-    fontWeight: "600",
-  },
-  submenu_text_main: {
-    color: "#000",
-    fontSize: 20,
-    fontWeight: "600",
-  },
-  options: {
-    marginTop: 10,
     width: "100%",
-    height: 100,
   },
-  subOptions: {
-    width: "100%",
-    height: 50,
-    flexDirection: "row",
-    alignItems: "center",
-    paddingLeft: 20,
-    justifyContent: "space-around",
-  },
-  options_img: {
-    height: 60,
-    width: 60,
-  },
-  options_text: {
-    fontSize: 20,
-    fontWeight: "600",
-    color: "#000",
-    width: 300,
-  },
-  broken: {
-    width: "100%",
-    height: 10,
-    backgroundColor: "#D9D9D9",
-  },
-  fill: {
-    width: "100%",
-    height: 55,
-    alignItems: "center",
-    flexDirection: "row",
-    justifyContent: "space-around",
-    borderBottomWidth: 0.1,
-    borderColor: "gray",
-  },
-  fill_all: {
-    width: 100,
-    height: 40,
-    backgroundColor: "#D9D9D9",
-    justifyContent: "space-around",
-    alignItems: "center",
-    borderRadius: 50,
-    flexDirection: "row",
-  },
-  text_count_main: {
+  contentText: {
     fontSize: 18,
-    color: "#000",
-    fontWeight: "500",
   },
-  fill_dn: {
-    width: 150,
-    height: 40,
-    backgroundColor: "#D9D9D9",
-    justifyContent: "space-around",
-    alignItems: "center",
-    borderRadius: 50,
-    flexDirection: "row",
+  segment_control: {
+    height: Dimensions.get("window").height * 0.045,
   },
-  text_count_dn: {
-    fontSize: 18,
-    color: "#000",
-    fontWeight: "600",
-  },
-  img_danhba: {
-    height: 50,
+  avatar_user: {
     width: 50,
+    height: 50,
     borderRadius: 50,
   },
-  call_sections: {
+  contacts_container: {},
+  one_contact: {
     flexDirection: "row",
-    justifyContent: "space-around",
-    width: 100,
-    height: 50,
     alignItems: "center",
+    padding: 12,
   },
-  text_danhba: {
-    fontSize: 15,
-    fontWeight: "600",
-    color: "#000",
-    width: 180,
+  content_totalUsers: {
+    fontSize: 16,
+    fontWeight: "500",
+    borderWidth: 0.5,
+    borderRadius: 16,
+    padding: 8,
+    marginRight: 12,
+    borderColor: "gray",
+    color: "gray",
   },
-  border_options: {
-    height: 35,
-    width: 35,
+  header_contacts: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 12,
+  },
+  content_1: {
+    fontSize: 18,
+    fontWeight: "400",
+    marginLeft: 12,
+  },
+  content_2: {
+    fontSize: 16,
+    fontWeight: "400",
+    marginLeft: 12,
+    color: "gray",
+  },
+  icon_contacts: {
+    width: 40,
+    height: 40,
+    backgroundColor: "#0091FF",
+    borderRadius: 14,
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "center",
-    borderRadius: 10,
-    backgroundColor: "blue",
   },
-  header: {
-    backgroundColor: "#f9f9f9",
-    padding: 10,
-    fontWeight: "bold",
-    fontSize: 20,
-  },
+  loimoiketban: { flexDirection: "row", alignItems: "center", paddingVertical: 14 },
 });
