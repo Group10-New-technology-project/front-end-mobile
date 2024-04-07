@@ -4,7 +4,15 @@
     "slug": "Zalo",
     "version": "1.0.0",
     "orientation": "portrait",
-    "plugins": ["expo-image-picker"],
+    "plugins": [
+      "expo-image-picker",
+      [
+        "expo-contacts",
+        {
+          "contactsPermission": "Allow $(PRODUCT_NAME) to access your contacts."
+        }
+      ]
+    ],
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "packagerOpts": {

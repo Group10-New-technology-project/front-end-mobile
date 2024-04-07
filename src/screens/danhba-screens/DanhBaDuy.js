@@ -1,29 +1,14 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  ScrollView,
-  FlatList,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from "react-native";
 import React, { useState, useEffect } from "react";
-import { Feather } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { FontAwesome5 } from "@expo/vector-icons";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome5, FontAwesome6, Feather, AntDesign } from "@expo/vector-icons";
 
-export default function DanhBaScreen() {
+export default function DanhBaDuy() {
   const [data, setData] = React.useState([
     { key: "1", name: "DyyBin", image: require("../../../assets/image/Cristiano.jpg") },
     { key: "2", name: "Anh 7", image: require("../../../assets/image/Cristiano.jpg") },
     { key: "3", name: "Chú Tư", image: require("../../../assets/image/Cristiano.jpg") },
     { key: "4", name: "Cậu 5", image: require("../../../assets/image/Cristiano.jpg") },
-    {
-      key: "5",
-      name: "Cristiano Bình Dương",
-      image: require("../../../assets/image/Cristiano.jpg"),
-    },
+    { key: "5", name: "Cristiano", image: require("../../../assets/image/Cristiano.jpg") },
     { key: "6", name: "Fan M.U", image: require("../../../assets/image/Cristiano.jpg") },
     { key: "7", name: "Cục Dàng Trôi Sông", image: require("../../../assets/image/Cristiano.jpg") },
     { key: "8", name: "Vợ", image: require("../../../assets/image/Cristiano.jpg") },
@@ -47,7 +32,6 @@ export default function DanhBaScreen() {
   const sortAndGroupDataByName = () => {
     // Sắp xếp dữ liệu theo tên
     const sortedData = [...data].sort((a, b) => a.name.localeCompare(b.name));
-
     // Phân loại dữ liệu theo chữ cái
     const groupedData = [];
     let currentChar = "";
@@ -185,10 +169,9 @@ export default function DanhBaScreen() {
                   <View style={styles.call_sections}>
                     <TouchableOpacity>
                       <Feather name="phone" size={20} color="gray" />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
                       <AntDesign name="videocamera" size={20} color="gray" />
                     </TouchableOpacity>
+                    <TouchableOpacity></TouchableOpacity>
                   </View>
                 </View>
               </TouchableOpacity>
