@@ -47,7 +47,7 @@ const Stack = createNativeStackNavigator();
 export function StackNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="TrangChu"
+      initialRouteName="Tabs"
       screenOptions={{
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
@@ -121,7 +121,7 @@ export function StackNavigator() {
         component={NhapSoDienThoai}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomBackButton routeName="Đăng ký tài khoản mới" />,
+          headerLeft: () => <CustomBackButton routeName="Đăng ký" />,
         }}
       />
       <Stack.Screen name="NhapMaXacThuc" component={NhapMaXacThuc} />

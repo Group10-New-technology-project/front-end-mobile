@@ -112,14 +112,11 @@ export default function DangNhap({ navigation }) {
         </View>
         <View style={{ height: 50, justifyContent: "center" }}>
           <TouchableOpacity onPress={hanlde_layMatKhau}>
-            <Text style={{ marginLeft: 10, color: "#0F8EF9", fontSize: 14, fontWeight: 400 }}>
-              Lấy lại mật khẩu
-            </Text>
+            <Text style={{ marginLeft: 10, color: "#0F8EF9", fontSize: 14, fontWeight: 400 }}>Lấy lại mật khẩu</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity>
-          <View
-            style={{ marginTop: 5, height: 39, justifyContent: "center", alignItems: "center" }}>
+          <View style={{ marginTop: 5, height: 39, justifyContent: "center", alignItems: "center" }}>
             {username.length > 0 && password.length > 0 ? (
               <TouchableOpacity onPress={handleLogin}>
                 <View
@@ -130,9 +127,7 @@ export default function DangNhap({ navigation }) {
                     backgroundColor: "#00A3FF",
                     justifyContent: "center",
                   }}>
-                  <Text style={{ fontSize: 13, color: "white", textAlign: "center" }}>
-                    Đăng nhập
-                  </Text>
+                  <Text style={{ fontSize: 13, color: "white", textAlign: "center" }}>Đăng nhập</Text>
                 </View>
               </TouchableOpacity>
             ) : (

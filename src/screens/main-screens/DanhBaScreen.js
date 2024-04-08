@@ -158,7 +158,7 @@ export default function DanhBaScreen({ navigation }) {
     switch (selectedIndex) {
       case 0:
         return (
-          <View style={{}}>
+          <View style={{ backgroundColor: "white" }}>
             <FlatList data={phoneBook} renderItem={renderItem} keyExtractor={(item) => item.id.toString()} />
           </View>
         );
@@ -189,7 +189,6 @@ export default function DanhBaScreen({ navigation }) {
           values={["Bạn bè", "Nhóm", "OA"]}
           selectedIndex={selectedIndex}
           onChange={onChange}
-          fontStyle={{ fontSize: 16 }}
         />
       </View>
       {renderContentView()}
