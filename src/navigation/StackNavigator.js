@@ -7,21 +7,9 @@ import CustomBackButton from "../components/CustomBackButton";
 //UTILS
 import Button from "../utils/Button";
 //SCREENS
-//CA NHAN
 import TaiKhoanVaBaoMat from "../screens/canhan-screens/TaiKhoanVaBaoMat";
 import QuyenRiengTu from "../screens/canhan-screens/QuyenRiengTu";
-//DANG KY
-//DANG NHAP
-//DANH BA
-//KHAC
-//KHAM PHA
-//KHAM PHA
-//MAIN
-//NHAT KY
-//TIN NHAN
-//TRANG CHU
 import ReelScreen from "../screens/khampha-screens/ReelScreen";
-import DemoScreen from "../screens/khac-screens/DemoScreen";
 import CaiDat from "../screens/khac-screens/CaiDatNhanh";
 import QRCodeScreen from "../screens/khac-screens/QRCodeScreen";
 import TaoMatKhau from "../screens/dangky-screens/TaoMatKhau";
@@ -94,7 +82,6 @@ export function StackNavigator() {
         }}
       />
       <Stack.Screen name="ReelScreen" component={ReelScreen} />
-      <Stack.Screen name="DemoScreen" component={DemoScreen} />
       <Stack.Screen name="Button" component={Button} />
       <Stack.Screen name="TaoMatKhau" component={TaoMatKhau} />
       <Stack.Screen name="NhapTenNguoiDung" component={NhapTenNguoiDung} />
