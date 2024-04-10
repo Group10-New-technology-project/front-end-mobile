@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { API_URL } from "@env";
 export default function TinNhanScreen({ navigation }) {
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -43,7 +43,7 @@ export default function TinNhanScreen({ navigation }) {
       try {
         if (!userID) return;
 
-        const response = await fetch(`http://192.168.99.218:3000/api/v1/conversation/getConversationByUserId/${userID}`);
+        const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByUserId/${userID}`);
         const data = await response.json();
 
         if (Array.isArray(data)) {

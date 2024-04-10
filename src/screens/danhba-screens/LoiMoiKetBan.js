@@ -3,8 +3,8 @@ import { View, Text, StyleSheet, Dimensions, FlatList, Image, TouchableOpacity, 
 import SegmentedControl from "@react-native-segmented-control/segmented-control";
 import { API_URL } from "@env";
 
-export default function LoiMoiKetBan() {
-  let ID = "60aae4843ae33121e0de8506";
+export default function LoiMoiKetBan({ route }) {
+  const { ID } = route.params;
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [friendRequests, setFriendRequests] = useState([]);
   const [userInfosRequest, setuserInfosRequest] = useState({});

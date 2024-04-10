@@ -22,7 +22,7 @@ export default function SearchBarSelect() {
 
   const handleSubmitEditing = () => {
     console.log("Giá trị nhập vào:", phone);
-    navigation.navigate("TimKiem", { searchText: phone });
+    navigation.navigate("TimKiem", { searchPhone: phone });
   };
 
   return (
