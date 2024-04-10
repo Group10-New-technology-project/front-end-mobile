@@ -173,7 +173,7 @@ export default function DanhBaScreen({ navigation }) {
             <SafeAreaView style={styles.line} />
             <View style={styles.header_contacts}>
               <Text style={styles.content_totalUsers}>Tất cả {totalUsers}</Text>
-              <Text style={styles.content_totalUsers}>Bạn mới 0</Text>
+              <Text style={styles.content_totalUsers}>Bạn mới {totalUsers}</Text>
             </View>
             <FlatList data={sortedUsers} renderItem={renderUserItem} keyExtractor={(item, index) => index.toString()} />
           </View>

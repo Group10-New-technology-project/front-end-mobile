@@ -1,8 +1,9 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { TabsComponent } from "./BottomTabs";
 //COMPONENTS
-import { TabsComponent } from "../components/BottomTabs";
 import SearchBar from "../components/SearchBar";
+import SearchBarSelect from "../components/SearchBarSelect";
 import CustomBackButton from "../components/CustomBackButton";
 //UTILS
 import Button from "../utils/Button";
@@ -28,10 +29,9 @@ import LayLaiMatKhau from "../screens/dangnhap-screens/LayLaiMatKhau";
 import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiMatKhau";
 import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
 import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
-
+import TimKiem from "../screens/khac-screens/TimKiem";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
-
 export function StackNavigator() {
   return (
     <Stack.Navigator
@@ -40,6 +40,8 @@ export function StackNavigator() {
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
         headerShown: false,
+        animationTypeForReplace: "pop", // Sử dụng animationTypeForReplace
+        animation: "ios",
       }}>
       <Stack.Screen
         name="Tabs"
@@ -154,6 +156,16 @@ export function StackNavigator() {
         options={{
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Lời mời kết bạn" />,
+        }}
+      />
+      <Stack.Screen
+        name="TimKiem"
+        component={TimKiem}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton />,
+          headerTitle: () => <SearchBarSelect />,
+          animation: "fade",
         }}
       />
     </Stack.Navigator>
