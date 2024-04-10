@@ -35,7 +35,7 @@ const Stack = createNativeStackNavigator();
 export function StackNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="Tabs"
+      initialRouteName="TrangChu"
       screenOptions={{
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
