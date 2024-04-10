@@ -13,6 +13,7 @@
     "@expo/metro-runtime": "~3.1.3",
     "@react-native-async-storage/async-storage": "^1.23.1",
     "@react-native-community/datetimepicker": "7.6.1",
+    "@react-native-segmented-control/segmented-control": "2.4.1",
     "@react-navigation/bottom-tabs": "^6.5.11",
     "@react-navigation/native": "^6.1.9",
     "@react-navigation/native-stack": "^6.9.22",
@@ -20,6 +21,7 @@
     "aws-sdk": "^2.1592.0",
     "expo": "~50.0.11",
     "expo-av": "^13.10.5",
+    "expo-contacts": "~12.8.2",
     "expo-document-picker": "~11.10.1",
     "expo-firebase-recaptcha": "^2.3.1",
     "expo-image-picker": "^14.7.1",
@@ -31,16 +33,14 @@
     "react-native": "0.73.4",
     "react-native-country-picker-modal": "^2.0.0",
     "react-native-dotenv": "^3.4.11",
-    "react-native-gifted-chat": "^2.4.0",
     "react-native-modal": "^13.0.1",
     "react-native-modal-datetime-picker": "^17.1.0",
     "react-native-switch": "^1.5.1",
     "react-native-vector-icons": "^10.0.3",
     "react-native-web": "~0.19.6",
     "react-native-webview": "^13.8.4",
-    "toggle-switch-react-native": "^3.3.0",
-    "expo-contacts": "~12.8.2",
-    "@react-native-segmented-control/segmented-control": "2.4.1"
+    "socket.io-client": "^4.7.5",
+    "toggle-switch-react-native": "^3.3.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

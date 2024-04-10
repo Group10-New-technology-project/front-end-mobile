@@ -1,27 +1,16 @@
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { TabsComponent } from "./BottomTabs";
 //COMPONENTS
-import { TabsComponent } from "../components/BottomTabs";
 import SearchBar from "../components/SearchBar";
+import SearchBarSelect from "../components/SearchBarSelect";
 import CustomBackButton from "../components/CustomBackButton";
 //UTILS
 import Button from "../utils/Button";
 //SCREENS
-//CA NHAN
 import TaiKhoanVaBaoMat from "../screens/canhan-screens/TaiKhoanVaBaoMat";
 import QuyenRiengTu from "../screens/canhan-screens/QuyenRiengTu";
-//DANG KY
-//DANG NHAP
-//DANH BA
-//KHAC
-//KHAM PHA
-//KHAM PHA
-//MAIN
-//NHAT KY
-//TIN NHAN
-//TRANG CHU
 import ReelScreen from "../screens/khampha-screens/ReelScreen";
-import DemoScreen from "../screens/khac-screens/DemoScreen";
 import CaiDat from "../screens/khac-screens/CaiDatNhanh";
 import QRCodeScreen from "../screens/khac-screens/QRCodeScreen";
 import TaoMatKhau from "../screens/dangky-screens/TaoMatKhau";
@@ -40,10 +29,9 @@ import LayLaiMatKhau from "../screens/dangnhap-screens/LayLaiMatKhau";
 import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiMatKhau";
 import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
 import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
-
+import TimKiem from "../screens/khac-screens/TimKiem";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
-
 export function StackNavigator() {
   return (
     <Stack.Navigator
@@ -52,6 +40,8 @@ export function StackNavigator() {
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
         headerShown: false,
+        animationTypeForReplace: "pop", // Sử dụng animationTypeForReplace
+        animation: "ios",
       }}>
       <Stack.Screen
         name="Tabs"
@@ -94,7 +84,6 @@ export function StackNavigator() {
         }}
       />
       <Stack.Screen name="ReelScreen" component={ReelScreen} />
-      <Stack.Screen name="DemoScreen" component={DemoScreen} />
       <Stack.Screen name="Button" component={Button} />
       <Stack.Screen name="TaoMatKhau" component={TaoMatKhau} />
       <Stack.Screen name="NhapTenNguoiDung" component={NhapTenNguoiDung} />
@@ -121,7 +110,7 @@ export function StackNavigator() {
         component={NhapSoDienThoai}
         options={{
           headerShown: true,
-          headerLeft: () => <CustomBackButton routeName="Đăng ký tài khoản mới" />,
+          headerLeft: () => <CustomBackButton routeName="Đăng ký" />,
         }}
       />
       <Stack.Screen name="NhapMaXacThuc" component={NhapMaXacThuc} />
@@ -167,6 +156,16 @@ export function StackNavigator() {
         options={{
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Lời mời kết bạn" />,
+        }}
+      />
+      <Stack.Screen
+        name="TimKiem"
+        component={TimKiem}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton />,
+          headerTitle: () => <SearchBarSelect />,
+          animation: "fade",
         }}
       />
     </Stack.Navigator>

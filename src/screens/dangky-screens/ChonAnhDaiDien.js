@@ -9,7 +9,6 @@ const s3 = new S3({
   secretAccessKey: SECRET_ACCESS_KEY,
   region: REGION,
 });
-
 console.log(ACCESS_KEY_ID);
 console.log(SECRET_ACCESS_KEY);
 console.log(REGION);
@@ -21,8 +20,7 @@ export default function ChonAnhDaiDien({ navigation, route }) {
   console.log("Da nhan", password, SoDienThoai, name, birthday, Gender);
 
   const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/demo3.png");
-
-  const [imageURL, setimageAvatar] = useState("");
+  const [imageURL, setimageAvatar] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/demo3.png");
 
   const handle_signup = async () => {
     console.log("Fest", password, SoDienThoai, name, birthday, Gender, imageURL);
