@@ -30,8 +30,8 @@ import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiM
 import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
 import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
 import TimKiem from "../screens/khac-screens/TimKiem";
-import Demo from "../screens/Demo";
-import DemoReadFile from "../screens/DemoReadFile";
+import Demo from "../screens/khac-screens/Demo";
+import DemoReadFile from "../screens/khac-screens/DemoReadFile";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {

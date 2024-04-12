@@ -4,7 +4,7 @@ import { View, Text, StyleSheet } from "react-native";
 export default function QRCodeScreen() {
   return (
     <View style={styles.container}>
-      <Text>QR CODE</Text>
+      <Text>QRCodeScreen</Text>
     </View>
   );
 }

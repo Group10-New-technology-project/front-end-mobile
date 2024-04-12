@@ -30,9 +30,7 @@ export default function QuyenRiengTu() {
           <View style={styles.khoazalo}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <FontAwesome name="user-circle-o" size={22} color="gray" />
-              <Text style={{ fontSize: 17, fontWeight: "500", marginHorizontal: 16 }}>
-                Hiển thị trạng thái truy cập
-              </Text>
+              <Text style={{ fontSize: 17, fontWeight: "500", marginHorizontal: 16 }}>Hiển thị trạng thái truy cập</Text>
             </View>
             <Text style={{ fontSize: 16, color: "#696969", fontWeight: "500", marginRight: 20 }}>Đang bật</Text>
             <View style={{ position: "absolute", right: 10 }}>
@@ -76,16 +74,12 @@ export default function QuyenRiengTu() {
       <View style={{ height: 7, backgroundColor: "#E6E6E6" }}></View>
 
       <View style={styles.container_nguontimkiem}>
-        <Text style={{ fontSize: 15, fontWeight: "bold", color: "#0008C0", marginTop: 10 }}>
-          Nguồn tìm kiếm và kết bạn
-        </Text>
+        <Text style={{ fontSize: 15, fontWeight: "bold", color: "#0008C0", marginTop: 10 }}>Nguồn tìm kiếm và kết bạn</Text>
         <View style={styles.kiemtrabaomat}>
           <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/shield-alert.png")} />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Tự động kết bạn từ danh bạ máy</Text>
-            <Text style={{ fontSize: 15, fontWeight: "400" }}>
-              Thêm liên hệ danh bạ vào Zalo khi cả {"\n"} 2 đề lưu số nhau
-            </Text>
+            <Text style={{ fontSize: 15, fontWeight: "400" }}>Thêm liên hệ danh bạ vào Zalo khi cả {"\n"} 2 đề lưu số nhau</Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
             <ToggleSwitch isOn={isSwitchOn} onColor="blue" offColor="gray" size="medium" onToggle={onToggle} />
@@ -175,5 +169,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
   },
-  sodienthoai: { flexDirection: "row", alignItems: "center", paddingVertical: 12 },
+  sodienthoai: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+  },
 });

@@ -48,10 +48,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
             {userData && userData.avatar ? (
               <Image style={{ width: 50, height: 50, borderRadius: 50 }} source={{ uri: userData.avatar }} />
             ) : (
-              <Image
-                style={{ width: 50, height: 50, borderRadius: 50 }}
-                source={require("../main-screens/image/Abstract1998.png")}
-              />
+              <Image style={{ width: 50, height: 50, borderRadius: 50 }} source={require("../main-screens/image/Abstract1998.png")} />
             )}
 
             <View style={{ flexDirection: "column", paddingLeft: 15 }}>
@@ -67,9 +64,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/phone.png")} />
           <View style={{ flexDirection: "column", paddingLeft: 16 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Số điện thoại</Text>
-            <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>
-              {userData ? userData.username : "Số điện thoại"}
-            </Text>
+            <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>{userData ? userData.username : "Số điện thoại"}</Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -112,9 +107,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/shield-check.png")} />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Kiểm tra bảo mật</Text>
-            <Text style={{ fontSize: 16, color: "#A8AA50", fontWeight: "400", marginTop: 3 }}>
-              2 vấn đề bảo mật cần xử lý
-            </Text>
+            <Text style={{ fontSize: 16, color: "#A8AA50", fontWeight: "400", marginTop: 3 }}>2 vấn đề bảo mật cần xử lý</Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -141,9 +134,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/shield-alert.png")} />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Bảo mật 2 lớp</Text>
-            <Text style={{ fontSize: 16, fontWeight: "400" }}>
-              Thêm hình thức xác nhận bảo vệ tài {"\n"}khoản khi đăng nhập trên thiết bị mới
-            </Text>
+            <Text style={{ fontSize: 16, fontWeight: "400" }}>Thêm hình thức xác nhận bảo vệ tài {"\n"}khoản khi đăng nhập trên thiết bị mới</Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
             <ToggleSwitch isOn={isSwitchOn} onColor="#0091FF" offColor="gray" size="medium" onToggle={onToggle} />
@@ -237,5 +228,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
   },
-  sodienthoai: { flexDirection: "row", alignItems: "center", paddingVertical: 12 },
+  sodienthoai: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+  },
 });

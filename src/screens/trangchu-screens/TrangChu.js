@@ -8,11 +8,7 @@ export default function Home({ navigation }) {
     <View style={styles.container}>
       <View style={[styles.header, {}]}>
         <Text style={{ fontSize: 50, fontWeight: "900", color: "#0091FF" }}>ZELO</Text>
-        <Image
-          source={require("../../../assets/img/bannerzalo.png")}
-          resizeMode="contain"
-          style={{ height: 356, width: 390 }}
-        />
+        <Image source={require("../../../assets/img/bannerzalo.png")} resizeMode="contain" style={{ height: 356, width: 390 }} />
       </View>
 
       <View style={styles.footer}>
@@ -45,15 +41,7 @@ export default function Home({ navigation }) {
               <Text style={{ fontSize: 13, color: "#000000", textAlign: "center" }}>Đăng ký</Text>
             </View>
           </TouchableOpacity>
-          <View
-            style={{
-              marginTop: 10,
-              height: 40,
-              width: 274,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "center",
-            }}>
+          <View style={{ marginTop: 10, height: 40, width: 274, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>
             <TouchableOpacity onPress={() => setSelectedLanguage("Vietnamese")}>
               {selectedLanguage === "Vietnamese" ? (
                 <View style={[styles.languageItem, styles.selectedLanguage]}>
@@ -114,13 +102,13 @@ const styles = StyleSheet.create({
     marginTop: 8,
     fontSize: 13,
     textAlign: "center",
-    color: "#000000", // Thêm màu văn bản cho chữ Tiếng Việt và English
+    color: "#000000",
   },
   languageText1: {
     marginTop: 8,
     fontSize: 13,
     textAlign: "center",
-    color: "#9B9DA7", // Thêm màu văn bản cho chữ Tiếng Việt và English
+    color: "#9B9DA7",
   },
   languageItem1: {
     height: 38,
