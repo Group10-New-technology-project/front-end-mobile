@@ -14,17 +14,15 @@ export default function DangNhap({ navigation }) {
         Alert.alert("Failed");
         return;
       }
-
       // Tạo đối tượng JSON chứa thông tin đăng nhập
       const userData = {
         username: username,
         password: password,
       };
-
       // Lưu đối tượng JSON vào AsyncStorage
       await AsyncStorage.setItem("userData", JSON.stringify(userData));
       console.log("Đã lưu thông tin đăng nhập vào AsyncStorage");
-      console.log("userdata", userData);
+      // console.log("userdata", userData);
 
       // Gửi yêu cầu đăng nhập đến máy chủ API
       const response = await fetch(`${API_URL}/api/v1/users/login`, {

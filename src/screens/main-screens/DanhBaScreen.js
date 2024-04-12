@@ -16,7 +16,7 @@ export default function DanhBaScreen({ navigation }) {
   const [users, setUsers] = useState([]);
   const [pickedItem, setPickedItem] = useState([]);
   const ID = userData?._id;
-
+  console.log(ID);
   useEffect(() => {
     const fetchDataUserLogin = async () => {
       try {

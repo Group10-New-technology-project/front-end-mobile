@@ -30,6 +30,8 @@ import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiM
 import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
 import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
 import TimKiem from "../screens/khac-screens/TimKiem";
+import Demo from "../screens/Demo";
+import DemoReadFile from "../screens/DemoReadFile";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
@@ -119,9 +121,8 @@ export function StackNavigator() {
         name="ChatScreen"
         component={ChatScreen}
         options={{
-          headerLeft: () => <CustomBackButton routeName="Name" />,
+          headerLeft: () => <CustomBackButton routeName="Trò chuyện cá nhân" />,
           headerShown: true,
-          headerStyle: { backgroundColor: "gray" },
         }}
       />
       <Stack.Screen
@@ -166,6 +167,20 @@ export function StackNavigator() {
           headerLeft: () => <CustomBackButton />,
           headerTitle: () => <SearchBarSelect />,
           animation: "fade",
+        }}
+      />
+      <Stack.Screen
+        name="Demo"
+        component={Demo}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="DemoReadFile"
+        component={DemoReadFile}
+        options={{
+          headerShown: true,
         }}
       />
     </Stack.Navigator>

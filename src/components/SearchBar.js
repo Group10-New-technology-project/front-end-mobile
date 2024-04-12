@@ -14,7 +14,7 @@ export default function SearchBar() {
     console.log("QR");
   };
   const handleSearchInputPress = () => {
-    navigation.navigate("TimKiem", { searchPhone: "" });
+    navigation.navigate("TimKiem", { searchPhone: "123" });
   };
 
   return (

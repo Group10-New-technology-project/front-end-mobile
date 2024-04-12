@@ -2,12 +2,14 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
+import { useIsFocused } from "@react-navigation/native";
+
 export default function TinNhanScreen({ navigation }) {
+  const isFocused = useIsFocused();
   const [userData, setUserData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [conversations, setConversations] = useState([]);
   const [lastMessages, setLastMessages] = useState({});
-
   const userID = userData?._id;
 
   const convertToStandardFormat = (createdAt) => {
@@ -26,7 +28,10 @@ export default function TinNhanScreen({ navigation }) {
         if (storedUserData) {
           const user = JSON.parse(storedUserData);
           console.log("Thông tin người dùng đã đăng nhập:", user);
+          console.log("ID người dùng 1", user._id);
           setUserData(user);
+          // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
+          await fetchConversations(user._id);
         } else {
           console.log("Không có thông tin người dùng được lưu");
         }
@@ -35,17 +40,12 @@ export default function TinNhanScreen({ navigation }) {
       }
     };
 
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchConversations = async () => {
+    const fetchConversations = async (userID) => {
+      console.log("ID người dùng2:", userID);
       try {
-        if (!userID) return;
-
         const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByUserId/${userID}`);
         const data = await response.json();
-
+        console.log("Dữ liệu cuộc trò chuyện:", data);
         if (Array.isArray(data)) {
           setConversations(data);
           setLoading(false);
@@ -54,6 +54,12 @@ export default function TinNhanScreen({ navigation }) {
           data.forEach((item) => {
             if (item.messages && item.messages.length > 0) {
               lastMsgs[item._id] = item.messages[item.messages.length - 1].content;
+              let isImage = item.messages[item.messages.length - 1].type;
+              if (isImage === "image") {
+                lastMsgs[item._id] = "Hình ảnh";
+              } else if (isImage === "file") {
+                lastMsgs[item._id] = "Tài liệu";
+              }
             }
           });
           setLastMessages(lastMsgs);
@@ -65,8 +71,10 @@ export default function TinNhanScreen({ navigation }) {
       }
     };
 
-    fetchConversations();
-  }, [userID]);
+    if (isFocused) {
+      fetchData();
+    }
+  }, [isFocused]);
 
   const truncateString = (str, maxLength) => {
     return str.length > maxLength ? str.slice(0, maxLength - 3) + "..." : str;
@@ -97,11 +105,10 @@ export default function TinNhanScreen({ navigation }) {
       const otherUser = conversation.members.find((member) => member.userId._id !== userID);
       return otherUser ? otherUser.userId : null;
     } else {
-      // Implement logic for finding sender in group conversation if needed
-
       return null;
     }
   };
+  console.log("Danh sách cuộc trò chuyện:", conversations);
 
   return (
     <View style={styles.container}>
@@ -109,35 +116,38 @@ export default function TinNhanScreen({ navigation }) {
         data={conversations}
         keyExtractor={(item) => item._id.toString()}
         renderItem={({ item }) => {
+          var messageTimeDiff = "";
           if (!item.messages || item.messages.length === 0) {
-            return null;
+            // không làm gì
+          } else {
+            const formattedCreatedAt = convertToStandardFormat(item.messages[item.messages.length - 1].createAt);
+            messageTimeDiff = calculateTimeDiff(formattedCreatedAt);
+            console.log("Thời gian 2:", formattedCreatedAt);
           }
-
-          const formattedCreatedAt = convertToStandardFormat(item.messages[item.messages.length - 1].createAt);
-          const messageTimeDiff = calculateTimeDiff(formattedCreatedAt);
-          console.log("Thời gian 2:", formattedCreatedAt);
           let avatarUrl = "";
           let nameMem = "loading";
-
           const sender = findSender(item);
           if (sender) {
             avatarUrl = sender.avatar;
             nameMem = sender.name;
           }
-
-          const lastMsg = lastMessages[item._id] || "";
-          const messageColor = item.seen ? "#555" : "#000";
-
+          const lastMsg = lastMessages[item._id] || "Các bạn đã trở thành bạn bè!";
+          const messageColor = item.seen ? "black" : "gray";
           return (
-            <TouchableOpacity style={styles.cssMessage} onPress={() => navigation.navigate("ChatScreen", { conversationId: item._id })}>
-              <Image source={{ uri: avatarUrl }} style={{ width: 50, height: 50, borderRadius: 50 }} />
-              <View style={styles.section_header}>
-                <Text>{nameMem}</Text>
-                <Text style={styles.text_message}>
-                  {sender && sender._id === userID ? "Bạn: " + truncateString(lastMsg, 35) : truncateString(lastMsg, 35)}
-                </Text>
+            <TouchableOpacity onPress={() => navigation.navigate("ChatScreen", { conversationId: item._id })}>
+              <View style={styles.conversation_view}>
+                <View style={{ flexDirection: "row", alignItems: "center" }}>
+                  <Image source={{ uri: avatarUrl }} style={{ width: 60, height: 60, borderRadius: 60 }} />
+                  <View style={styles.section_header}>
+                    <Text style={styles.text_content}>{nameMem}</Text>
+                    <Text style={styles.text_message}>
+                      {sender._id != userID ? "Bạn: " + truncateString(lastMsg, 35) : truncateString(lastMsg, 35)}
+                    </Text>
+                  </View>
+                </View>
+                <Text style={{ color: messageColor, paddingLeft: 30, fontSize: 15 }}>{messageTimeDiff}</Text>
               </View>
-              <Text style={{ color: messageColor, padding: 5 }}>{messageTimeDiff}</Text>
+              <View style={{ borderWidth: 0.5, borderColor: "#DBDBDB" }} />
             </TouchableOpacity>
           );
         }}
@@ -149,25 +159,32 @@ export default function TinNhanScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  cssMessage: {
-    width: "100%",
-    height: 80,
-    flexDirection: "row",
-    padding: 10,
-  },
-  section_header: {
-    flex: 1,
-    paddingLeft: 10,
+    backgroundColor: "#fff",
   },
   text_name: {
     fontSize: 20,
     fontWeight: "500",
     color: "#000",
   },
-  text_message: {
+  text_content: {
     fontSize: 17,
-    color: "#000",
-    paddingTop: 5,
+    fontWeight: "400",
+  },
+  text_message: {
+    marginTop: 4,
+    fontSize: 17,
+    fontWeight: "400",
+    color: "gray",
+  },
+  section_header: {
+    paddingLeft: 15,
+  },
+  conversation_view: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
 });
