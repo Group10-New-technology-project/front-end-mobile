@@ -30,14 +30,15 @@ import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiM
 import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
 import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
 import TimKiem from "../screens/khac-screens/TimKiem";
-import Demo from "../screens/khac-screens/Demo";
-import DemoReadFile from "../screens/khac-screens/DemoReadFile";
+import Demo from "../screens/test-screens/Demo";
+import DemoReadFile from "../screens/test-screens/DemoReadFile";
+import ChatChanh from "../screens/test-screens/ChatChanh";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="TrangChu"
+      initialRouteName="ChatChanh"
       screenOptions={{
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
@@ -179,6 +180,13 @@ export function StackNavigator() {
       <Stack.Screen
         name="DemoReadFile"
         component={DemoReadFile}
+        options={{
+          headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="ChatChanh"
+        component={ChatChanh}
         options={{
           headerShown: true,
         }}

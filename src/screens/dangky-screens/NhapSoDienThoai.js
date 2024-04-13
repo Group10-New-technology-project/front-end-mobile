@@ -13,7 +13,7 @@ export default function NhapSoDienThoai({ navigation }) {
     } else {
       formattedPhoneNumber = "+84" + SoDienThoai;
     }
-    navigation.navigate("TaoMatKhau", {
+    navigation.navigate("NhapMaXacThuc", {
       phone2: formattedPhoneNumber.slice(3),
       SoDienThoai: formattedPhoneNumber,
     });
@@ -95,9 +95,7 @@ export default function NhapSoDienThoai({ navigation }) {
                   )}
                 </TouchableOpacity>
                 <Text style={{ fontWeight: 500, fontSize: 14, marginLeft: 4 }}>Tôi đồng ý với </Text>
-                <Text style={{ fontWeight: 700, fontSize: 14, marginLeft: 3, color: "#0187F9" }}>
-                  điều khoản Mạng xã hội Zelo
-                </Text>
+                <Text style={{ fontWeight: 700, fontSize: 14, marginLeft: 3, color: "#0187F9" }}>điều khoản Mạng xã hội Zelo</Text>
               </View>
             </View>
             <View style={{ marginLeft: 20, flexDirection: "row", height: 30, alignItems: "center" }}>
@@ -126,9 +124,7 @@ export default function NhapSoDienThoai({ navigation }) {
                 )}
               </TouchableOpacity>
               <Text style={{ fontWeight: 500, fontSize: 14, marginLeft: 4 }}>Tôi đồng ý với </Text>
-              <Text style={{ fontWeight: 700, fontSize: 14, marginLeft: 3, color: "#0187F9" }}>
-                chính sách bảo mật Zelo
-              </Text>
+              <Text style={{ fontWeight: 700, fontSize: 14, marginLeft: 3, color: "#0187F9" }}>chính sách bảo mật Zelo</Text>
             </View>
           </View>
           <View style={{ marginTop: 30, height: 39, justifyContent: "center", alignItems: "center" }}>

@@ -14,20 +14,16 @@ import {
   Button,
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { MaterialIcons } from "@expo/vector-icons";
-import { Ionicons } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME, API_URL } from "@env";
 import { S3 } from "aws-sdk";
-import io from "socket.io-client";
-import { Entypo } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons } from "@expo/vector-icons";
 import { Audio } from "expo-av";
-import Modal from "react-native-modal";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
+import * as ImagePicker from "expo-image-picker";
 import * as Linking from "expo-linking";
+import Modal from "react-native-modal";
+import io from "socket.io-client";
 
 export default function ChatScreen({ route }) {
   const { conversationId } = route.params;
@@ -665,8 +661,12 @@ export default function ChatScreen({ route }) {
                         }}>
                         {/* Hiển thị icon của loại file dựa trên phần mở rộng */}
                         {getFileTypeIcon(item.content)}
-                        <Text style={[styles.messageContent, messageContentStyle, { marginLeft: 5, color: "#000" }]}>{renderFile(item.content)}</Text>
-                        <Text style={[styles.messageContent1, messageContentStyle]}>{item.createAt ? formatTime(item.createAt) : "N/A"}</Text>
+                        <Text style={[styles.messageContent, messageContentStyle, { marginLeft: 5, color: "#000" }]}>
+                          {renderFile(item.content)}
+                        </Text>
+                        <Text style={[styles.messageContent1, messageContentStyle]}>
+                          {item.createAt ? formatTime(item.createAt) : "N/A"}
+                        </Text>
                       </View>
                     </TouchableOpacity>
                   )}
@@ -684,7 +684,9 @@ export default function ChatScreen({ route }) {
                         }}>
                         {/* Icon for audio message */}
                         {/* <Ionicons name="volume-high-outline" size={24} color="black" style={{ marginRight: 5 }} /> */}
-                        <Text style={[styles.messageContent1, messageContentStyle]}>{item.createAt ? formatTime(item.createAt) : "N/A"}</Text>
+                        <Text style={[styles.messageContent1, messageContentStyle]}>
+                          {item.createAt ? formatTime(item.createAt) : "N/A"}
+                        </Text>
                         <AntDesign name="sound" size={24} color="black" style={{ marginRight: 5 }} />
                         <Text style={[styles.messageContent, messageContentStyle, { marginLeft: 5, color: "#000" }]}>Audio</Text>
                       </View>

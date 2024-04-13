@@ -48,7 +48,10 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
             {userData && userData.avatar ? (
               <Image style={{ width: 50, height: 50, borderRadius: 50 }} source={{ uri: userData.avatar }} />
             ) : (
-              <Image style={{ width: 50, height: 50, borderRadius: 50 }} source={require("../main-screens/image/Abstract1998.png")} />
+              <Image
+                style={{ width: 24, height: 24 }}
+                source={{ uri: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/IMG_2024-04-12_18-16-9.png" }}
+              />
             )}
 
             <View style={{ flexDirection: "column", paddingLeft: 15 }}>
@@ -64,7 +67,9 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/phone.png")} />
           <View style={{ flexDirection: "column", paddingLeft: 16 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Số điện thoại</Text>
-            <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>{userData ? userData.username : "Số điện thoại"}</Text>
+            <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>
+              {userData ? userData.username : "Số điện thoại"}
+            </Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -134,7 +139,9 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/shield-alert.png")} />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Bảo mật 2 lớp</Text>
-            <Text style={{ fontSize: 16, fontWeight: "400" }}>Thêm hình thức xác nhận bảo vệ tài {"\n"}khoản khi đăng nhập trên thiết bị mới</Text>
+            <Text style={{ fontSize: 16, fontWeight: "400" }}>
+              Thêm hình thức xác nhận bảo vệ tài {"\n"}khoản khi đăng nhập trên thiết bị mới
+            </Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
             <ToggleSwitch isOn={isSwitchOn} onColor="#0091FF" offColor="gray" size="medium" onToggle={onToggle} />
@@ -159,7 +166,10 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
         </View>
         <TouchableOpacity onPress={handleMatKhau}>
           <View style={styles.mat_khau}>
-            <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/unlock-keyhole.png")} />
+            <Image
+              style={{ width: 24, height: 24 }}
+              source={{ uri: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/IMG_2024-04-12_18-16-9.png" }}
+            />
             <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Mật khẩu</Text>
             <View style={{ position: "absolute", right: 10 }}>
               <Ionicons name="chevron-forward" size={18} color="gray" />

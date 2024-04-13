@@ -37,7 +37,10 @@ export default function CaNhanScreen({ navigation }) {
           {userData && userData.avatar ? (
             <Image style={{ width: 50, height: 50, borderRadius: 50 }} source={{ uri: userData.avatar }} />
           ) : (
-            <Image style={{ width: 50, height: 50, borderRadius: 50 }} source={require("./image/Abstract1998.png")} />
+            <Image
+              style={{ width: 50, height: 50, borderRadius: 50 }}
+              source={{ uri: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/IMG_2024-04-12_18-16-9.png" }}
+            />
           )}
           <View style={styles.view_title}>
             <Text style={styles.title}>{userData ? userData.name : "Tên người dùng"}</Text>

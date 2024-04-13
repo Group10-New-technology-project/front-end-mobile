@@ -1,7 +1,7 @@
 import { View, StyleSheet, Dimensions, TouchableOpacity, Text } from "react-native";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-// --------------
+
 export default function SearchBar() {
   const navigation = useNavigation();
 
