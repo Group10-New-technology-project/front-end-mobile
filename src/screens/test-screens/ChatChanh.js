@@ -53,19 +53,19 @@ function MessageBubble({ member, content, avatar, createAt }) {
           <View style={styles.modalItems}>
             <TouchableOpacity style={styles.modalItem}>
               <View style={styles.icons}>
-                <Ionicons name="copy" size={35} color="#FF9900" />
+                <Ionicons name="copy" size={33} color="#FF9900" />
               </View>
               <Text style={styles.content1}>Sao chép</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalItem}>
               <View style={styles.icons}>
-                <Entypo name="reply" size={40} color="#E318D1" />
+                <Entypo name="reply" size={38} color="#E318D1" />
               </View>
               <Text style={styles.content1}>Trả lời</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalItem}>
               <View style={[styles.icons, { transform: [{ rotate: "deg" }] }]}>
-                <Entypo name="forward" size={40} color="#004D9A" />
+                <Entypo name="forward" size={38} color="#004D9A" />
               </View>
               <Text style={styles.content1}>Chuyển tiếp</Text>
             </TouchableOpacity>
@@ -73,19 +73,19 @@ function MessageBubble({ member, content, avatar, createAt }) {
           <View style={styles.modalItems}>
             <TouchableOpacity style={styles.modalItem}>
               <View style={styles.icons}>
-                <MaterialIcons name="delete" size={38} color="#797979" />
+                <MaterialIcons name="delete" size={36} color="#797979" />
               </View>
               <Text style={styles.content1}>Xóa</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalItem}>
               <View style={styles.icons}>
-                <MaterialIcons name="restore" size={40} color="#1DBC5D" />
+                <MaterialIcons name="restore" size={38} color="#1DBC5D" />
               </View>
               <Text style={styles.content1}>Thu hồi</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalItem}>
               <View style={styles.icons}>
-                <FontAwesome6 name="cloud-arrow-down" size={28} color="#00A3FF" />
+                <FontAwesome6 name="cloud-arrow-down" size={26} color="#00A3FF" />
               </View>
               <Text style={styles.content1}>Lưu cloud</Text>
             </TouchableOpacity>
@@ -93,19 +93,19 @@ function MessageBubble({ member, content, avatar, createAt }) {
           <View style={styles.modalItems}>
             <TouchableOpacity style={styles.modalItem}>
               <View style={styles.icons}>
-                <AntDesign name="exclamationcircle" size={32} color="#4D4D4D" />
+                <AntDesign name="exclamationcircle" size={30} color="#4D4D4D" />
               </View>
               <Text style={styles.content1}>Coming</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalItem}>
               <View style={styles.icons}>
-                <AntDesign name="exclamationcircle" size={32} color="#4D4D4D" />
+                <AntDesign name="exclamationcircle" size={30} color="#4D4D4D" />
               </View>
               <Text style={styles.content1}>Coming</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.modalItem}>
               <View style={styles.icons}>
-                <AntDesign name="exclamationcircle" size={32} color="#4D4D4D" />
+                <AntDesign name="exclamationcircle" size={30} color="#4D4D4D" />
               </View>
               <Text style={styles.content1}>Coming</Text>
             </TouchableOpacity>
