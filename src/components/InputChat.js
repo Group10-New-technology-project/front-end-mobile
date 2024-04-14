@@ -8,7 +8,7 @@ const widthApp = Dimensions.get("window").width;
 
 export default function Input() {
   const [showOthers, setShowOthers] = useState(false);
-  const [showSticker, setShowSticker] = useState(false);
+  const [showMicro, setShowMicro] = useState(false);
   const [showImage, setShowImage] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const [textInputValue, setTextInputValue] = useState("");
@@ -16,30 +16,30 @@ export default function Input() {
   const handleShowImage = () => {
     Keyboard.dismiss();
     setShowOthers(false);
-    setShowSticker(false);
+    setShowMicro(false);
     setShowImage(!showImage);
   };
   const handleShowOthers = () => {
     Keyboard.dismiss();
-    setShowSticker(false);
+    setShowMicro(false);
     setShowImage(false);
     setShowOthers(!showOthers);
   };
   const handleTextInputFocus = () => {
     setIsTyping(false);
     setShowOthers(false);
-    setShowSticker(false);
+    setShowMicro(false);
     setShowImage(false);
   };
   const handleChangeText = (text) => {
     setTextInputValue(text);
     setIsTyping(!!text);
   };
-  const handleShowSticker = () => {
+  const handleShowMicro = () => {
     Keyboard.dismiss();
     setShowOthers(false);
     setShowImage(false);
-    setShowSticker(!showSticker);
+    setShowMicro(!showMicro);
   };
   handleSendMessage = () => {
     Keyboard.dismiss();
@@ -50,8 +50,8 @@ export default function Input() {
     <SafeAreaView style={styles.container}>
       <View style={styles.inputContainer}>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
-          <TouchableOpacity onPress={handleShowSticker}>
-            <MaterialCommunityIcons name="sticker-emoji" size={28} color="gray" />
+          <TouchableOpacity onPress={handleShowMicro}>
+            <FontAwesome name="microphone" size={24} color="gray" />
           </TouchableOpacity>
           <TextInput
             style={styles.textInput_container}
@@ -76,9 +76,9 @@ export default function Input() {
           <MaterialCommunityIcons name="send" size={28} color="#0091FF" />
         </TouchableOpacity>
       </View>
-      {showSticker && (
+      {showMicro && (
         <View style={{ height: 268, backgroundColor: "green" }}>
-          <Text>Sticker</Text>
+          <Text>Micro</Text>
         </View>
       )}
       {showOthers && (
@@ -88,7 +88,7 @@ export default function Input() {
       )}
       {showImage && (
         <View style={{ height: 268, backgroundColor: "yellow" }}>
-          <Text>Other</Text>
+          <Text>Image</Text>
         </View>
       )}
     </SafeAreaView>
@@ -110,6 +110,6 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderColor: "#0091FF",
     fontSize: 16,
-    paddingLeft: 10,
+    paddingLeft: 14,
   },
 });
