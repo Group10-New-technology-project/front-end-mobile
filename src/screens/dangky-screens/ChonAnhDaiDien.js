@@ -128,11 +128,10 @@ export default function ChonAnhDaiDien({ navigation, route }) {
     console.log(result);
     Alert.alert("Chọn ảnh thành công");
     //Đẩy lên S3
-    uploadImageToS3(result.assets[0].uri);
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      uploadImageToS3(result.assets[0].uri);
     }
-    // console.log(result);
   };
 
   return (

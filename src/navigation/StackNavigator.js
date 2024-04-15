@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TabsComponent } from "./BottomTabs";
 //COMPONENTS
 import SearchBar from "../components/SearchBar";
+import SearchBarConver from "../components/SearchBarConver";
 import SearchBarSelect from "../components/SearchBarSelect";
 import CustomBackButton from "../components/CustomBackButton";
 //UTILS
@@ -33,12 +34,13 @@ import TimKiem from "../screens/khac-screens/TimKiem";
 import Demo from "../screens/test-screens/Demo";
 import DemoReadFile from "../screens/test-screens/DemoReadFile";
 import ChatChanh from "../screens/test-screens/ChatChanh";
+import TaoNhom from "../screens/khac-screens/TaoNhom";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
   return (
     <Stack.Navigator
-      initialRouteName="ChatChanh"
+      initialRouteName="TrangChu"
       screenOptions={{
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
@@ -50,7 +52,7 @@ export function StackNavigator() {
         name="Tabs"
         component={TabsComponent}
         options={{
-          headerLeft: () => <SearchBar />,
+          headerLeft: () => <SearchBarConver />,
           headerShown: true,
         }}
       />
@@ -189,6 +191,15 @@ export function StackNavigator() {
         component={ChatChanh}
         options={{
           headerShown: true,
+        }}
+      />
+      <Stack.Screen
+        name="TaoNhom"
+        component={TaoNhom}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Nhóm mới" />,
+          headerStyle: { backgroundColor: "gray" },
         }}
       />
     </Stack.Navigator>

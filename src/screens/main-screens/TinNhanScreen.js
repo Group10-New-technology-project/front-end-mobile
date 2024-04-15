@@ -30,7 +30,6 @@ export default function TinNhanScreen({ navigation }) {
           console.log("Thông tin người dùng đã đăng nhập:", user);
           console.log("ID người dùng 1", user._id);
           setUserData(user);
-          // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
           await fetchConversations(user._id);
         } else {
           console.log("Không có thông tin người dùng được lưu");
@@ -101,14 +100,13 @@ export default function TinNhanScreen({ navigation }) {
   };
 
   const findSender = (conversation) => {
-    if (conversation.type === "Direct") {
+    if (conversation.type === "Direct" || conversation.type === "Group") {
       const otherUser = conversation.members.find((member) => member.userId._id !== userID);
       return otherUser ? otherUser.userId : null;
     } else {
       return null;
     }
   };
-  console.log("Danh sách cuộc trò chuyện:", conversations);
 
   return (
     <View style={styles.container}>
