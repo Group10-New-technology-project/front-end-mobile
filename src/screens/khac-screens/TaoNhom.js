@@ -76,6 +76,8 @@ export default function TaoNhom({ navigation }) {
     try {
       const response = await axios.post("http://192.168.99.223:3000/api/v1/conversation/createConversationWeb", {
         arrayUserId: arrayFriends,
+        name: nameGroup,
+        groupImage: imageURL,
       });
       console.log("Conversation created:", response.data);
       navigation.navigate("Tabs");
