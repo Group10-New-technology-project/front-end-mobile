@@ -7,6 +7,9 @@ import CaNhanScreen from "../screens/main-screens/CaNhanScreen";
 import TinNhanScreen from "../screens/main-screens/TinNhanScreen";
 import NhatKyScreen from "../screens/main-screens/NhatKyScreen";
 // --------------
+import SearchBarTinNhan from "../components/SearchBarTinNhan";
+import SearchBar from "../components/SearchBar";
+// --------------
 import { AntDesign, Feather } from "@expo/vector-icons";
 // --------------
 const Tab = createBottomTabNavigator();
@@ -16,7 +19,9 @@ export function TabsComponent() {
     <Tab.Navigator
       initialRouteName="TinNhan"
       screenOptions={{
-        headerShown: false,
+        headerShown: true,
+        headerTitle: "",
+        headerStyle: { backgroundColor: "#0091FF" },
         tabBarActiveTintColor: "#0091FF", // Màu sắc của tab khi được chọn
         tabBarInactiveTintColor: "#B7B7B7", // Màu sắc của tab khi không được chọn
         tabBarShowLabel: true, // Hiển thị nhãn cho tab
@@ -39,6 +44,7 @@ export function TabsComponent() {
         options={{
           tabBarLabel: "Tin Nhắn",
           tabBarIcon: ({ color, size }) => <AntDesign name="message1" size={size} color={color} />,
+          headerLeft: () => <SearchBarTinNhan />,
         }}
       />
       <Tab.Screen
@@ -47,6 +53,7 @@ export function TabsComponent() {
         options={{
           tabBarLabel: "Danh bạ",
           tabBarIcon: ({ color, size }) => <AntDesign name="contacts" size={size} color={color} />,
+          headerLeft: () => <SearchBar />,
         }}
       />
       <Tab.Screen
@@ -55,6 +62,7 @@ export function TabsComponent() {
         options={{
           tabBarLabel: "Khám phá",
           tabBarIcon: ({ color, size }) => <Feather name="grid" size={size} color={color} />,
+          headerLeft: () => <SearchBar />,
         }}
       />
       <Tab.Screen
@@ -63,6 +71,7 @@ export function TabsComponent() {
         options={{
           tabBarLabel: "Nhật ký",
           tabBarIcon: ({ color, size }) => <Feather name="clock" size={size} color={color} />,
+          headerLeft: () => <SearchBar />,
         }}
       />
       <Tab.Screen
@@ -71,6 +80,7 @@ export function TabsComponent() {
         options={{
           tabBarLabel: "Cá nhân",
           tabBarIcon: ({ color, size }) => <AntDesign name="user" size={size} color={color} />,
+          headerLeft: () => <SearchBar />,
         }}
       />
     </Tab.Navigator>

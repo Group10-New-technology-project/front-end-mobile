@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert } from "react-native"; // Import Text từ react-native
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 
@@ -21,10 +21,7 @@ export default function DangNhap({ navigation }) {
       };
       // Lưu đối tượng JSON vào AsyncStorage
       await AsyncStorage.setItem("userData", JSON.stringify(userData));
-      console.log("Đã lưu thông tin đăng nhập vào AsyncStorage");
       // console.log("userdata", userData);
-
-      // Gửi yêu cầu đăng nhập đến máy chủ API
       const response = await fetch(`${API_URL}/api/v1/users/login`, {
         method: "POST",
         headers: {
@@ -33,21 +30,17 @@ export default function DangNhap({ navigation }) {
         body: JSON.stringify(userData),
       });
 
-      // console.log(response);
-
       if (!response.ok) {
         Alert.alert("Sai tên người dùng hoặc mật khẩu");
-        // throw new Error("Network response was not ok");
       }
       const data = await response.json();
-      console.log("Data", data);
+      // console.log("Data", data);
       if (data.user) {
-        // Đăng nhập thành công, điều hướng tới màn hình Tabs
         await AsyncStorage.setItem("userData", JSON.stringify(data.user));
         navigation.navigate("Tabs");
+        console.log("Đăng nhập thành công");
       } else {
-        // Đăng nhập không thành công, hiển thị thông báo lỗi
-        console.log("Đăng nhập không thành công");
+        Alert.alert("Đăng nhập không thành công");
       }
     } catch (error) {
       console.error("There was an error!", error);
@@ -57,6 +50,7 @@ export default function DangNhap({ navigation }) {
   const hanlde_layMatKhau = () => {
     navigation.navigate("LayLaiMatKhau");
   };
+
   return (
     <View style={styles.container}>
       <View>
@@ -83,8 +77,7 @@ export default function DangNhap({ navigation }) {
               borderBottomWidth: 1,
               borderBottomColor: "#F1F3F4",
               color: "black",
-              backgroundColor: "#fff", // outlineColor: 'transparent', // Đặt màu viền trong suốt
-              // outlineWidth: 0, // Đặt độ rộng của viền là 0
+              backgroundColor: "#fff",
             }}
             onChangeText={(text) => setUsername(text)}
           />

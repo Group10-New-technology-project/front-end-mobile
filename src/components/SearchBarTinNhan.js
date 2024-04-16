@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 
-export default function SearchBarConver() {
+export default function SearchBarTinNhan() {
   const navigation = useNavigation();
   const [isModalVisible, setModalVisible] = useState(false);
 
@@ -39,7 +39,7 @@ export default function SearchBarConver() {
         <Text style={styles.text_search}>Tìm kiếm</Text>
       </TouchableOpacity>
 
-      <View style={{ flexDirection: "row", alignItems: "center", paddingRight: 40 }}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
         <TouchableOpacity onPress={handleCaiDat}>
           <Ionicons style={{ marginRight: 8 }} name="settings-outline" size={24} color="white" />
         </TouchableOpacity>
@@ -97,6 +97,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     width: Dimensions.get("window").width,
+    paddingHorizontal: 18,
   },
   search_icon: {
     flexDirection: "row",
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "400",
     color: "white",
-    width: Dimensions.get("window").width * 0.6,
+    width: 250,
   },
   modalContainer: {
     right: 0,
@@ -129,7 +130,6 @@ const styles = StyleSheet.create({
   content_container: {
     flexDirection: "row",
     alignItems: "center",
-    // backgroundColor: "green",
     paddingVertical: 10,
   },
 });

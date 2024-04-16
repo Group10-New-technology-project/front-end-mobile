@@ -39,15 +39,15 @@ export default function TaoNhom({ navigation }) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get("http://192.168.99.223:3000/api/v1/users/getFriendWithDetails/661917fe718c270bc360f2e9");
+        const response = await axios.get(`${API_URL}/api/v1/users/getFriendWithDetails/${ID}`);
         setUsers(response.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-
     fetchUserData();
   }, []);
+
   useEffect(() => {
     if (arrayFriends.length === 0) {
       setArrayFriends([ID]);
@@ -74,7 +74,7 @@ export default function TaoNhom({ navigation }) {
     }
     console.log("arrayFriends:", arrayFriends);
     try {
-      const response = await axios.post("http://192.168.99.223:3000/api/v1/conversation/createConversationWeb", {
+      const response = await axios.post(`${API_URL}/api/v1/conversation/createConversationWeb`, {
         arrayUserId: arrayFriends,
         name: nameGroup,
         groupImage: imageURL,

@@ -2,8 +2,6 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TabsComponent } from "./BottomTabs";
 //COMPONENTS
-import SearchBar from "../components/SearchBar";
-import SearchBarConver from "../components/SearchBarConver";
 import SearchBarSelect from "../components/SearchBarSelect";
 import CustomBackButton from "../components/CustomBackButton";
 //UTILS
@@ -45,17 +43,11 @@ export function StackNavigator() {
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
         headerShown: false,
-        animationTypeForReplace: "pop", // Sử dụng animationTypeForReplace
+        animationTypeForReplace: "pop",
         animation: "ios",
       }}>
-      <Stack.Screen
-        name="Tabs"
-        component={TabsComponent}
-        options={{
-          headerLeft: () => <SearchBarConver />,
-          headerShown: true,
-        }}
-      />
+      {/*TabsComponent*/}
+      <Stack.Screen name="Tabs" component={TabsComponent} />
       <Stack.Screen
         name="TaiKhoanVaBaoMat"
         component={TaiKhoanVaBaoMat}

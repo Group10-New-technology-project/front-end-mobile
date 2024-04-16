@@ -27,8 +27,7 @@ export default function TinNhanScreen({ navigation }) {
         const storedUserData = await AsyncStorage.getItem("userData");
         if (storedUserData) {
           const user = JSON.parse(storedUserData);
-          console.log("Thông tin người dùng đã đăng nhập:", user);
-          console.log("ID người dùng 1", user._id);
+          console.log("Thông tin người dùng đã đăng nhập:", user._id);
           setUserData(user);
           await fetchConversations(user._id);
         } else {
@@ -40,15 +39,12 @@ export default function TinNhanScreen({ navigation }) {
     };
 
     const fetchConversations = async (userID) => {
-      console.log("ID người dùng2:", userID);
       try {
         const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByUserId/${userID}`);
         const data = await response.json();
-        console.log("Dữ liệu cuộc trò chuyện:", data);
         if (Array.isArray(data)) {
           setConversations(data);
           setLoading(false);
-
           const lastMsgs = {};
           data.forEach((item) => {
             if (item.messages && item.messages.length > 0) {
@@ -120,7 +116,7 @@ export default function TinNhanScreen({ navigation }) {
           } else {
             const formattedCreatedAt = convertToStandardFormat(item.messages[item.messages.length - 1].createAt);
             messageTimeDiff = calculateTimeDiff(formattedCreatedAt);
-            console.log("Thời gian 2:", formattedCreatedAt);
+            // console.log("Thời gian 2:", formattedCreatedAt);
           }
           let avatarUrl = "";
           let nameMem = "loading";
