@@ -116,7 +116,6 @@ export default function TinNhanScreen({ navigation }) {
           } else {
             const formattedCreatedAt = convertToStandardFormat(item.messages[item.messages.length - 1].createAt);
             messageTimeDiff = calculateTimeDiff(formattedCreatedAt);
-            // console.log("Thời gian 2:", formattedCreatedAt);
           }
           let avatarUrl = "";
           let nameMem = "loading";

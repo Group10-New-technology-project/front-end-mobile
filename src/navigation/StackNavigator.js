@@ -1,9 +1,12 @@
 import React from "react";
+import { Text } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TabsComponent } from "./BottomTabs";
 //COMPONENTS
 import SearchBarSelect from "../components/SearchBarSelect";
 import CustomBackButton from "../components/CustomBackButton";
+import Header from "../components/Header";
+import HeaderTinNhan from "../components/HeaderTinNhan";
 //UTILS
 import Button from "../utils/Button";
 //SCREENS
@@ -33,6 +36,9 @@ import Demo from "../screens/test-screens/Demo";
 import DemoReadFile from "../screens/test-screens/DemoReadFile";
 import ChatChanh from "../screens/test-screens/ChatChanh";
 import TaoNhom from "../screens/khac-screens/TaoNhom";
+import ChanhRecived from "../screens/test-screens/ChanhRecived";
+import ChanhSender from "../screens/test-screens/ChanhSender";
+import ThongTinNhom from "../screens/tinnhan-screens/ThongTinNhom";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
@@ -46,7 +52,6 @@ export function StackNavigator() {
         animationTypeForReplace: "pop",
         animation: "ios",
       }}>
-      {/*TabsComponent*/}
       <Stack.Screen name="Tabs" component={TabsComponent} />
       <Stack.Screen
         name="TaiKhoanVaBaoMat"
@@ -115,10 +120,10 @@ export function StackNavigator() {
       <Stack.Screen
         name="ChatScreen"
         component={ChatScreen}
-        options={{
-          headerLeft: () => <CustomBackButton routeName="Trò chuyện cá nhân" />,
+        options={({ route }) => ({
+          headerLeft: () => <HeaderTinNhan conversationData1={route.params.conversationId} />,
           headerShown: true,
-        }}
+        })}
       />
       <Stack.Screen
         name="DoiMatKhauScreen"
@@ -192,6 +197,30 @@ export function StackNavigator() {
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Nhóm mới" />,
           headerStyle: { backgroundColor: "gray" },
+        }}
+      />
+      <Stack.Screen
+        name="ChanhRecived"
+        component={ChanhRecived}
+        options={({ route }) => ({
+          headerShown: true,
+          headerLeft: () => <Header userData={route.params?.me} status={route.params?.status} />,
+        })}
+      />
+      <Stack.Screen
+        name="ChanhSender"
+        component={ChanhSender}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Chanh sender" />,
+        }}
+      />
+      <Stack.Screen
+        name="ThongTinNhom"
+        component={ThongTinNhom}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Tùy chọn" />,
         }}
       />
     </Stack.Navigator>
