@@ -80,6 +80,9 @@ export default function ThongTinNhom({ navigation, route }) {
     fetchConversationData();
   }, [userData]);
 
+  const handleXemThanhVien = () => {
+    navigation.navigate("ThanhVienNhom", { conversationId: conversationId });
+  };
   return (
     <ScrollView nestedScrollEnabled={true}>
       {type === "Group" ? (
@@ -92,10 +95,10 @@ export default function ThongTinNhom({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 22,
-                  fontWeight: "bold",
+                  fontWeight: "500",
                   color: "#232323",
                   // fontFamily: "Sans-serif",
-                  marginTop: 10,
+                  marginTop: 15,
                 }}>
                 {name}
               </Text>
@@ -291,7 +294,7 @@ export default function ThongTinNhom({ navigation, route }) {
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10 }}>
                 <Ionicons name="people-outline" size={21} color="#7F8284" />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleXemThanhVien}>
                   <Text style={{ marginLeft: 17, fontSize: 16 }}>
                     Xem thành viên <Text style={{ fontSize: 12 }}>(5)</Text>
                   </Text>
@@ -473,10 +476,9 @@ export default function ThongTinNhom({ navigation, route }) {
               <Text
                 style={{
                   fontSize: 22,
-                  fontWeight: "bold",
+                  fontWeight: "500",
                   color: "#232323",
-                  // fontFamily: "Sans-serif",
-                  marginTop: 10,
+                  marginTop: 15,
                 }}>
                 {name}
               </Text>

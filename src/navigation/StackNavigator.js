@@ -39,6 +39,8 @@ import TaoNhom from "../screens/khac-screens/TaoNhom";
 import ChanhRecived from "../screens/test-screens/ChanhRecived";
 import ChanhSender from "../screens/test-screens/ChanhSender";
 import ThongTinNhom from "../screens/tinnhan-screens/ThongTinNhom";
+import ThanhVienNhom from "../screens/tinnhan-screens/ThanhVienNhom";
+import TruongNhomMoi from "../screens/tinnhan-screens/TruongNhomMoi";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
@@ -221,6 +223,22 @@ export function StackNavigator() {
         options={{
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Tùy chọn" />,
+        }}
+      />
+      <Stack.Screen
+        name="ThanhVienNhom"
+        component={ThanhVienNhom}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Thành viên" />,
+        }}
+      />
+      <Stack.Screen
+        name="TruongNhomMoi"
+        component={TruongNhomMoi}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Chọn trưởng nhóm mới" />,
         }}
       />
     </Stack.Navigator>

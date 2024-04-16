@@ -38,7 +38,7 @@ export default function HeaderTinNhan({ conversationData1 }) {
     if (conversationData.type === "Direct") {
       const member = conversationData.members.find((member) => member.userId._id !== userData._id);
       name = member ? member.userId.name : "";
-      statusName = "Đang hoạt động";
+      statusName = "Vừa mới truy cập";
     } else if (conversationData.type === "Group") {
       name = conversationData.name;
       statusName = "Bấm để xem thông tin";

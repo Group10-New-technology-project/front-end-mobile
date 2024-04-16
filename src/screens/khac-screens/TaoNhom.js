@@ -1,17 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Button,
-  Alert,
-  Dimensions,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput, Alert, Dimensions, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { Checkbox } from "expo-checkbox";
 import * as ImagePicker from "expo-image-picker";
