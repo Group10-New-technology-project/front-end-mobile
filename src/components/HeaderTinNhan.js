@@ -46,7 +46,7 @@ export default function HeaderTinNhan({ conversationData1 }) {
   }
 
   const goThongTinNhom = () => {
-    navigation.navigate("ThongTinNhom", { conversationId });
+    navigation.navigate("ThongTinNhom", { conversationId, userId: userData._id });
   };
 
   return (
@@ -91,7 +91,7 @@ export const styles = StyleSheet.create({
   },
   text_online: {
     color: "#F4F4F4",
-    fontWeight: "300",
+    fontWeight: "400",
     fontSize: 13,
   },
   icon_menu: {

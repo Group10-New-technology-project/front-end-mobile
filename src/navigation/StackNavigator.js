@@ -38,6 +38,8 @@ import ThongTinNhom from "../screens/tinnhan-screens/ThongTinNhom";
 import ThanhVienNhom from "../screens/tinnhan-screens/ThanhVienNhom";
 import TruongNhomMoi from "../screens/tinnhan-screens/TruongNhomMoi";
 import ChuyenTiep from "../screens/tinnhan-screens/ChuyenTiep";
+import ThemNhieuThanhVienVaoNhom from "../screens/tinnhan-screens/ThemNhieuThanhVienVaoNhom";
+import ThemThanhVienVaoNhieuNhom from "../screens/tinnhan-screens/ThemThanhVienVaoNhieuNhom";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
@@ -226,6 +228,24 @@ export function StackNavigator() {
             // headerLeft: () => <CustomBackButton routeName="Chuyển tiếp" />,
           }
         }
+      />
+      <Stack.Screen
+        name="ThemNhieuThanhVienVaoNhom"
+        component={ThemNhieuThanhVienVaoNhom}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Thêm thành viên" />,
+          headerStyle: { backgroundColor: "#A1A1A1" },
+        }}
+      />
+      <Stack.Screen
+        name="ThemThanhVienVaoNhieuNhom"
+        component={ThemThanhVienVaoNhieuNhom}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Thêm vào nhóm" />,
+          headerStyle: { backgroundColor: "#A1A1A1" },
+        }}
       />
     </Stack.Navigator>
   );

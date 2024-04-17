@@ -3,13 +3,12 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 import { useIsFocused } from "@react-navigation/native";
-import { set } from "firebase/database";
 
 export default function TinNhanScreen({ navigation }) {
   const isFocused = useIsFocused();
   const [conversations, setConversations] = useState([]);
   const [lastMessages, setLastMessages] = useState({});
-  const [userID, setUserID] = useState(""); // Thêm userID
+  const [userID, setUserID] = useState("");
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState({});
 

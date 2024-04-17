@@ -7,7 +7,7 @@ export default function Home({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={[styles.header, {}]}>
-        <Text style={{ fontSize: 50, fontWeight: "900", color: "#0091FF" }}>ZELO</Text>
+        <Text style={{ fontSize: 52, fontWeight: "800", color: "#0091FF" }}>Zelo</Text>
         <Image source={require("../../../assets/img/bannerzalo.png")} resizeMode="contain" style={{ height: 356, width: 390 }} />
       </View>
 
@@ -24,7 +24,7 @@ export default function Home({ navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
               }}>
-              <Text style={{ fontSize: 13, color: "white", textAlign: "center" }}>Đăng nhập</Text>
+              <Text style={{ fontSize: 14, color: "white", textAlign: "center" }}>Đăng nhập</Text>
             </View>
           </TouchableOpacity>
           <TouchableOpacity onPress={() => navigation.navigate("NhapSoDienThoai")}>
@@ -38,7 +38,7 @@ export default function Home({ navigation }) {
                 alignItems: "center",
                 justifyContent: "center",
               }}>
-              <Text style={{ fontSize: 13, color: "#000000", textAlign: "center" }}>Đăng ký</Text>
+              <Text style={{ fontSize: 14, color: "#000000", textAlign: "center" }}>Đăng ký</Text>
             </View>
           </TouchableOpacity>
           <View style={{ marginTop: 10, height: 40, width: 274, flexDirection: "row", alignItems: "center", justifyContent: "center" }}>

@@ -57,32 +57,32 @@ export default function SearchBarTinNhan() {
         animationOut="fadeOutUp">
         <View style={styles.modalSize}>
           <TouchableOpacity style={styles.content_container} onPress={handleAdd}>
-            <MaterialCommunityIcons name="account-plus-outline" size={25} color="gray" />
+            <MaterialCommunityIcons name="account-plus-outline" size={25} color="#BCBCBC" />
             <Text style={styles.content_2}>Thêm bạn</Text>
           </TouchableOpacity>
           <View style={{ borderWidth: 0.5, borderColor: "#E8E8E8" }} />
           <TouchableOpacity style={styles.content_container} onPress={handleTaoNhom}>
-            <MaterialCommunityIcons name="account-plus-outline" size={25} color="gray" />
+            <MaterialCommunityIcons name="account-multiple-plus-outline" size={25} color="#BCBCBC" />
             <Text style={styles.content_2}>Tạo nhóm</Text>
           </TouchableOpacity>
           <View style={{ borderWidth: 0.5, borderColor: "#E8E8E8" }} />
           <TouchableOpacity style={styles.content_container} onPress={handleAdd}>
-            <MaterialCommunityIcons name="account-plus-outline" size={25} color="gray" />
+            <MaterialCommunityIcons name="cloud-download-outline" size={25} color="#BCBCBC" />
             <Text style={styles.content_2}>Cloud của tôi</Text>
           </TouchableOpacity>
           <View style={{ borderWidth: 0.5, borderColor: "#E8E8E8" }} />
           <TouchableOpacity style={styles.content_container} onPress={handleAdd}>
-            <MaterialCommunityIcons name="account-plus-outline" size={25} color="gray" />
+            <MaterialCommunityIcons name="calendar-month-outline" size={25} color="#BCBCBC" />
             <Text style={styles.content_2}>Lịch Zalo</Text>
           </TouchableOpacity>
           <View style={{ borderWidth: 0.5, borderColor: "#E8E8E8" }} />
           <TouchableOpacity style={styles.content_container} onPress={handleAdd}>
-            <MaterialCommunityIcons name="account-plus-outline" size={25} color="gray" />
+            <MaterialCommunityIcons name="video-wireless-outline" size={25} color="#BCBCBC" />
             <Text style={styles.content_2}>Tạo cuộc gọi nhóm</Text>
           </TouchableOpacity>
           <View style={{ borderWidth: 0.5, borderColor: "#E8E8E8" }} />
           <TouchableOpacity style={styles.content_container} onPress={handleAdd}>
-            <MaterialCommunityIcons name="account-plus-outline" size={25} color="gray" />
+            <MaterialCommunityIcons name="cellphone-link" size={25} color="#BCBCBC" />
             <Text style={styles.content_2}>Thiết bị đăng nhập</Text>
           </TouchableOpacity>
         </View>

@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView } from "react-native";
-import { AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons, Feather } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons, Feather, FontAwesome6 } from "@expo/vector-icons";
 import { API_URL } from "@env";
 
 export default function ThongTinNhom({ navigation, route }) {
-  const { conversationId } = route.params;
+  const { conversationId, userId } = route.params;
   const [ConversationData, setConversationData] = useState(null);
+  const [userFriendId, setUserFriendId] = useState(null);
   const [type, setType] = useState(null);
-  const [userData, setUserData] = useState(null);
   const [name, setName] = useState("");
   const [image, setImage] = useState("https://media-cdn-v2.laodong.vn/storage/newsportal/2023/8/26/1233821/Giai-Nhat--Dem-Sai-G.jpg");
   const [arrayimage, setArrayImage] = useState([
-    "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-002.jpg",
-    "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-002.jpg",
-    "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-006.jpg",
-    "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-004.jpg",
+    // "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-002.jpg",
+    // "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-002.jpg",
+    // "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-006.jpg",
+    // "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-004.jpg",
   ]);
   const [isFirstSelected, setIsFirstSelected] = useState([true, true, true]);
 
@@ -28,61 +27,54 @@ export default function ThongTinNhom({ navigation, route }) {
   };
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const storedUserData = await AsyncStorage.getItem("userData");
-        if (storedUserData) {
-          const user = JSON.parse(storedUserData);
-          setUserData(user);
-        } else {
-          console.log("Không có thông tin người dùng được lưu");
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu người dùng:", error);
-      }
-    };
-    fetchUserData();
+    fetchConversationData();
   }, []);
 
-  useEffect(() => {
-    const fetchConversationData = async () => {
-      try {
-        const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByIdApp/${conversationId}`);
-        const data = await response.json();
-        setConversationData(data);
+  const fetchConversationData = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByIdApp/${conversationId}`);
+      const data = await response.json();
+      setConversationData(data);
 
-        if (data) {
-          if (data.type === "Direct") {
-            setType("Direct");
-            const member = data.members.find((member) => member.userId && member.userId._id !== userData?._id);
-            let name1 = member ? member.userId.name : "";
-            setName(name1);
-            setImage(member ? member.userId.avatar : "");
-          } else if (data.type === "Group") {
-            setType("Group");
-            setName(data.name);
-            if (data.groupImage && data.groupImage !== "") {
-              setImage(data.groupImage);
-            } else {
-            }
-          }
-
-          for (let i = 0; i < data.messages.length; i++) {
-            if (data.messages[i].type === "image" && data.messages[i].type === "video") {
-              setArrayImage((arrayimage) => [...arrayimage, data.messages[i].content]);
-            }
+      if (data) {
+        if (data.type === "Direct") {
+          setType("Direct");
+          const member = data.members.find((member) => member.userId && member.userId._id !== userId);
+          let name1 = member ? member.userId.name : "";
+          setName(name1);
+          setImage(member ? member.userId.avatar : "");
+          setUserFriendId(member ? member.userId._id : "");
+        } else if (data.type === "Group") {
+          setType("Group");
+          setName(data.name);
+          if (data.groupImage && data.groupImage !== "") {
+            setImage(data.groupImage);
+          } else {
           }
         }
-      } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu cuộc trò chuyện:", error);
+
+        for (let i = 0; i < data.messages.length; i++) {
+          if (data.messages[i].type === "image" && data.messages[i].type === "video") {
+            setArrayImage((arrayimage) => [...arrayimage, data.messages[i].content]);
+          }
+        }
       }
-    };
-    fetchConversationData();
-  }, [userData]);
+    } catch (error) {
+      console.error("Lỗi khi lấy dữ liệu cuộc trò chuyện:", error);
+    }
+  };
 
   const handleXemThanhVien = () => {
     navigation.navigate("ThanhVienNhom", { conversationId: conversationId });
   };
+  const handleThemThanhVien = () => {
+    navigation.navigate("ThemNhieuThanhVienVaoNhom", { conversationId: conversationId });
+  };
+
+  const AddFriendToGroup = () => {
+    navigation.navigate("ThemThanhVienVaoNhieuNhom", { userFriendId: userFriendId, name: name });
+  };
+
   return (
     <ScrollView nestedScrollEnabled={true}>
       {type === "Group" ? (
@@ -118,11 +110,10 @@ export default function ThongTinNhom({ navigation, route }) {
                     <AntDesign name="search1" size={20} color="#111111" />
                   </View>
                 </TouchableOpacity>
-
                 <Text style={{ textAlign: "center", color: "#212121" }}>Tìm tin nhắn</Text>
               </View>
               <View style={{ marginHorizontal: 11, height: 80, width: 70, alignItems: "center", justifyContent: "center" }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleThemThanhVien}>
                   <View
                     style={{
                       borderRadius: 50,
@@ -135,7 +126,6 @@ export default function ThongTinNhom({ navigation, route }) {
                     <AntDesign name="addusergroup" size={20} color="#111111" />
                   </View>
                 </TouchableOpacity>
-
                 <Text style={{ textAlign: "center", color: "#212121" }}>Thêm thành viên</Text>
               </View>
               <View style={{ marginHorizontal: 11, height: 80, width: 70, alignItems: "center", justifyContent: "center" }}>
@@ -199,7 +189,7 @@ export default function ThongTinNhom({ navigation, route }) {
                 <Ionicons name="chevron-forward-outline" size={17} color="#7C828A" style={{ marginRight: 10 }} />
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: "row", marginLeft: 30 }}>
+            <View style={{ flexDirection: "row", marginLeft: 10 }}>
               {arrayimage.length === 0 ? (
                 <View
                   style={{
@@ -296,7 +286,7 @@ export default function ThongTinNhom({ navigation, route }) {
                 <Ionicons name="people-outline" size={21} color="#7F8284" />
                 <TouchableOpacity onPress={handleXemThanhVien}>
                   <Text style={{ marginLeft: 17, fontSize: 16 }}>
-                    Xem thành viên <Text style={{ fontSize: 12 }}>(5)</Text>
+                    Xem thành viên <Text style={{ fontSize: 15 }}>(5)</Text>
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -512,11 +502,11 @@ export default function ThongTinNhom({ navigation, route }) {
                       justifyContent: "center",
                       alignItems: "center",
                     }}>
-                    <AntDesign name="addusergroup" size={20} color="#111111" />
+                    <FontAwesome6 name="user" size={18} color="#111111" />
                   </View>
                 </TouchableOpacity>
 
-                <Text style={{ textAlign: "center", color: "#212121" }}>Thêm thành viên</Text>
+                <Text style={{ textAlign: "center", color: "#212121" }}>Trang cá nhân</Text>
               </View>
               <View style={{ marginHorizontal: 11, height: 80, width: 70, alignItems: "center", justifyContent: "center" }}>
                 <TouchableOpacity>
@@ -630,7 +620,7 @@ export default function ThongTinNhom({ navigation, route }) {
                 <Ionicons name="chevron-forward-outline" size={17} color="#7C828A" style={{ marginRight: 10 }} />
               </TouchableOpacity>
             </View>
-            <View style={{ flexDirection: "row", marginLeft: 30 }}>
+            <View style={{ flexDirection: "row", marginLeft: 10 }}>
               {arrayimage.length === 0 ? (
                 <View
                   style={{
@@ -701,7 +691,7 @@ export default function ThongTinNhom({ navigation, route }) {
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10 }}>
                 <Ionicons name="person-add-outline" size={21} color="#7C828A" style={{ transform: [{ rotateY: "180deg" }] }} />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={AddFriendToGroup}>
                   <Text style={{ marginLeft: 17, fontSize: 16 }}>Thêm {name} vào nhóm</Text>
                 </TouchableOpacity>
               </View>
@@ -890,5 +880,6 @@ export default function ThongTinNhom({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
+    flex: 1,
   },
 });

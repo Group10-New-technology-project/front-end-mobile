@@ -235,7 +235,7 @@ export default function DanhBaScreen({ navigation }) {
       <Modal
         style={styles.modal_container}
         isVisible={isBottomSheetVisible}
-        swipeDirection={["left", "right", "down", "up"]}
+        swipeDirection={["left", "right"]}
         animationIn="slideInLeft"
         animationOut="slideOutRight"
         onSwipeComplete={toggleBottomSheet}
@@ -266,10 +266,12 @@ export default function DanhBaScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFF",
   },
   modal_container: {
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "FFFFFF",
   },
   modal_size: {
     backgroundColor: "white",
@@ -331,7 +333,9 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50,
   },
-  contacts_container: {},
+  contacts_container: {
+    // backgroundColor: "white",
+  },
   one_contact: {
     flexDirection: "row",
     alignItems: "center",

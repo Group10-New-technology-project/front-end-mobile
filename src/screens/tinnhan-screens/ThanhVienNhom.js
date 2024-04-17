@@ -9,6 +9,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ThanhVienNhom({ route, navigation }) {
   const { conversationId } = route.params;
+  console.log("conversationId:", conversationId);
   const [users, setUsers] = useState([]);
   const [leader, setLeader] = useState(null);
   const [deputies, setDeputies] = useState([]);
