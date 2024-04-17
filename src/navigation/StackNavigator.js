@@ -37,7 +37,7 @@ import ChanhSender from "../screens/test-screens/ChanhSender";
 import ThongTinNhom from "../screens/tinnhan-screens/ThongTinNhom";
 import ThanhVienNhom from "../screens/tinnhan-screens/ThanhVienNhom";
 import TruongNhomMoi from "../screens/tinnhan-screens/TruongNhomMoi";
-import ChuyenTiep from "../screens/tinnhan-screens/chuyentiep";
+import ChuyenTiep from "../screens/tinnhan-screens/ChuyenTiep";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
