@@ -14,7 +14,7 @@ const s3 = new S3({
 });
 
 export default function TaoNhom({ navigation }) {
-  const ID = "661917fe718c270bc360f2e9";
+  const ID = "661f4a461946a130d7110e8b";
   const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/default_icon_camera.png");
   const [imageURL, setImageURL] = useState(null);
   const [users, setUsers] = useState([]);

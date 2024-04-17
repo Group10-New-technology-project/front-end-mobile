@@ -13,7 +13,7 @@ export default function NhapSoDienThoai({ navigation }) {
     } else {
       formattedPhoneNumber = "+84" + SoDienThoai;
     }
-    navigation.navigate("NhapMaXacThuc", {
+    navigation.navigate("TaoMatKhau", {
       phone2: formattedPhoneNumber.slice(3),
       SoDienThoai: formattedPhoneNumber,
     });
