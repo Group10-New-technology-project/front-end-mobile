@@ -1,5 +1,4 @@
 import React from "react";
-import { Text } from "react-native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TabsComponent } from "./BottomTabs";
 //COMPONENTS
@@ -32,15 +31,13 @@ import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiM
 import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
 import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
 import TimKiem from "../screens/khac-screens/TimKiem";
-import Demo from "../screens/test-screens/Demo";
-import DemoReadFile from "../screens/test-screens/DemoReadFile";
-import ChatChanh from "../screens/test-screens/ChatChanh";
 import TaoNhom from "../screens/khac-screens/TaoNhom";
 import ChanhRecived from "../screens/test-screens/ChanhRecived";
 import ChanhSender from "../screens/test-screens/ChanhSender";
 import ThongTinNhom from "../screens/tinnhan-screens/ThongTinNhom";
 import ThanhVienNhom from "../screens/tinnhan-screens/ThanhVienNhom";
 import TruongNhomMoi from "../screens/tinnhan-screens/TruongNhomMoi";
+import ChuyenTiep from "../screens/tinnhan-screens/chuyentiep";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
@@ -172,27 +169,6 @@ export function StackNavigator() {
         }}
       />
       <Stack.Screen
-        name="Demo"
-        component={Demo}
-        options={{
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
-        name="DemoReadFile"
-        component={DemoReadFile}
-        options={{
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
-        name="ChatChanh"
-        component={ChatChanh}
-        options={{
-          headerShown: true,
-        }}
-      />
-      <Stack.Screen
         name="TaoNhom"
         component={TaoNhom}
         options={{
@@ -240,6 +216,16 @@ export function StackNavigator() {
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Chọn trưởng nhóm mới" />,
         }}
+      />
+      <Stack.Screen
+        name="ChuyenTiep"
+        component={ChuyenTiep}
+        options={
+          {
+            // headerShown: true,
+            // headerLeft: () => <CustomBackButton routeName="Chuyển tiếp" />,
+          }
+        }
       />
     </Stack.Navigator>
   );

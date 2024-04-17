@@ -13,6 +13,7 @@ export default function ThanhVienNhom({ route, navigation }) {
   const [leader, setLeader] = useState(null);
   const [deputies, setDeputies] = useState([]);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [isModalVisiblePhoNhom, setModalVisiblePhoNhom] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userData, setUserData] = useState(null);
 
@@ -47,7 +48,7 @@ export default function ThanhVienNhom({ route, navigation }) {
         setUsers(memberUsers);
         const deputyUsers = response.data.deputy?.map((deputy) => deputy.userId._id);
         setDeputies(deputyUsers);
-        // console.log("Deputies:", deputyUsers);
+        console.log("Deputies:", deputyUsers);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -55,16 +56,25 @@ export default function ThanhVienNhom({ route, navigation }) {
   };
 
   const handleChonThanhVien = (item) => {
-    console.log(userData);
-    if (userData !== leader) {
-      console.log(item._id);
+    setSelectedUser(item);
+    // setModalVisible(true);
+    console.log("userData", item._id);
+    if (deputies.includes(userData)) {
+      console.log("Bạn là phó nhóm");
+      setModalVisiblePhoNhom(true);
+    } else if (userData === leader) {
+      console.log("bạn là trưởng nhóm");
+      setModalVisible(true);
+    } else {
       return;
     }
-    setModalVisible(true);
-    setSelectedUser(item);
   };
+
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
+  };
+  const toggleModal2 = () => {
+    setModalVisiblePhoNhom(!isModalVisiblePhoNhom);
   };
 
   const handleThemPhoNhom = async () => {
@@ -181,6 +191,7 @@ export default function ThanhVienNhom({ route, navigation }) {
         isVisible={isModalVisible}
         onBackdropPress={toggleModal}
         backdropOpacity={0.5}
+        // swipeDirection={"down"}
         animationIn="fadeInUp"
         animationOut="fadeOutDown">
         <View style={styles.modalContent}>
@@ -226,6 +237,37 @@ export default function ThanhVienNhom({ route, navigation }) {
           </View>
         </View>
       </Modal>
+      {/* Modal2 */}
+      <Modal
+        style={styles.modalContainer}
+        isVisible={isModalVisiblePhoNhom}
+        onBackdropPress={toggleModal2}
+        swipeDirection={"down"}
+        backdropOpacity={0.5}
+        animationIn="fadeInUp"
+        animationOut="fadeOutDown">
+        <View style={styles.modalContent2}>
+          <View style={styles.headerModal}>
+            <Text style={[{ paddingLeft: 110 }, styles.content_5]}>Thông tin thành viên</Text>
+            <TouchableOpacity onPress={toggleModal2}>
+              <AntDesign name="close" size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+          <View style={{ borderWidth: 0.5, borderColor: "#E4E4E4" }} />
+          <View style={styles.modal_user}>
+            <Image source={{ uri: selectedUser?.avatar }} style={{ width: 50, height: 50, borderRadius: 50, marginRight: 15 }} />
+            <Text style={styles.content_1}>{selectedUser?.name}</Text>
+          </View>
+          <View style={styles.user_container}>
+            <Text style={styles.content_2}>Xem thông tin cá nhân</Text>
+            {selectedUser?._id !== leader && !deputies.includes(selectedUser?._id) && (
+              <TouchableOpacity onPress={handleXoaThanhVien}>
+                <Text style={[styles.content_2, { color: "red" }]}>Xóa khỏi nhóm</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -254,12 +296,18 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     backgroundColor: "white",
   },
+  modalContent2: {
+    width: Dimensions.get("window").width,
+    height: 290,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+    backgroundColor: "white",
+  },
   headerModal: {
     padding: 12,
     alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
-    // backgroundColor: "green",
   },
   modal_user: {
     flexDirection: "row",

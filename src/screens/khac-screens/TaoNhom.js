@@ -6,6 +6,7 @@ import * as ImagePicker from "expo-image-picker";
 import { S3 } from "aws-sdk";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME, API_URL } from "@env";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const s3 = new S3({
   accessKeyId: ACCESS_KEY_ID,
@@ -14,7 +15,6 @@ const s3 = new S3({
 });
 
 export default function TaoNhom({ navigation }) {
-  const ID = "661f4a461946a130d7110e8b";
   const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/default_icon_camera.png");
   const [imageURL, setImageURL] = useState(null);
   const [users, setUsers] = useState([]);
@@ -25,22 +25,40 @@ export default function TaoNhom({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/api/v1/users/getFriendWithDetails/${ID}`);
-        setUsers(response.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
-    fetchUserData();
+    fetchDataUserLogin();
   }, []);
 
   useEffect(() => {
     if (arrayFriends.length === 0) {
-      setArrayFriends([ID]);
+      setArrayFriends([]);
     }
   }, []);
+
+  const fetchDataUserLogin = async () => {
+    try {
+      const storedUserData = await AsyncStorage.getItem("userData");
+      if (storedUserData) {
+        const user = JSON.parse(storedUserData);
+        console.log("Đã lấy id của người dùng:", user._id);
+        fetchUserData(user._id);
+        setArrayFriends([user._id]);
+      } else {
+        console.log("Không có thông tin người dùng được lưu");
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+    }
+  };
+
+  const fetchUserData = async (userData) => {
+    console.log("userData:", userData);
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/users/getFriendWithDetails/${userData}`);
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
 
   const handleCheckBox = (id) => {
     const index = arrayFriends.indexOf(id);
