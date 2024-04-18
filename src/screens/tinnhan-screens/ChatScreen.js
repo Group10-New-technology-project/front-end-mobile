@@ -346,7 +346,7 @@ function MessageBubble({
         const updatedMessages = conversation.messages.filter((msg) => msg._id !== messageId);
         // Cập nhật lại conversation với danh sách tin nhắn mới
         const updatedConversation = { ...conversation, messages: updatedMessages };
-        socketRef.current.emit("message", { message: "Tin nhắn đã được xóa thành công", room: conversation?._id });
+        socketRef.current.emit("sendMessage", { message: "Tin nhắn đã được xóa thành công", room: conversation?._id });
         // Cập nhật lại trạng thái của conversation
         setConversation(updatedConversation);
         setModalVisible(false);
@@ -383,7 +383,7 @@ function MessageBubble({
         console.log("ID tin nhắn:", messageId);
         console.log("ID cuộc trò chuyện:", conversation?._id);
         console.log("ID thành viên:", findMemberId());
-        socketRef.current.emit("message", { message: "Tin nhắn đã được thu hồi", room: conversation?._id });
+        socketRef.current.emit("sendMessage", { message: "Tin nhắn đã được thu hồi", room: conversation?._id });
         setModalVisible(false);
         // Bạn có thể thêm các hành động khác sau khi thu hồi tin nhắn thành công ở đây
       } else {
@@ -465,7 +465,6 @@ function MessageBubble({
     const mes = message.content;
     const fullName = message.memberId?.userId?.name;
     const firstWord = mes.split(" ")[0];
-    console.log(firstWord);
     useEffect(() => {
       // Chỉ chạy khi component được render lần đầu tiên
       if (!isAdd && !isDelete && !isChange) {
@@ -480,11 +479,11 @@ function MessageBubble({
     }, [mes, isAdd, isDelete, isChange]);
     return (
       <View style={styles.notifyContainer}>
-        {isChange && <FontAwesome5 name="key" size={24} color="#79B836" />}
+        {isChange && <FontAwesome5 name="key" size={20} color="#79B836" />}
         <Image source={{ uri: message.memberId.userId.avatar }} style={{ width: 20, height: 20, borderRadius: 20 }}></Image>
         <Text style={styles.notifyText}>{message.content}</Text>
-        {isAdd && <MaterialIcons style={{ paddingLeft: 10 }} name="accessibility-new" size={24} color="#FBC94C" />}
-        {isDelete && <FontAwesome style={{ paddingLeft: 10 }} name="sign-out" size={24} color="black" />}
+        {isAdd && <MaterialIcons style={{ paddingLeft: 10 }} name="accessibility-new" size={20} color="#FBC94C" />}
+        {isDelete && <FontAwesome style={{ paddingLeft: 10 }} name="sign-out" size={20} color="black" />}
       </View>
     );
   };
@@ -714,7 +713,7 @@ export default function ChatScreen({ route }) {
   };
 
   const listenToMessages = () => {
-    socketRef.current.on("message", (message) => {
+    socketRef.current.on("sendMessage", (message) => {
       console.log("Tin nhắn mới:", message);
       fetchData();
     });
@@ -869,7 +868,7 @@ export default function ChatScreen({ route }) {
         listenToMessages();
         setTextInputValue("");
         setSelectedImages([]);
-        socketRef.current.emit("message", { message: messageContent, room: conversationId });
+        socketRef.current.emit("sendMessage", { message: messageContent, room: conversationId });
       } else {
         console.error("Lỗi khi gửi tin nhắn:", responseData);
       }
@@ -1034,8 +1033,9 @@ export default function ChatScreen({ route }) {
         setMessages((prevMessages) => [...prevMessages, responseData]);
         listenToMessages();
         setTextInputValue("");
+        setMessageRepply(null);
         setSelectedImages([]);
-        socketRef.current.emit("message", { message: messageContent, room: conversationId });
+        socketRef.current.emit("sendMessage", { message: messageContent, room: conversationId });
       } else {
         console.error("Lỗi khi gửi tin nhắn:", responseData);
       }
@@ -1155,7 +1155,7 @@ export default function ChatScreen({ route }) {
         listenToMessages();
         setTextInputValue("");
         setSelectedImages([]);
-        socketRef.current.emit("message", { message: audioUrl, room: conversationId });
+        socketRef.current.emit("sendMessage", { message: audioUrl, room: conversationId });
       } else {
         console.error("Lỗi khi gửi tin nhắn âm thanh:", responseData);
       }
@@ -1683,15 +1683,16 @@ const styles = StyleSheet.create({
     alignItems: "center", // Căn giữa theo chiều ngang
     alignSelf: "center",
     backgroundColor: "#fff",
-    borderRadius: 10,
-    paddingHorizontal: 20,
-    height: 25,
+    borderRadius: 25,
+    paddingHorizontal: 10,
+    height: 24,
     flexDirection: "row",
   },
   notifyText: {
-    fontSize: 14, // Đặt kích thước chữ mong muốn
+    fontSize: 12, // Đặt kích thước chữ mong muốn
     color: "#000", // Đặt màu chữ là màu đen
     textAlign: "center", // Căn giữa nội dung văn bản
     paddingLeft: 10,
+    fontWeight: "400",
   },
 });

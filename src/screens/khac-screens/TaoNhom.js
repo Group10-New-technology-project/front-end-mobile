@@ -7,6 +7,7 @@ import { S3 } from "aws-sdk";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME, API_URL } from "@env";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { set } from "firebase/database";
 
 const s3 = new S3({
   accessKeyId: ACCESS_KEY_ID,
@@ -26,16 +27,7 @@ export default function TaoNhom({ navigation, route }) {
   const [isViewCheckBox, setIsViewCheckBox] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [myName, setMyName] = useState(null);
-
-  // const findMemberId = async (id) => {
-  //   try {
-  //     const response = await axios.get(`${API_URL}/api/v1/member/getMemberByUserId/${id}`);
-  //     console.log("MemberId:", response.data._id);
-  //     return response.data._id;
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
+  const [memberId, setmemberId] = useState(null);
 
   useEffect(() => {
     fetchDataUserLogin();
@@ -54,7 +46,9 @@ export default function TaoNhom({ navigation, route }) {
         const user = JSON.parse(storedUserData);
         console.log("Đã lấy id của người dùng:", user._id);
         fetchUserData(user._id);
+        fetchMemberId(user._id);
         setMyName(user);
+        console.log("user", user);
         if (userFriendId === null) {
           setArrayFriends([user._id]);
         } else {
@@ -78,6 +72,16 @@ export default function TaoNhom({ navigation, route }) {
     }
   };
 
+  const fetchMemberId = async (userID) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/member/getMemberByUserId/${userID}`);
+      const data = response.data._id;
+      setmemberId(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const handleCheckBox = (id) => {
     const index = arrayFriends.indexOf(id);
     if (index !== -1) {
@@ -89,10 +93,20 @@ export default function TaoNhom({ navigation, route }) {
     }
   };
 
+  const fetchMessagesNotify = async (conversationID) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+        conversationId: conversationID,
+        content: `${myName.name.slice(myName.name.lastIndexOf(" ") + 1)} đã tạo nhóm ${nameGroup}`,
+        memberId: memberId,
+        type: "notify",
+      });
+    } catch (error) {
+      console.error("Error creating conversation:", error);
+    }
+  };
+
   const createConversation = async () => {
-    console.log("ten nhom:", nameGroup);
-    console.log("anh nhom:", imageURL);
-    console.log("Ma name", myName);
     if (arrayFriends.length < 3) {
       Alert.alert("Lỗi tạo nhóm", "Vui lòng chọn ít nhất 2 người bạn");
       return;
@@ -103,18 +117,7 @@ export default function TaoNhom({ navigation, route }) {
         name: nameGroup,
         groupImage: imageURL,
       });
-      console.log("Conversation created:", response.data);
-      // try {
-      //   const response2 = await axios.post(`${API_URL}/api/v1/messages/addMessage`, {
-      //     conversationId: response.data._id,
-      //     content: `${myName.name} đã tạo nhóm ${nameGroup}`,
-      //     memberId: findMemberId(myName._id),
-      //     type: "notify",
-      //   });
-      //   console.log("Conversation created:", response2.data);
-      // } catch (error) {
-      //   console.error("Error creating conversation:", error);
-      // }
+      fetchMessagesNotify(response.data._id);
       navigation.navigate("Tabs");
     } catch (error) {
       console.error("Error creating conversation:", error);

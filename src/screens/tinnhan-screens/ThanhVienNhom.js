@@ -1,26 +1,39 @@
 import { useEffect } from "react";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Dimensions, Alert } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
 import Modal from "react-native-modal";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import { set } from "firebase/database";
+import io from "socket.io-client";
 export default function ThanhVienNhom({ route, navigation }) {
   const { conversationId } = route.params;
   console.log("conversationId:", conversationId);
   const [users, setUsers] = useState([]);
   const [leader, setLeader] = useState(null);
   const [deputies, setDeputies] = useState([]);
+  const socketRef = useRef(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [isModalVisiblePhoNhom, setModalVisiblePhoNhom] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
   const [userData, setUserData] = useState(null);
-
+  const [memberId, setmemberId] = useState(null);
+  const [myName, setMyName] = useState(null);
   useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io(`${API_URL}`);
+    }
     fetchUserData();
     fetchDataUserLogin();
+    return () => {
+      if (socketRef.current) {
+        console.log("Ngắt kết nối socket");
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
   }, []);
 
   const fetchDataUserLogin = async () => {
@@ -30,6 +43,8 @@ export default function ThanhVienNhom({ route, navigation }) {
         const user = JSON.parse(storedUserData);
         console.log("Thông tin người dùng đã đăng nhập:", user._id);
         setUserData(user._id);
+        setMyName(user.name);
+        fetchMemberId(user._id);
       } else {
         console.log("Không có thông tin người dùng được lưu");
       }
@@ -49,7 +64,6 @@ export default function ThanhVienNhom({ route, navigation }) {
         setUsers(memberUsers);
         const deputyUsers = response.data.deputy?.map((deputy) => deputy.userId._id);
         setDeputies(deputyUsers);
-        console.log("Deputies:", deputyUsers);
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -111,21 +125,23 @@ export default function ThanhVienNhom({ route, navigation }) {
     }
   };
   const handleXoaThanhVien = async () => {
-    console.log("xoa thanh vien", selectedUser._id);
+    // console.log("xoa thanh vien", selectedUser._id);
     setModalVisible(false);
     try {
       const response = await axios.post(`${API_URL}/api/v1/conversation/leaveConversation`, {
         conversationID: conversationId,
         userID: selectedUser._id,
       });
-
       fetchUserData();
+      fetchMessagesNotify(selectedUser.name);
+      socketRef.current.emit("sendMessage", { message: "messageContent", room: conversationId });
       Alert.alert("Thông báo", `Đã xóa thành viên ${selectedUser.name} khỏi nhóm thành công`);
     } catch (error) {
       console.error("Error:", error.response.data);
       Alert.alert("Error", "Failed to remove deputy from conversation. Please try again.");
     }
   };
+
   const handleChuyenNhomTruong = async () => {
     console.log("chuyen nhom truong", selectedUser._id);
     setModalVisible(false);
@@ -134,7 +150,6 @@ export default function ThanhVienNhom({ route, navigation }) {
         conversationID: conversationId,
         newLeaderUserID: selectedUser._id,
       });
-
       fetchUserData();
       Alert.alert("Thông báo", `Chuyển trưởng nhóm đến ${selectedUser.name} thành công`);
     } catch (error) {
@@ -142,6 +157,7 @@ export default function ThanhVienNhom({ route, navigation }) {
       Alert.alert("Error", "Failed to remove deputy from conversation. Please try again.");
     }
   };
+
   const handleGiaiTanNhom = async () => {
     setModalVisible(false);
     try {
@@ -164,6 +180,29 @@ export default function ThanhVienNhom({ route, navigation }) {
     } catch (error) {
       console.error("Error:", error.response.data);
       Alert.alert("Error", "Failed. Please try again.");
+    }
+  };
+
+  const fetchMemberId = async (userID) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/member/getMemberByUserId/${userID}`);
+      const data = response.data._id;
+      setmemberId(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const fetchMessagesNotify = async (nameUser) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+        conversationId: conversationId,
+        content: `${myName.slice(myName.lastIndexOf(" ") + 1)} đã đuổi ${nameUser.slice(nameUser.lastIndexOf(" ") + 1)} khỏi nhóm`,
+        memberId: memberId,
+        type: "notify",
+      });
+    } catch (error) {
+      console.error("Error creating conversation:", error);
     }
   };
 

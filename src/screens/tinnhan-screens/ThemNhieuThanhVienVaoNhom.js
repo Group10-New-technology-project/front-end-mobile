@@ -1,24 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput, Alert, Dimensions, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { Checkbox } from "expo-checkbox";
 import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import io from "socket.io-client";
 
 export default function ThemNhieuThanhVienVaoNhom({ navigation, route }) {
   const { conversationId } = route.params;
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const socketRef = useRef(null);
   const [arrayNewFriends, setArrayNewFriends] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
   const [arrayFriendsID, setArrayFriendsID] = useState([]);
+  const [myName, setMyName] = useState("");
+  const [memberId, setmemberId] = useState("");
 
   useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io(`${API_URL}`);
+    }
+    joinRoom();
     fetchDataUserLogin();
     fetchArrayUser();
     console.log("arrayNewFriends:", arrayFriendsID);
+    return () => {
+      if (socketRef.current) {
+        console.log("Ngắt kết nối socket");
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
   }, []);
-
+  const joinRoom = () => {
+    socketRef.current.emit("joinRoom", { roomId: conversationId, userId: "1111" });
+  };
   useEffect(() => {
     console.log("arrayNewFriends:", arrayNewFriends);
   }, [arrayNewFriends]);
@@ -30,6 +47,8 @@ export default function ThemNhieuThanhVienVaoNhom({ navigation, route }) {
         const user = JSON.parse(storedUserData);
         console.log("Đã lấy id của người dùng:", user._id);
         fetchUserData(user._id);
+        setMyName(user.name);
+        fetchMemberId(user._id);
       } else {
         console.log("Không có thông tin người dùng được lưu");
       }
@@ -37,6 +56,17 @@ export default function ThemNhieuThanhVienVaoNhom({ navigation, route }) {
       console.error("Lỗi khi lấy thông tin người dùng:", error);
     }
   };
+
+  const fetchMemberId = async (userID) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/member/getMemberByUserId/${userID}`);
+      const data = response.data._id;
+      setmemberId(data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const fetchArrayUser = async () => {
     try {
       const response = await axios.get(`${API_URL}/api/v1/conversation/getArrayUserConversationUsers/${conversationId}`);
@@ -66,9 +96,24 @@ export default function ThemNhieuThanhVienVaoNhom({ navigation, route }) {
         conversationID: conversationId,
         arrayUserID: arrayNewFriends,
       });
-      console.log("response:", response.data);
+      // console.log("response:", response.data);
+      fetchMessagesNotify(conversationId);
+      socketRef.current.emit("sendMessage", { message: "messageContent", room: conversationId });
       Alert.alert("Thông báo", "Thêm thành viên mới vào nhóm thành công");
       navigation.goBack();
+    } catch (error) {
+      console.error("Error creating conversation:", error);
+    }
+  };
+
+  const fetchMessagesNotify = async (con) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+        conversationId: con,
+        content: `${myName.slice(myName.lastIndexOf(" ") + 1)} đã thêm 1 thành viên mới`,
+        memberId: memberId,
+        type: "notify",
+      });
     } catch (error) {
       console.error("Error creating conversation:", error);
     }

@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 import { useIsFocused } from "@react-navigation/native";
 import { set } from "firebase/database";
+import io from "socket.io-client";
 
 export default function TinNhanScreen({ navigation }) {
   const isFocused = useIsFocused();
@@ -12,6 +13,7 @@ export default function TinNhanScreen({ navigation }) {
   const [userID, setUserID] = useState(""); // Thêm userID
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState({});
+  const socketRef = useRef(null);
   const [TuiGui, setTuiGui] = useState("");
 
   const convertToStandardFormat = (createdAt) => {
@@ -23,72 +25,89 @@ export default function TinNhanScreen({ navigation }) {
     return createdAt;
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const storedUserData = await AsyncStorage.getItem("userData");
-        if (storedUserData) {
-          const user = JSON.parse(storedUserData);
-          // console.log("Thông tin người dùng đã đăng nhập:", user);
-          // console.log("ID người dùng 1", user._id);
-          setUserData(user);
-          setUserID(user._id); // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
-          // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
-          await fetchConversations(user._id);
-        } else {
-          console.log("Không có thông tin người dùng được lưu");
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error);
+  const fetchData = async () => {
+    try {
+      const storedUserData = await AsyncStorage.getItem("userData");
+      if (storedUserData) {
+        const user = JSON.parse(storedUserData);
+        // console.log("Thông tin người dùng đã đăng nhập:", user);
+        // console.log("ID người dùng 1", user._id);
+        setUserData(user);
+        setUserID(user._id); // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
+        // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
+        await fetchConversations(user._id);
+      } else {
+        console.log("Không có thông tin người dùng được lưu");
       }
-    };
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+    }
+  };
+  const fetchConversations = async (userID) => {
+    try {
+      const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByUserId/${userID}`);
+      const data = await response.json();
+      // console.log("Dữ liệu cuộc trò chuyện:", data);
+      if (Array.isArray(data)) {
+        setConversations(data);
+        setLoading(false);
 
-    const userId = userData._id;
-
-    const fetchConversations = async (userID) => {
-      try {
-        const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByUserId/${userID}`);
-        const data = await response.json();
-        // console.log("Dữ liệu cuộc trò chuyện:", data);
-        if (Array.isArray(data)) {
-          setConversations(data);
-          setLoading(false);
-
-          const lastMsgs = {};
-          data.forEach((item) => {
-            if (item.messages && item.messages.length > 0) {
-              lastMsgs[item._id] = item.messages[item.messages.length - 1].content;
-              let check = item.messages[item.messages.length - 1].memberId.userId._id;
-              if (check == userID) {
-                setTuiGui("Bạn: ");
-              }
-              let isImage = item.messages[item.messages.length - 1].type;
-              if (isImage === "image") {
-                lastMsgs[item._id] = "Hình ảnh";
-              } else if (isImage === "file") {
-                lastMsgs[item._id] = "Tài liệu";
-              } else if (isImage === "audio") {
-                lastMsgs[item._id] = "Voice message";
-              } else if (isImage === "video") {
-                lastMsgs[item._id] = "Video";
-              }
+        const lastMsgs = {};
+        data.forEach((item) => {
+          if (item.messages && item.messages.length > 0) {
+            lastMsgs[item._id] = item.messages[item.messages.length - 1].content;
+            let check = item.messages[item.messages.length - 1].memberId.userId._id;
+            if (check == userID) {
+              setTuiGui("Bạn: ");
             }
-          });
-          setLastMessages(lastMsgs);
-          // console.log("Tin nhắn cuối cùng:", lastMsgs);
-        } else {
-          console.error("Dữ liệu trả về không phải là một mảng:", data);
-        }
-      } catch (error) {
-        console.error("Lỗi khi tải cuộc trò chuyện:", error);
+            let isImage = item.messages[item.messages.length - 1].type;
+            if (isImage === "image") {
+              lastMsgs[item._id] = "Hình ảnh";
+            } else if (isImage === "file") {
+              lastMsgs[item._id] = "Tài liệu";
+            } else if (isImage === "audio") {
+              lastMsgs[item._id] = "Voice message";
+            } else if (isImage === "video") {
+              lastMsgs[item._id] = "Video";
+            }
+          }
+        });
+        setLastMessages(lastMsgs);
+        // console.log("Tin nhắn cuối cùng:", lastMsgs);
+      } else {
+        console.error("Dữ liệu trả về không phải là một mảng:", data);
       }
-    };
+    } catch (error) {
+      console.error("Lỗi khi tải cuộc trò chuyện:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io(`${API_URL}`);
+    }
+    listenToMessages();
+    fetchData();
+    const userId = userData._id;
 
     if (isFocused) {
       fetchData();
     }
+    return () => {
+      if (socketRef.current) {
+        console.log("Ngắt kết nối socket");
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
   }, [isFocused]);
 
+  const listenToMessages = () => {
+    socketRef.current.on("sendMessage", (message) => {
+      console.log("Tin nhắn mới:", message);
+      fetchData();
+    });
+  };
   const truncateString = (str, maxLength) => {
     return str.length > maxLength ? str.slice(0, maxLength - 3) + "..." : str;
   };

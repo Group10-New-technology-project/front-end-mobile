@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView } from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView, Alert } from "react-native";
 import { AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons, Feather, FontAwesome6 } from "@expo/vector-icons";
 import { API_URL } from "@env";
+import axios from "axios";
 
 export default function ThongTinNhom({ navigation, route }) {
   const { conversationId, userId } = route.params;
@@ -12,6 +13,43 @@ export default function ThongTinNhom({ navigation, route }) {
   const [image, setImage] = useState("a");
   const [arrayimage, setArrayImage] = useState([]);
   const [isFirstSelected, setIsFirstSelected] = useState([true, true, true]);
+  const handleXoaThanhVien = async () => {
+    try {
+      console.log("conversationId", conversationId);
+      console.log("userId", userId);
+      const response = await axios.post(`${API_URL}/api/v1/conversation/leaveConversation`, {
+        conversationID: conversationId,
+        userID: userId,
+      });
+      navigation.navigate("Tabs");
+    } catch (error) {
+      console.error("Error:", error.response.data);
+      Alert.alert("Error", "Failed to remove deputy from conversation. Please try again.");
+    }
+  };
+  const handleGiaiTanNhom = async () => {
+    try {
+      Alert.alert("Thông báo", "Bạn có chắc chắn muốn giải tán nhóm?", [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            const response = await axios.post(`${API_URL}/api/v1/conversation/deleteConversationById/${conversationId}`);
+            console.log("Giai tan nhom thanh cong");
+            Alert.alert("Thông báo", "Đã giải tán nhóm thành công");
+            navigation.navigate("Tabs");
+          },
+        },
+      ]);
+    } catch (error) {
+      console.error("Error:", error.response.data);
+      Alert.alert("Error", "Failed. Please try again.");
+    }
+  };
 
   const toggleSelection = (index) => {
     setIsFirstSelected((prevState) => {
@@ -445,7 +483,7 @@ export default function ThongTinNhom({ navigation, route }) {
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10, alignItems: "center" }}>
                 <Ionicons name="log-out-outline" size={20} color="#EC514C" style={{ transform: [{ rotateY: "180deg" }] }} />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => handleXoaThanhVien()}>
                   <Text style={{ marginLeft: 17, fontSize: 16, color: "#EC514C" }}>Rời nhóm</Text>
                 </TouchableOpacity>
               </View>
