@@ -14,8 +14,10 @@ const s3 = new S3({
   region: REGION,
 });
 
-export default function TaoNhom({ navigation }) {
-  const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/default_icon_camera.png");
+export default function TaoNhom({ navigation, route }) {
+  const { userFriendId } = route.params;
+
+  const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/icon-camera.png");
   const [imageURL, setImageURL] = useState(null);
   const [users, setUsers] = useState([]);
   const [arrayFriends, setArrayFriends] = useState([]);
@@ -23,6 +25,17 @@ export default function TaoNhom({ navigation }) {
   const [isViewVisible, setIsViewVisible] = useState(true);
   const [isViewCheckBox, setIsViewCheckBox] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [myName, setMyName] = useState(null);
+
+  // const findMemberId = async (id) => {
+  //   try {
+  //     const response = await axios.get(`${API_URL}/api/v1/member/getMemberByUserId/${id}`);
+  //     console.log("MemberId:", response.data._id);
+  //     return response.data._id;
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
 
   useEffect(() => {
     fetchDataUserLogin();
@@ -41,7 +54,12 @@ export default function TaoNhom({ navigation }) {
         const user = JSON.parse(storedUserData);
         console.log("Đã lấy id của người dùng:", user._id);
         fetchUserData(user._id);
-        setArrayFriends([user._id]);
+        setMyName(user);
+        if (userFriendId === null) {
+          setArrayFriends([user._id]);
+        } else {
+          setArrayFriends([user._id, userFriendId]);
+        }
       } else {
         console.log("Không có thông tin người dùng được lưu");
       }
@@ -74,11 +92,11 @@ export default function TaoNhom({ navigation }) {
   const createConversation = async () => {
     console.log("ten nhom:", nameGroup);
     console.log("anh nhom:", imageURL);
-    if (arrayFriends.length < 2) {
+    console.log("Ma name", myName);
+    if (arrayFriends.length < 3) {
       Alert.alert("Lỗi tạo nhóm", "Vui lòng chọn ít nhất 2 người bạn");
       return;
     }
-    console.log("arrayFriends:", arrayFriends);
     try {
       const response = await axios.post(`${API_URL}/api/v1/conversation/createConversationWeb`, {
         arrayUserId: arrayFriends,
@@ -86,6 +104,17 @@ export default function TaoNhom({ navigation }) {
         groupImage: imageURL,
       });
       console.log("Conversation created:", response.data);
+      // try {
+      //   const response2 = await axios.post(`${API_URL}/api/v1/messages/addMessage`, {
+      //     conversationId: response.data._id,
+      //     content: `${myName.name} đã tạo nhóm ${nameGroup}`,
+      //     memberId: findMemberId(myName._id),
+      //     type: "notify",
+      //   });
+      //   console.log("Conversation created:", response2.data);
+      // } catch (error) {
+      //   console.error("Error creating conversation:", error);
+      // }
       navigation.navigate("Tabs");
     } catch (error) {
       console.error("Error creating conversation:", error);
@@ -126,7 +155,7 @@ export default function TaoNhom({ navigation }) {
     console.log(result);
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      await uploadImageToS3(result.assets[0].uri);
+      // await uploadImageToS3(result.assets[0].uri);
     }
   };
 
@@ -165,22 +194,19 @@ export default function TaoNhom({ navigation }) {
   };
   const handleCheckPress = () => {
     if (nameGroup.length < 3 || nameGroup.length > 16) {
-      Alert.alert("Error", "Tên nhóm phải có ít nhất 3 ký tự");
-      return;
-    } else if (imageURL === null) {
-      Alert.alert("Error", "Vui lòng chọn ảnh nhóm");
+      Alert.alert("Thông báo", "Tên nhóm phải có ít nhất 3 ký tự");
       return;
     }
     setIsViewVisible(false);
     setNameGroup(nameGroup);
-    console.log("nameGroup:", nameGroup);
+    uploadImageToS3(image);
   };
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFF" }}>
         <ActivityIndicator size="large" color="#0091FF" />
-        <Text style={{ marginTop: 10, fontSize: 16, fontWeight: "400", color: "#0091FF" }}>Đang tải ảnh lên...</Text>
+        <Text style={{ marginTop: 10, fontSize: 16, fontWeight: "400", color: "#0091FF" }}>Đang tải..</Text>
       </View>
     );
   }
@@ -192,7 +218,7 @@ export default function TaoNhom({ navigation }) {
           <TextInput
             style={styles.input}
             placeholder="Nhập tên nhóm"
-            placeholderTextColor="#AEAEAE"
+            placeholderTextColor="#808080"
             onChangeText={handleTextChange}
             value={nameGroup}
           />
@@ -274,7 +300,7 @@ const styles = StyleSheet.create({
     height: 55,
     width: 55,
     borderRadius: 55,
-    // opacity: 1,
+    backgroundColor: "#D5D5D5",
   },
   btn_continue: {
     alignItems: "center",

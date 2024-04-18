@@ -15,21 +15,34 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   Button,
+  Alert,
 } from "react-native";
-// import Input from "../../components/InputChat";
 import Modal from "react-native-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { AntDesign, Ionicons, Entypo, MaterialIcons, FontAwesome6, FontAwesome, MaterialCommunityIcons } from "@expo/vector-icons";
+import {
+  AntDesign,
+  Ionicons,
+  Entypo,
+  MaterialIcons,
+  FontAwesome6,
+  FontAwesome,
+  MaterialCommunityIcons,
+  FontAwesome5,
+} from "@expo/vector-icons";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME, API_URL } from "@env";
 import io from "socket.io-client";
 import { set } from "firebase/database";
-import { Audio } from "expo-av";
+import { Audio, Video } from "expo-av";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import * as Linking from "expo-linking";
+import * as MediaLibrary from "expo-media-library";
 import { S3 } from "aws-sdk";
 import { useNavigation } from "@react-navigation/native";
+import { Zocial } from "@expo/vector-icons";
+import { render } from "react-dom";
+import ImageZoom from "react-native-image-pan-zoom";
 
 const heightApp = Dimensions.get("window").height;
 const widthApp = Dimensions.get("window").width;
@@ -49,18 +62,27 @@ function MessageBubble({
   const [modalX, setModalX] = useState(0);
   const [modalY, setModalY] = useState(0);
   const navigation = useNavigation();
+  const [viewedImage, setViewedImage] = useState(null);
+  const [isPlaying, setIsPlaying] = React.useState(false);
 
   const avatar = message.memberId?.userId?.avatar;
+
+  const modalWidth = Dimensions.get("window").width;
+  const modalHeight = Dimensions.get("window").height;
+
+  // Kích thước cụ thể cho khung zoom và ảnh (ví dụ: 80% của kích thước modal)
+  const zoomWidth = modalWidth * 0.8;
+  const zoomHeight = modalHeight * 0.8;
 
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
 
   const openModal = (event) => {
-    console.log("Open modal");
+    // console.log("Open modal");
     setModalVisible(true);
-    setModalX(event.nativeEvent.pageX - 150);
-    setModalY(event.nativeEvent.pageY);
+    setModalX(event.nativeEvent.pageX - 180);
+    setModalY(event.nativeEvent.pageY - 150);
   };
   const formatTimestamp = (timestamp) => {
     const date = new Date(timestamp);
@@ -98,12 +120,42 @@ function MessageBubble({
     }
   };
 
+  // xem anh
+  const openImageViewer = (imageUrl) => {
+    setViewedImage(imageUrl);
+  };
+
+  const rederMainMessage = () => {
+    const replyMessage = message.reply;
+    if (message.deleteMember && message.deleteMember.length > 0) {
+      for (let i = 0; i < message.deleteMember.length; i++) {
+        if (message.deleteMember[i]._id === memberID) {
+          console.log("ID", message.deleteMember[i]._id);
+          return null;
+        }
+      }
+    } else if (replyMessage.length > 0) {
+      return (
+        <View>
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <View style={styles.verticalLine}></View>
+            <View style={styles.replyContainer}>
+              <Text style={styles.replyName}>{replyMessage[0].memberId?.userId?.name}</Text>
+              <Text style={styles.replyContent}>{replyMessage[0].content}</Text>
+            </View>
+          </View>
+          {renderMessageContent()}
+        </View>
+      );
+    } else {
+      return renderMessageContent();
+    }
+    // console.log("ID thành viên:", memberID);
+  };
+
   const renderMessageContent = () => {
     // neu co memberId trong message.deleteMembers thi khong hien thi message
     const memberID = findMemberId();
-    const RepMess = replyMessage;
-    console.log("RepMess", RepMess);
-    // console.log("ID thành viên:", memberID);
     if (message.deleteMember && message.deleteMember.length > 0) {
       for (let i = 0; i < message.deleteMember.length; i++) {
         if (message.deleteMember[i]._id === memberID) {
@@ -118,7 +170,9 @@ function MessageBubble({
       } else if (message.type === "image") {
         const imageUrls = message.content.split(", ");
         return imageUrls.map((imageUrl, index) => (
-          <Image key={index} source={{ uri: imageUrl }} resizeMode="contain" style={{ width: 250, height: 250 }} />
+          <TouchableOpacity key={index} onPress={() => openImageViewer(imageUrl)}>
+            <Image key={index} source={{ uri: imageUrl }} resizeMode="contain" style={{ width: 250, height: 250 }} />
+          </TouchableOpacity>
         ));
       } else if (message.type === "audio") {
         return (
@@ -136,6 +190,33 @@ function MessageBubble({
             <TouchableOpacity onPress={() => openFile(message.content)}>
               <Text style={styles.fileName}>{renderFile(message.content)}</Text>
             </TouchableOpacity>
+          </View>
+        );
+      } else if (message.type === "video") {
+        return (
+          <View style={styles.videoContainer}>
+            <Video
+              source={{ uri: message.content }}
+              rate={1.0}
+              volume={1.0}
+              isMuted={false}
+              resizeMode="cover"
+              shouldPlay={isPlaying}
+              isLooping
+              style={styles.video}
+              // onPlaybackStatusUpdate={(status) => setIsPlaying(status.isPlaying)}
+              useNativeControls
+            />
+            {isPlaying && (
+              <TouchableOpacity onPress={handlePlayPause} style={styles.pauseButton}>
+                <MaterialIcons name="pause" size={50} color="white" />
+              </TouchableOpacity>
+            )}
+            {!isPlaying && (
+              <TouchableOpacity onPress={handlePlayPause} style={styles.playButton}>
+                <MaterialIcons name="play-arrow" size={50} color="white" />
+              </TouchableOpacity>
+            )}
           </View>
         );
       } else {
@@ -245,7 +326,7 @@ function MessageBubble({
   const deleteMessage = async (messageId) => {
     try {
       const response = await fetch(`${API_URL}/api/v1/messages/deleteMessage`, {
-        method: "DELETE",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -258,12 +339,14 @@ function MessageBubble({
 
       if (response.ok) {
         console.log("Tin nhắn đã được xóa thành công");
+        Alert.alert("Thông báo", "Tin nhắn đã được xóa thành công");
         console.log("ID tin nhắn:", messageId);
         console.log("ID cuộc trò chuyện:", conversation?._id);
         console.log("ID thành viên:", findMemberId());
         const updatedMessages = conversation.messages.filter((msg) => msg._id !== messageId);
         // Cập nhật lại conversation với danh sách tin nhắn mới
         const updatedConversation = { ...conversation, messages: updatedMessages };
+        socketRef.current.emit("message", { message: "Tin nhắn đã được xóa thành công", room: conversation?._id });
         // Cập nhật lại trạng thái của conversation
         setConversation(updatedConversation);
         setModalVisible(false);
@@ -300,8 +383,7 @@ function MessageBubble({
         console.log("ID tin nhắn:", messageId);
         console.log("ID cuộc trò chuyện:", conversation?._id);
         console.log("ID thành viên:", findMemberId());
-        listenToMessages();
-        socketRef.current.emit("messageDeleted", { messageId, conversationId: conversation?._id });
+        socketRef.current.emit("message", { message: "Tin nhắn đã được thu hồi", room: conversation?._id });
         setModalVisible(false);
         // Bạn có thể thêm các hành động khác sau khi thu hồi tin nhắn thành công ở đây
       } else {
@@ -320,98 +402,232 @@ function MessageBubble({
   // luu message khi an va tra loi
   const saveMessageRepply = (message) => {
     setMessageRepply(message);
+    setModalVisible(false);
+  };
+
+  // download anh
+  const downloadAndSaveImage = async (imageUrl) => {
+    try {
+      // Kiểm tra quyền truy cập thư viện ảnh
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== "granted") {
+        alert("không có quyền truy cập thư viện ảnh");
+        return;
+      }
+
+      // Tải xuống ảnh và lưu trữ vào thư mục tạm thời của ứng dụng
+      const temporaryFileUri = `${FileSystem.cacheDirectory}temp_image.jpg`;
+      const downloadResult = await FileSystem.downloadAsync(imageUrl, temporaryFileUri);
+
+      if (downloadResult.status === 200) {
+        // Lưu ảnh vào thư viện hình ảnh của thiết bị
+        const asset = await MediaLibrary.createAssetAsync(downloadResult.uri);
+        alert("Tải ảnh thành công");
+      } else {
+        alert("Failed to download image!");
+      }
+    } catch (error) {
+      console.error("Error while downloading and saving image:", error);
+    }
+  };
+
+  // play video
+  const PlayVideo = ({ videoUri }) => {
+    // Phát video khi component được render
+    React.useEffect(() => {
+      // Tạo một audio instance
+      const video = new Video.Sound();
+
+      // Load video từ URI được cung cấp
+      video.loadAsync({ uri: videoUri }).then(() => {
+        // Phát video sau khi đã được load thành công
+        video.playAsync();
+      });
+
+      // Trả về một hàm để dọn dẹp khi component bị unmount
+      return () => {
+        video.unloadAsync();
+      };
+    }, [videoUri]); // Render lại component nếu videoUri thay đổi
+
+    return null; // Không cần phải render bất cứ điều gì
+  };
+
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
+  };
+
+  const renderNotifyMessage = () => {
+    const [isAdd, setIsAdd] = useState(false);
+    const [isDelete, setIsDelete] = useState(false);
+    const [isChange, setIsChange] = useState(false);
+    const [isAvt, setIsAvt] = useState("");
+    const mes = message.content;
+    const fullName = message.memberId?.userId?.name;
+    const firstWord = mes.split(" ")[0];
+    console.log(firstWord);
+    useEffect(() => {
+      // Chỉ chạy khi component được render lần đầu tiên
+      if (!isAdd && !isDelete && !isChange) {
+        if (mes.includes("thêm")) {
+          setIsAdd(true);
+        } else if (mes.includes("đuổi")) {
+          setIsDelete(true);
+        } else if (mes.includes("bổ nhiệm")) {
+          setIsChange(true);
+        }
+      }
+    }, [mes, isAdd, isDelete, isChange]);
+    return (
+      <View style={styles.notifyContainer}>
+        {isChange && <FontAwesome5 name="key" size={24} color="#79B836" />}
+        <Image source={{ uri: message.memberId.userId.avatar }} style={{ width: 20, height: 20, borderRadius: 20 }}></Image>
+        <Text style={styles.notifyText}>{message.content}</Text>
+        {isAdd && <MaterialIcons style={{ paddingLeft: 10 }} name="accessibility-new" size={24} color="#FBC94C" />}
+        {isDelete && <FontAwesome style={{ paddingLeft: 10 }} name="sign-out" size={24} color="black" />}
+      </View>
+    );
   };
 
   return (
-    <View style={[styles.rowContainer, { alignSelf: !isCurrentUserMessage ? "flex-start" : "flex-end" }]}>
-      {!isCurrentUserMessage && !(message.deleteMember && message.deleteMember.length > 0) && (
-        <Image source={{ uri: avatar }} style={styles.avatar} />
-      )}
-      {message.deleteMember && message.deleteMember.length > 0 ? null : (
-        <TouchableOpacity
-          style={[styles.message_container, { backgroundColor: !isCurrentUserMessage ? "#FFFF" : "#CCF3FF" }]}
-          onLongPress={openModal}>
-          {renderMessageContent()}
-          <Text style={styles.timeText}>{formatTimestamp(message.createAt)}</Text>
-        </TouchableOpacity>
-      )}
-      <Modal
-        style={styles.modalContainer}
-        isVisible={isModalVisible}
-        onBackdropPress={toggleModal}
-        backdropOpacity={0.5}
-        animationIn="fadeInUp"
-        animationOut="fadeOutDown">
-        <View style={[styles.modalContent, { top: modalY, left: modalX }]}>
-          <View style={styles.modalItems}>
-            <TouchableOpacity style={styles.modalItem}>
-              <View style={styles.icons}>
-                <Ionicons name="copy" size={33} color="#FF9900" />
-              </View>
-              <Text style={styles.content1}>Sao chép</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalItem} onPress={() => saveMessageRepply(message)}>
-              <View style={styles.icons}>
-                <Entypo name="reply" size={38} color="#E318D1" />
-              </View>
-              <Text style={styles.content1}>Trả lời</Text>
-            </TouchableOpacity>
+    <>
+      {message.type === "notify" ? (
+        renderNotifyMessage()
+      ) : (
+        <View style={[styles.rowContainer, { alignSelf: !isCurrentUserMessage ? "flex-start" : "flex-end" }]}>
+          {!isCurrentUserMessage && !(message.deleteMember && message.deleteMember.length > 0) && (
+            <Image source={{ uri: avatar }} style={styles.avatar} />
+          )}
+          {message.deleteMember && message.deleteMember.length > 0 ? null : (
             <TouchableOpacity
-              style={styles.modalItem}
-              setModalVisible={false}
-              onPress={() => {
-                navigation.navigate("ChuyenTiep", { message: message, memberId: findMemberId(), userID: userData._id });
-                setModalVisible(false);
-              }}>
-              <View style={[styles.icons, { transform: [{ rotate: "deg" }] }]}>
-                <Entypo name="forward" size={38} color="#004D9A" />
-              </View>
-              <Text style={styles.content1}>Chuyển tiếp</Text>
+              style={[
+                styles.message_container,
+                {
+                  backgroundColor: !isCurrentUserMessage ? "#FFFF" : "#CCF3FF",
+                },
+              ]}
+              onLongPress={openModal}>
+              {rederMainMessage()}
+              <Text style={styles.timeText}>{formatTimestamp(message.createAt)}</Text>
             </TouchableOpacity>
-          </View>
-          <View style={styles.modalItems}>
-            <TouchableOpacity style={styles.modalItem} onPress={() => deleteMessage(message._id)}>
-              <View style={styles.icons}>
-                <MaterialIcons name="delete" size={36} color="#797979" />
+          )}
+          <Modal isVisible={viewedImage !== null} onBackdropPress={() => setViewedImage(null)} backdropOpacity={0.8}>
+            <View style={{ flex: 1, backgroundColor: "#000", padding: 20 }}>
+              <View style={{ flexDirection: "row", alignItems: "center", marginBottom: 10 }}>
+                {message?.memberId?.userId?.avatar && (
+                  <Image
+                    source={{ uri: message?.memberId?.userId?.avatar }}
+                    resizeMode="cover"
+                    style={{ width: 40, height: 40, borderRadius: 20, marginRight: 10 }}
+                  />
+                )}
+                <View style={{ width: 220 }}>
+                  <Text style={{ fontSize: 16, fontWeight: "bold", color: "#fff", marginBottom: 5 }}>
+                    {message?.memberId?.userId?.name}
+                  </Text>
+                  <Text style={{ fontSize: 12, color: "#ccc" }}>{formatTimestamp(message.createAt)}</Text>
+                </View>
+                <TouchableOpacity onPress={() => downloadAndSaveImage(message.content)}>
+                  <AntDesign name="download" size={24} color="#fff" />
+                </TouchableOpacity>
+                <Entypo name="dots-three-vertical" style={{ padding: 5 }} size={24} color="#fff" />
               </View>
-              <Text style={styles.content1}>Xóa</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalItem} onPress={() => thuHoiMessage(message._id)}>
-              <View style={styles.icons}>
-                <MaterialIcons name="restore" size={38} color="#1DBC5D" />
+              <TouchableWithoutFeedback onPress={() => setViewedImage(null)}>
+                <View style={{ flex: 1 }}>
+                  <ImageZoom
+                    cropWidth={zoomWidth}
+                    cropHeight={Dimensions.get("window").height}
+                    imageWidth={Dimensions.get("window").width}
+                    imageHeight={Dimensions.get("window").height}>
+                    <Image source={{ uri: viewedImage }} style={{ width: "100%", height: "100%" }} resizeMode="contain" />
+                  </ImageZoom>
+                </View>
+              </TouchableWithoutFeedback>
+              <TouchableOpacity onPress={() => setViewedImage(null)} style={{ alignItems: "center", marginTop: 20 }}>
+                <AntDesign name="closecircle" size={24} color="#fff" />
+              </TouchableOpacity>
+            </View>
+          </Modal>
+
+          <Modal
+            style={styles.modalContainer}
+            isVisible={isModalVisible}
+            onBackdropPress={toggleModal}
+            backdropOpacity={0.5}
+            animationIn="fadeInUp"
+            animationOut="fadeOutDown">
+            <View style={[styles.modalContent, { top: modalY, left: modalX }]}>
+              <View style={styles.modalItems}>
+                <TouchableOpacity style={styles.modalItem}>
+                  <View style={styles.icons}>
+                    <Ionicons name="copy" size={33} color="#FF9900" />
+                  </View>
+                  <Text style={styles.content1}>Sao chép</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalItem} onPress={() => saveMessageRepply(message)}>
+                  <View style={styles.icons}>
+                    <Entypo name="reply" size={38} color="#E318D1" />
+                  </View>
+                  <Text style={styles.content1}>Trả lời</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.modalItem}
+                  setModalVisible={false}
+                  onPress={() => {
+                    navigation.navigate("ChuyenTiep", { message: message, memberId: findMemberId(), userID: userData._id });
+                    setModalVisible(false);
+                  }}>
+                  <View style={[styles.icons, { transform: [{ rotate: "deg" }] }]}>
+                    <Entypo name="forward" size={38} color="#004D9A" />
+                  </View>
+                  <Text style={styles.content1}>Chuyển tiếp</Text>
+                </TouchableOpacity>
               </View>
-              <Text style={styles.content1}>Thu hồi</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalItem}>
-              <View style={styles.icons}>
-                <FontAwesome6 name="cloud-arrow-down" size={26} color="#00A3FF" />
+              <View style={styles.modalItems}>
+                <TouchableOpacity style={styles.modalItem} onPress={() => deleteMessage(message._id)}>
+                  <View style={styles.icons}>
+                    <MaterialIcons name="delete" size={36} color="#797979" />
+                  </View>
+                  <Text style={styles.content1}>Xóa</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalItem} onPress={() => thuHoiMessage(message._id)}>
+                  <View style={styles.icons}>
+                    <MaterialIcons name="restore" size={38} color="#1DBC5D" />
+                  </View>
+                  <Text style={styles.content1}>Thu hồi</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalItem}>
+                  <View style={styles.icons}>
+                    <FontAwesome6 name="cloud-arrow-down" size={26} color="#00A3FF" />
+                  </View>
+                  <Text style={styles.content1}>Lưu cloud</Text>
+                </TouchableOpacity>
               </View>
-              <Text style={styles.content1}>Lưu cloud</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.modalItems}>
-            <TouchableOpacity style={styles.modalItem}>
-              <View style={styles.icons}>
-                <AntDesign name="exclamationcircle" size={30} color="#4D4D4D" />
+              <View style={styles.modalItems}>
+                <TouchableOpacity style={styles.modalItem}>
+                  <View style={styles.icons}>
+                    <AntDesign name="exclamationcircle" size={30} color="#4D4D4D" />
+                  </View>
+                  <Text style={styles.content1}>Coming</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalItem}>
+                  <View style={styles.icons}>
+                    <AntDesign name="exclamationcircle" size={30} color="#4D4D4D" />
+                  </View>
+                  <Text style={styles.content1}>Coming</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.modalItem}>
+                  <View style={styles.icons}>
+                    <AntDesign name="exclamationcircle" size={30} color="#4D4D4D" />
+                  </View>
+                  <Text style={styles.content1}>Coming</Text>
+                </TouchableOpacity>
               </View>
-              <Text style={styles.content1}>Coming</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalItem}>
-              <View style={styles.icons}>
-                <AntDesign name="exclamationcircle" size={30} color="#4D4D4D" />
-              </View>
-              <Text style={styles.content1}>Coming</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.modalItem}>
-              <View style={styles.icons}>
-                <AntDesign name="exclamationcircle" size={30} color="#4D4D4D" />
-              </View>
-              <Text style={styles.content1}>Coming</Text>
-            </TouchableOpacity>
-          </View>
+            </View>
+          </Modal>
         </View>
-      </Modal>
-    </View>
+      )}
+    </>
   );
 }
 
@@ -442,6 +658,7 @@ export default function ChatScreen({ route }) {
   const [isCurrentUserMessage, setIsCurrentUserMessage] = useState(false);
   const [isSelectedIconShowOthers, setIsSelectedIconShowOthers] = useState(false);
   const [messageRepply, setMessageRepply] = useState("");
+  const [selectedVideo, setSelectedVideo] = useState("");
 
   const handleShowImage = () => {
     Keyboard.dismiss();
@@ -536,6 +753,133 @@ export default function ChatScreen({ route }) {
     // console.log("member", member);
     return member ? member._id : null;
   };
+
+  // video
+
+  const selectVideoFromGallery = async () => {
+    try {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permissionResult.granted === false) {
+        alert("Permission to access media library is required!");
+        return;
+      }
+
+      const pickerResult = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+        allowsEditing: false,
+        quality: 0.5,
+        allowsMultipleSelection: true,
+        videoMaxSize: 10 * 1024 * 1024, // 10MB
+      });
+
+      if (!pickerResult.cancelled && pickerResult.assets) {
+        const selectedVideoURIs = pickerResult.assets.map((asset) => asset.uri);
+        console.log("Các video đã chọn:", selectedVideoURIs);
+        setShowOthers(false);
+        setSelectedVideo(selectedVideoURIs);
+        setShowKeyboard(false);
+      }
+    } catch (error) {
+      console.error("Lỗi khi chọn video từ thư viện:", error);
+    }
+  };
+
+  // đẩy video len s3
+  const uploadVideoToS3 = async (imageUri) => {
+    try {
+      const response = await fetch(imageUri);
+      const blob = await response.blob();
+      const currentTime = new Date();
+      const formattedTime = currentTime.toISOString().slice(0, 19).replace(/[-T:]/g, "");
+      const milliseconds = currentTime.getMilliseconds();
+      const filename = imageUri.split("/").pop();
+      const fileName = `Video_${formattedTime}_${milliseconds}_${filename}`;
+      const params = {
+        Bucket: S3_BUCKET_NAME,
+        Key: fileName,
+        Body: blob,
+        ACL: "public-read",
+      };
+
+      const s3 = new S3({
+        accessKeyId: ACCESS_KEY_ID,
+        secretAccessKey: SECRET_ACCESS_KEY,
+        region: REGION,
+      });
+
+      const uploadResponse = await s3.upload(params).promise();
+      console.log("Tải video thành công", uploadResponse.Location);
+      return uploadResponse.Location.toString();
+    } catch (error) {
+      console.error("Error uploading video", error);
+      throw error;
+    }
+  };
+  // send video
+  const sendVideo = async () => {
+    try {
+      const videoUrls = await Promise.all(selectedVideo.map(uploadVideoToS3));
+      let messageType = "text";
+      let messageContent = textInputValue;
+      if (videoUrls.length > 0) {
+        messageType = "video";
+        messageContent = videoUrls.join(", ");
+      }
+      let repMessage = messageRepply ? messageRepply : null;
+      console.log("Nội dung", messageContent);
+      console.log("ID", conversationId);
+      console.log("MemberID", findMemberId());
+      console.log("Type", messageType);
+      console.log("repMessage", repMessage);
+      console.log("ID Rep", repMessage?._id);
+      let response;
+      if (repMessage) {
+        console.log("Tin nhắn đã được trả lời");
+        response = await fetch(`${API_URL}/api/v1/messages/addReply`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            conversationId: conversationId,
+            content: messageContent,
+            memberId: findMemberId(),
+            type: messageType,
+            messageRepliedId: repMessage?._id,
+          }),
+        });
+      } else {
+        response = await fetch(`${API_URL}/api/v1/messages/addMessage`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            conversationId: conversationId,
+            content: messageContent,
+            memberId: findMemberId(),
+            type: messageType,
+          }),
+        });
+      }
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log("Tin nhắn đã được gửi:", responseData);
+        setMessages((prevMessages) => [...prevMessages, responseData]);
+        listenToMessages();
+        setTextInputValue("");
+        setSelectedImages([]);
+        socketRef.current.emit("message", { message: messageContent, room: conversationId });
+      } else {
+        console.error("Lỗi khi gửi tin nhắn:", responseData);
+      }
+    } catch (error) {
+      console.error("Lỗi khi gửi tin nhắn:", error);
+    } finally {
+      setIsSendingMessage(false);
+    }
+  };
+  // play video
 
   const selectImageFromGallery = async () => {
     try {
@@ -647,23 +991,43 @@ export default function ChatScreen({ route }) {
         messageType = "file";
         messageContent = fileUrl;
       }
+      let repMessage = messageRepply ? messageRepply : null;
       console.log("Nội dung", messageContent);
       console.log("ID", conversationId);
       console.log("MemberID", findMemberId());
       console.log("Type", messageType);
-      const response = await fetch(`${API_URL}/api/v1/messages/addMessage`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          conversationId: conversationId,
-          content: messageContent,
-          memberId: findMemberId(),
-          type: messageType,
-        }),
-      });
-
+      console.log("repMessage", repMessage);
+      console.log("ID Rep", repMessage?._id);
+      let response;
+      if (repMessage) {
+        console.log("Tin nhắn đã được trả lời");
+        response = await fetch(`${API_URL}/api/v1/messages/addReply`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            conversationId: conversationId,
+            content: messageContent,
+            memberId: findMemberId(),
+            type: messageType,
+            messageRepliedId: repMessage?._id,
+          }),
+        });
+      } else {
+        response = await fetch(`${API_URL}/api/v1/messages/addMessage`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            conversationId: conversationId,
+            content: messageContent,
+            memberId: findMemberId(),
+            type: messageType,
+          }),
+        });
+      }
       if (response.ok) {
         const responseData = await response.json();
         console.log("Tin nhắn đã được gửi:", responseData);
@@ -871,14 +1235,24 @@ export default function ChatScreen({ route }) {
     setMessageRepply(null);
   };
 
-  console.log("Message Repply", messageRepply);
-
+  // render for type message reply
+  const renderReplyMessage = (message) => {
+    if (message.type === "image") {
+      return <Image source={{ uri: message.content }} style={{ width: 50, height: 50 }}></Image>;
+    } else if (message.type === "audio") {
+      return <Ionicons name="musical-notes" size={24} color="black" />;
+    } else if (message.type === "video") {
+      return <Ionicons name="videocam" size={24} color="black" />;
+    } else if (message.type === "file") {
+      return <Ionicons name="document" size={24} color="black" />;
+    } else {
+      return <Text>{message.content}</Text>;
+    }
+  };
   return (
-    <SafeAreaView style={{ flex: 1 }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#F2F2F2" }}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text style={styles.title}>Zelo chat</Text>
-        </View>
+        <View style={styles.header}>{/* <Text style={styles.title}>Zelo chat</Text> */}</View>
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={90}>
           <FlatList
             ref={flatListRef}
@@ -911,7 +1285,8 @@ export default function ChatScreen({ route }) {
             <View style={styles.Reply}>
               <View style={styles.replyContent}>
                 <Text style={styles.nameReply}>{messageRepply.memberId.userId?.name}</Text>
-                <Text style={styles.messageContentReply}>{messageRepply.content}</Text>
+                {renderReplyMessage(messageRepply)}
+                {/* <Text style={styles.messageContentReply}>{messageRepply.content}</Text> */}
               </View>
               <AntDesign onPress={closeReply} style={styles.closeButton} name="close" size={24} color="black" />
             </View>
@@ -954,13 +1329,63 @@ export default function ChatScreen({ route }) {
             </View>
           )}
           {showOthers && (
-            <View style={{ height: 268, backgroundColor: "pink", flexDirection: "row" }}>
-              <TouchableOpacity style={styles.otherIconStyle} onPress={UseFile}>
-                <MaterialIcons name="attach-file" size={35} color="black" />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.otherIconStyle} onPress={takePhoto}>
-                <AntDesign name="camerao" size={35} color="black" />
-              </TouchableOpacity>
+            <View
+              style={{
+                height: 268,
+                backgroundColor: "#fff",
+                flexDirection: "row",
+                justifyContent: "center",
+                flexWrap: "wrap",
+                alignItems: "center",
+              }}>
+              <View style={styles.option}>
+                <TouchableOpacity style={styles.otherIconStyleViTri}>
+                  <AntDesign name="enviromento" size={35} color="#fff" />
+                </TouchableOpacity>
+                <Text>Định vị</Text>
+              </View>
+              <View style={styles.option}>
+                <TouchableOpacity style={styles.otherIconStyleFile} onPress={UseFile}>
+                  <MaterialIcons name="attach-file" size={35} color="#fff" />
+                </TouchableOpacity>
+                <Text>Tài liệu</Text>
+              </View>
+              <View style={styles.option}>
+                <TouchableOpacity style={styles.otherIconStyleCamera} onPress={takePhoto}>
+                  <AntDesign name="camerao" size={35} color="#fff" />
+                </TouchableOpacity>
+                <Text>Camera</Text>
+              </View>
+              <View style={styles.option}>
+                <TouchableOpacity style={styles.otherIconStyleCloud}>
+                  <AntDesign name="cloudo" size={35} color="#fff" />
+                </TouchableOpacity>
+                <Text>Cloud</Text>
+              </View>
+              <View style={styles.option}>
+                <TouchableOpacity style={styles.otherIconStyleGif}>
+                  <MaterialIcons name="gif" size={35} color="#fff" />
+                </TouchableOpacity>
+                <Text>@GIF</Text>
+              </View>
+              <View style={styles.option}>
+                <TouchableOpacity style={styles.otherIconStylePerson}>
+                  <Zocial name="persona" size={35} color="#fff" />
+                </TouchableOpacity>
+                <Text>Danh bạ</Text>
+              </View>
+              <View style={styles.option}>
+                <TouchableOpacity style={styles.otherIconStyleQR}>
+                  <MaterialCommunityIcons name="qrcode-remove" size={35} color="#fff" />
+                </TouchableOpacity>
+                <Text>Mã QR</Text>
+              </View>
+              <View style={styles.option}>
+                <TouchableOpacity style={styles.otherIconStyleMoney} onPress={selectVideoFromGallery}>
+                  <Entypo name="video" size={35} color="#fff" />
+                </TouchableOpacity>
+                <Text>Video</Text>
+              </View>
             </View>
           )}
           {showImage && (
@@ -993,13 +1418,12 @@ export default function ChatScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8F8F8",
   },
+
   header: {
     alignItems: "center",
     justifyContent: "center",
     height: 30,
-    // backgroundColor: "pink",
   },
   title: {
     fontSize: 20,
@@ -1076,6 +1500,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingLeft: 18,
     paddingRight: 18,
+    paddingVertical: 5,
     // backgroundColor: "green",
   },
   textInput_container: {
@@ -1085,6 +1510,7 @@ const styles = StyleSheet.create({
     borderColor: "#0091FF",
     fontSize: 16,
     paddingLeft: 14,
+    // backgroundColor: "#fff",
   },
   imageList: {
     flexDirection: "row",
@@ -1102,11 +1528,78 @@ const styles = StyleSheet.create({
     margin: 0,
     justifyContent: "flex-end",
   },
-  otherIconStyle: {
+  optionals: {
+    alignContent: "center",
+  },
+  otherIconStyleFile: {
     width: 70,
     height: 70,
-    backgroundColor: "white",
-    borderRadius: 10,
+    backgroundColor: "#4054D7",
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  // #D84B97
+  otherIconStylePerson: {
+    width: 70,
+    height: 70,
+    backgroundColor: "#3195E0",
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  otherIconStyleQR: {
+    width: 70,
+    height: 70,
+    backgroundColor: "#94EEC4",
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  otherIconStyleMoney: {
+    width: 70,
+    height: 70,
+    backgroundColor: "#D84B97",
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  otherIconStyleViTri: {
+    width: 70,
+    height: 70,
+    backgroundColor: "#FF5F83",
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  otherIconStyleGif: {
+    width: 70,
+    height: 70,
+    backgroundColor: "#53C97D",
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  otherIconStyleCamera: {
+    width: 70,
+    height: 70,
+    backgroundColor: "#DE5372",
+    borderRadius: 40,
+    justifyContent: "center",
+    alignItems: "center",
+    margin: 10,
+  },
+  otherIconStyleCloud: {
+    width: 70,
+    height: 70,
+    backgroundColor: "#3D7EF2",
+    borderRadius: 40,
     justifyContent: "center",
     alignItems: "center",
     margin: 10,
@@ -1142,5 +1635,63 @@ const styles = StyleSheet.create({
   messageContentReply: {
     color: "gray", // Màu xám cho nội dung tin nhắn
     fontSize: 12, // Kích thước font nhỏ hơn
+  },
+  replyContainer: {
+    borderRadius: 5,
+  },
+  replyName: {
+    fontWeight: "bold",
+    marginBottom: 5,
+  },
+  replyContent: {
+    marginBottom: 5,
+    color: "gray",
+  },
+  mainMessageContainer: {
+    marginLeft: 10,
+  },
+  verticalLine: {
+    width: 1.5,
+    height: "80%", // Chiều cao của đường dọc
+    backgroundColor: "#3989FF", // Màu sắc của đường dọc
+    marginRight: 5,
+  },
+  videoContainer: {
+    width: 250,
+    height: 250,
+    position: "relative",
+  },
+  video: {
+    flex: 1,
+  },
+  playButton: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  pauseButton: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  option: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  notifyContainer: {
+    justifyContent: "center",
+    alignItems: "center", // Căn giữa theo chiều ngang
+    alignSelf: "center",
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    paddingHorizontal: 20,
+    height: 25,
+    flexDirection: "row",
+  },
+  notifyText: {
+    fontSize: 14, // Đặt kích thước chữ mong muốn
+    color: "#000", // Đặt màu chữ là màu đen
+    textAlign: "center", // Căn giữa nội dung văn bản
+    paddingLeft: 10,
   },
 });

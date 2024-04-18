@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Dimensions, TouchableOpacity, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SearchBarTinNhan() {
   const navigation = useNavigation();
@@ -26,8 +27,7 @@ export default function SearchBarTinNhan() {
 
   const handleTaoNhom = () => {
     setModalVisible(!isModalVisible);
-    console.log("Tạo nhóm");
-    navigation.navigate("TaoNhom");
+    navigation.navigate("TaoNhom", { userFriendId: null });
   };
 
   return (

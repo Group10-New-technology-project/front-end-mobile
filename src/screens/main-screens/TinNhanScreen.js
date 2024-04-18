@@ -3,14 +3,16 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 import { useIsFocused } from "@react-navigation/native";
+import { set } from "firebase/database";
 
 export default function TinNhanScreen({ navigation }) {
   const isFocused = useIsFocused();
   const [conversations, setConversations] = useState([]);
   const [lastMessages, setLastMessages] = useState({});
-  const [userID, setUserID] = useState("");
+  const [userID, setUserID] = useState(""); // Thêm userID
   const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState({});
+  const [TuiGui, setTuiGui] = useState("");
 
   const convertToStandardFormat = (createdAt) => {
     const regexIso8601 = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
@@ -27,8 +29,8 @@ export default function TinNhanScreen({ navigation }) {
         const storedUserData = await AsyncStorage.getItem("userData");
         if (storedUserData) {
           const user = JSON.parse(storedUserData);
-          console.log("Thông tin người dùng đã đăng nhập:", user);
-          console.log("ID người dùng 1", user._id);
+          // console.log("Thông tin người dùng đã đăng nhập:", user);
+          // console.log("ID người dùng 1", user._id);
           setUserData(user);
           setUserID(user._id); // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
           // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
@@ -47,7 +49,7 @@ export default function TinNhanScreen({ navigation }) {
       try {
         const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByUserId/${userID}`);
         const data = await response.json();
-        console.log("Dữ liệu cuộc trò chuyện:", data);
+        // console.log("Dữ liệu cuộc trò chuyện:", data);
         if (Array.isArray(data)) {
           setConversations(data);
           setLoading(false);
@@ -56,6 +58,10 @@ export default function TinNhanScreen({ navigation }) {
           data.forEach((item) => {
             if (item.messages && item.messages.length > 0) {
               lastMsgs[item._id] = item.messages[item.messages.length - 1].content;
+              let check = item.messages[item.messages.length - 1].memberId.userId._id;
+              if (check == userID) {
+                setTuiGui("Bạn: ");
+              }
               let isImage = item.messages[item.messages.length - 1].type;
               if (isImage === "image") {
                 lastMsgs[item._id] = "Hình ảnh";
@@ -63,10 +69,13 @@ export default function TinNhanScreen({ navigation }) {
                 lastMsgs[item._id] = "Tài liệu";
               } else if (isImage === "audio") {
                 lastMsgs[item._id] = "Voice message";
+              } else if (isImage === "video") {
+                lastMsgs[item._id] = "Video";
               }
             }
           });
           setLastMessages(lastMsgs);
+          // console.log("Tin nhắn cuối cùng:", lastMsgs);
         } else {
           console.error("Dữ liệu trả về không phải là một mảng:", data);
         }
@@ -94,13 +103,13 @@ export default function TinNhanScreen({ navigation }) {
     const diffSeconds = Math.floor((diffTime % (1000 * 60)) / 1000);
 
     if (diffDays > 0) {
-      return `${diffDays} days `;
+      return `${diffDays} ngày `;
     } else if (diffHours > 0) {
-      return `${diffHours} hours `;
+      return `${diffHours} giờ `;
     } else if (diffMinutes > 0) {
-      return `${diffMinutes} minutes `;
+      return `${diffMinutes} phút `;
     } else {
-      return `${diffSeconds} seconds `;
+      return `${diffSeconds} giây `;
     }
   };
 
@@ -112,7 +121,6 @@ export default function TinNhanScreen({ navigation }) {
       return null;
     }
   };
-  console.log("Danh sách cuộc trò chuyện:", conversations);
 
   return (
     <View style={styles.container}>
@@ -129,7 +137,6 @@ export default function TinNhanScreen({ navigation }) {
             } else {
               const formattedCreatedAt = convertToStandardFormat(item.messages[item.messages.length - 1].createAt);
               messageTimeDiff = calculateTimeDiff(formattedCreatedAt);
-              console.log("Thời gian 2:", formattedCreatedAt);
             }
             let avatarUrl = "";
             let nameMem = "loading";
@@ -161,7 +168,9 @@ export default function TinNhanScreen({ navigation }) {
                     <View style={styles.section_header}>
                       <Text style={styles.text_content}>{nameMem}</Text>
                       <Text style={styles.text_message}>
-                        {sender._id != userID ? truncateString(lastMsg, 35) : truncateString(lastMsg, 35)}
+                        {item.type === "Direct" && item.messages.length > 0 && item.messages[item.messages.length - 1].type != "notify"
+                          ? TuiGui + truncateString(lastMsg, 35)
+                          : truncateString(lastMsg, 35)}
                       </Text>
                     </View>
                   </View>

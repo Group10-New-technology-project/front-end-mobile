@@ -41,7 +41,7 @@ export default function ChonAnhDaiDien({ navigation, route }) {
 
       // Nếu tạo người dùng thành công, chờ lấy thông tin người dùng và tạo thành viên
       await fetchUserByUserName();
-      navigation.navigate("DangNhap");
+      navigation.navigate("TrangChu");
     } catch (error) {
       console.error("Error signing up:", error);
       // Xử lý lỗi (ví dụ: hiển thị thông báo lỗi)

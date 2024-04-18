@@ -97,7 +97,8 @@ export default function ThemThanhVienVaoNhieuNhom({ navigation, route }) {
   };
 
   const handleTaoNhomWith = () => {
-    console.log("userFriendId:", userFriendId);
+    console.log(userFriendId);
+    navigation.navigate("TaoNhom", { userFriendId: userFriendId });
   };
 
   const renderItem = ({ item }) => {

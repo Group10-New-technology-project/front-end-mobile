@@ -9,13 +9,8 @@ export default function ThongTinNhom({ navigation, route }) {
   const [userFriendId, setUserFriendId] = useState(null);
   const [type, setType] = useState(null);
   const [name, setName] = useState("");
-  const [image, setImage] = useState("https://media-cdn-v2.laodong.vn/storage/newsportal/2023/8/26/1233821/Giai-Nhat--Dem-Sai-G.jpg");
-  const [arrayimage, setArrayImage] = useState([
-    // "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-002.jpg",
-    // "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-002.jpg",
-    // "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-006.jpg",
-    // "https://www.vietnamworks.com/hrinsider/wp-content/uploads/2023/12/hinh-nen-3d-thien-nhien-004.jpg",
-  ]);
+  const [image, setImage] = useState("a");
+  const [arrayimage, setArrayImage] = useState([]);
   const [isFirstSelected, setIsFirstSelected] = useState([true, true, true]);
 
   const toggleSelection = (index) => {
@@ -54,7 +49,7 @@ export default function ThongTinNhom({ navigation, route }) {
         }
 
         for (let i = 0; i < data.messages.length; i++) {
-          if (data.messages[i].type === "image" && data.messages[i].type === "video") {
+          if (data.messages[i].type === "image") {
             setArrayImage((arrayimage) => [...arrayimage, data.messages[i].content]);
           }
         }
@@ -70,9 +65,11 @@ export default function ThongTinNhom({ navigation, route }) {
   const handleThemThanhVien = () => {
     navigation.navigate("ThemNhieuThanhVienVaoNhom", { conversationId: conversationId });
   };
-
   const AddFriendToGroup = () => {
     navigation.navigate("ThemThanhVienVaoNhieuNhom", { userFriendId: userFriendId, name: name });
+  };
+  const handleTaoNhomVoi = () => {
+    navigation.navigate("TaoNhom", { userFriendId: userFriendId });
   };
 
   return (
@@ -214,7 +211,7 @@ export default function ThongTinNhom({ navigation, route }) {
                 <>
                   <FlatList
                     horizontal={true}
-                    data={arrayimage}
+                    data={arrayimage.slice(0, 4)}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
                       <TouchableOpacity>
@@ -645,7 +642,7 @@ export default function ThongTinNhom({ navigation, route }) {
                 <>
                   <FlatList
                     horizontal={true}
-                    data={arrayimage}
+                    data={arrayimage.slice(0, 4)}
                     keyExtractor={(item, index) => index.toString()}
                     renderItem={({ item }) => (
                       <TouchableOpacity>
@@ -678,7 +675,7 @@ export default function ThongTinNhom({ navigation, route }) {
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10 }}>
                 <AntDesign name="addusergroup" size={21} color="#7F8284" />
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleTaoNhomVoi}>
                   <Text style={{ marginLeft: 17, fontSize: 16 }}>Tạo nhóm với {name}</Text>
                 </TouchableOpacity>
               </View>
