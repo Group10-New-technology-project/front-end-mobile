@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView, Alert } from "react-native";
 import { AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons, Feather, FontAwesome6 } from "@expo/vector-icons";
 import { API_URL } from "@env";
 import axios from "axios";
-
+import io from "socket.io-client";
 export default function ThongTinNhom({ navigation, route }) {
   const { conversationId, userId } = route.params;
   const [ConversationData, setConversationData] = useState(null);
@@ -11,6 +11,7 @@ export default function ThongTinNhom({ navigation, route }) {
   const [type, setType] = useState(null);
   const [name, setName] = useState("");
   const [image, setImage] = useState("a");
+  const socketRef = useRef(null);
   const [arrayimage, setArrayImage] = useState([]);
   const [isFirstSelected, setIsFirstSelected] = useState([true, true, true]);
   const handleXoaThanhVien = async () => {
@@ -21,6 +22,7 @@ export default function ThongTinNhom({ navigation, route }) {
         conversationID: conversationId,
         userID: userId,
       });
+      socketRef.current.emit("sendMessage", { message: "messageContent", room: "conversationId" });
       navigation.navigate("Tabs");
     } catch (error) {
       console.error("Error:", error.response.data);
@@ -60,7 +62,17 @@ export default function ThongTinNhom({ navigation, route }) {
   };
 
   useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io(`${API_URL}`);
+    }
     fetchConversationData();
+    return () => {
+      if (socketRef.current) {
+        console.log("Ngắt kết nối socket");
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
   }, []);
 
   const fetchConversationData = async () => {

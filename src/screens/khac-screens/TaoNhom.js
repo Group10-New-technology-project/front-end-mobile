@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput, Alert, Dimensions, ActivityIndicator } from "react-native";
 import axios from "axios";
 import { Checkbox } from "expo-checkbox";
@@ -8,6 +8,7 @@ import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME, API_URL } fro
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { set } from "firebase/database";
+import io from "socket.io-client";
 
 const s3 = new S3({
   accessKeyId: ACCESS_KEY_ID,
@@ -21,6 +22,7 @@ export default function TaoNhom({ navigation, route }) {
   const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/icon-camera.png");
   const [imageURL, setImageURL] = useState(null);
   const [users, setUsers] = useState([]);
+  const socketRef = useRef(null);
   const [arrayFriends, setArrayFriends] = useState([]);
   const [nameGroup, setNameGroup] = useState("");
   const [isViewVisible, setIsViewVisible] = useState(true);
@@ -30,7 +32,18 @@ export default function TaoNhom({ navigation, route }) {
   const [memberId, setmemberId] = useState(null);
 
   useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io(`${API_URL}`);
+    }
+    joinRoom();
     fetchDataUserLogin();
+    return () => {
+      if (socketRef.current) {
+        console.log("Ngắt kết nối socket");
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -38,7 +51,9 @@ export default function TaoNhom({ navigation, route }) {
       setArrayFriends([]);
     }
   }, []);
-
+  const joinRoom = () => {
+    socketRef.current.emit("joinRoom", { roomId: "conversationId", userId: "1111" });
+  };
   const fetchDataUserLogin = async () => {
     try {
       const storedUserData = await AsyncStorage.getItem("userData");
@@ -118,6 +133,8 @@ export default function TaoNhom({ navigation, route }) {
         groupImage: imageURL,
       });
       fetchMessagesNotify(response.data._id);
+      Alert.alert("Thông báo", "Tạo nhóm thành công");
+      socketRef.current.emit("sendMessage", { message: response.data?._id, room: response.data?._id });
       navigation.navigate("Tabs");
     } catch (error) {
       console.error("Error creating conversation:", error);

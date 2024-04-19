@@ -1,21 +1,33 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, TextInput, FlatList, TouchableOpacity, Image, Dimensions, Alert } from "react-native";
 import { API_URL } from "@env";
 import { Checkbox } from "expo-checkbox";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
-
+import io from "socket.io-client";
 export default function ThemThanhVienVaoNhieuNhom({ navigation, route }) {
   const { userFriendId, name } = route.params;
   const [conversations, setConversations] = useState([]);
+  const socketRef = useRef(null);
   const [arrayConverstation, setArrayConverstation] = useState([]);
   const [arrayNewCovertation, setArrayNewCovertation] = useState([]);
   const [isChecked, setIsChecked] = useState(false);
 
   useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io(`${API_URL}`);
+    }
+
     fetchDataUserLogin();
     fetchArrayCovner();
+    return () => {
+      if (socketRef.current) {
+        console.log("Ngắt kết nối socket");
+        socketRef.current.disconnect();
+        socketRef.current = null;
+      }
+    };
   }, []);
 
   useEffect(() => {
@@ -76,6 +88,7 @@ export default function ThemThanhVienVaoNhieuNhom({ navigation, route }) {
         arrayConversationID: arrayNewCovertation,
       });
       console.log("response:", response.data);
+      socketRef.current.emit("sendMessage", { message: "messageContent", room: "conversationId" });
       Alert.alert("Thông báo", "Thêm thành viên mới vào nhóm thành công");
       navigation.goBack();
     } catch (error) {

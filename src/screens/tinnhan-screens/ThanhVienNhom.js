@@ -171,8 +171,9 @@ export default function ThanhVienNhom({ route, navigation }) {
           text: "OK",
           onPress: async () => {
             const response = await axios.post(`${API_URL}/api/v1/conversation/deleteConversationById/${conversationId}`);
-            console.log("Giai tan nhom thanh cong");
+            // console.log("Giai tan nhom thanh cong");
             Alert.alert("Thông báo", "Đã giải tán nhóm thành công");
+            socketRef.current.emit("sendMessage", { message: conversationId, room: conversationId });
             navigation.navigate("Tabs");
           },
         },
@@ -201,6 +202,7 @@ export default function ThanhVienNhom({ route, navigation }) {
         memberId: memberId,
         type: "notify",
       });
+      socketRef.current.emit("sendMessage", { message: conversationId, room: conversationId });
     } catch (error) {
       console.error("Error creating conversation:", error);
     }
