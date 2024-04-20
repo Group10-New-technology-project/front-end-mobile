@@ -1,12 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
-import {
-  Ionicons,
-  MaterialCommunityIcons,
-  AntDesign,
-  Feather,
-  FontAwesome,
-} from "@expo/vector-icons";
+import { Ionicons, MaterialCommunityIcons, AntDesign, Feather, FontAwesome } from "@expo/vector-icons";
 
 export default function CaiDatNhanh({ navigation }) {
   const handle_dangxuat = () => {
@@ -198,13 +192,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     height: 50,
   },
-  vector_location: { position: "absolute", right: 18 },
-  title1: { fontSize: 17, fontWeight: "500", marginLeft: 16 },
+  vector_location: {
+    position: "absolute",
+    right: 18,
+  },
+  title1: {
+    fontSize: 17,
+    fontWeight: "500",
+    marginLeft: 16,
+  },
   location_line: {
     alignItems: "flex-end",
   },
-  line: { borderWidth: 1, borderColor: "#ECECEC", width: "90%" },
-  line2: { borderWidth: 4, borderColor: "#ECECEC", width: "100%" },
+  line: {
+    borderWidth: 1,
+    borderColor: "#ECECEC",
+    width: "90%",
+  },
+  line2: {
+    borderWidth: 4,
+    borderColor: "#ECECEC",
+    width: "100%",
+  },
   btn_logout: {
     height: 50,
     backgroundColor: "#C5C5C5",

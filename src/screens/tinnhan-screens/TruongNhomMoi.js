@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-export default function QRCodeScreen() {
+export default function TruongNhomMoi() {
   return (
     <View style={styles.container}>
-      <Text>QRCodeScreen</Text>
+      <Text>New Screen</Text>
     </View>
   );
 }

@@ -35,14 +35,11 @@ export default function CaNhanScreen({ navigation }) {
       <View style={styles.header_pofile}>
         <View style={styles.tabs_menu}>
           {userData && userData.avatar ? (
-            <Image
-              style={{ width: 50, height: 50, borderRadius: 50 }}
-              source={{ uri: userData.avatar }}
-            />
+            <Image style={{ width: 50, height: 50, borderRadius: 50 }} source={{ uri: userData.avatar }} />
           ) : (
             <Image
               style={{ width: 50, height: 50, borderRadius: 50 }}
-              source={require("./image/Abstract1998.png")}
+              source={{ uri: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/IMG_2024-04-12_18-16-9.png" }}
             />
           )}
           <View style={styles.view_title}>
@@ -161,7 +158,7 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   tabs_menu: { flexDirection: "row", alignItems: "center" },
-  title: { fontSize: 17, fontWeight: "500", marginBottom: 10 },
+  title: { fontSize: 17, fontWeight: "500", marginBottom: 5 },
   title1: { fontSize: 17, fontWeight: "500" },
   title2: { fontSize: 14, color: "#696969", fontWeight: "400" },
   line: { borderWidth: 1, borderColor: "#ECECEC", width: 360 },

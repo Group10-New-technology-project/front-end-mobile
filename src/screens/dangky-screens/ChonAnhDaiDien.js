@@ -9,16 +9,11 @@ const s3 = new S3({
   secretAccessKey: SECRET_ACCESS_KEY,
   region: REGION,
 });
-console.log(ACCESS_KEY_ID);
-console.log(SECRET_ACCESS_KEY);
-console.log(REGION);
-console.log(S3_BUCKET_NAME);
-console.log(API_URL);
 
 export default function ChonAnhDaiDien({ navigation, route }) {
   const { password, SoDienThoai, name, birthday, Gender } = route.params;
   console.log("Da nhan", password, SoDienThoai, name, birthday, Gender);
-
+  const [idUser, setIdUser] = useState(null);
   const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/demo3.png");
   const [imageURL, setimageAvatar] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/demo3.png");
 
@@ -43,28 +38,53 @@ export default function ChonAnhDaiDien({ navigation, route }) {
       if (!response.ok) {
         throw new Error("Failed to sign up");
       }
-      // Nếu tạo người dùng thành công, chuyển hướng tới màn hình nhập thông tin cá nhân
-      navigation.navigate("Tabs");
+
+      // Nếu tạo người dùng thành công, chờ lấy thông tin người dùng và tạo thành viên
+      await fetchUserByUserName();
+      navigation.navigate("TrangChu");
     } catch (error) {
       console.error("Error signing up:", error);
       // Xử lý lỗi (ví dụ: hiển thị thông báo lỗi)
     }
   };
 
+  const fetchUserByUserName = async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/v1/users/username/${SoDienThoai}`);
+      if (!response.ok) {
+        console.log("Không tìm thấy người dùng");
+        return;
+      }
+      const data = await response.json();
+      setIdUser(data._id);
+      console.log("ID người dùng:", data._id);
+      createMember(data._id);
+      console.log("Tạo thành công thành viên");
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const createMember = async (userId) => {
+    console.log("Đa nhận", userId);
+    try {
+      const response = await fetch(`${API_URL}/api/v1/member/addMember/${userId}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Failed to create member");
+      }
+      console.log("Tạo thành công thành viên");
+    } catch (error) {
+      console.error("Error creating member:", error);
+    }
+  };
+
   const uploadImageToS3 = async (imageUri) => {
     try {
-      // const response = await fetch(imageUri);
-      // const blob = await response.blob();
-      // const originalFileName = imageUri.split("/").pop(); // Lấy tên file từ đường dẫn
-      // const timestamp = Date.now(); // Lấy timestamp hiện tại
-      // const fileName = `image_${timestamp}_${originalFileName}`; // Thêm timestamp vào tên tệp gốc
-      // const response = await fetch(imageUri);
-      // const blob = await response.blob();
-      // // Lấy ngày hiện tại và định dạng theo yêu cầu
-      // const currentDate = new Date();
-      // const formattedDate = currentDate.toISOString().slice(0, 10); // Lấy ngày tháng theo định dạng YYYY-MM-DD
-      // // Tạo tên file mới với định dạng 'IMG_Ngày hiện tại'
-      // const fileName = `IMG_${formattedDate}`;
       const response = await fetch(imageUri);
       const blob = await response.blob();
       // Lấy ngày hiện tại và định dạng theo yêu cầu
@@ -108,11 +128,10 @@ export default function ChonAnhDaiDien({ navigation, route }) {
     console.log(result);
     Alert.alert("Chọn ảnh thành công");
     //Đẩy lên S3
-    uploadImageToS3(result.assets[0].uri);
     if (!result.canceled) {
       setImage(result.assets[0].uri);
+      uploadImageToS3(result.assets[0].uri);
     }
-    // console.log(result);
   };
 
   return (

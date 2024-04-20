@@ -2,9 +2,10 @@ import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { TabsComponent } from "./BottomTabs";
 //COMPONENTS
-import SearchBar from "../components/SearchBar";
 import SearchBarSelect from "../components/SearchBarSelect";
 import CustomBackButton from "../components/CustomBackButton";
+import Header from "../components/Header";
+import HeaderTinNhan from "../components/HeaderTinNhan";
 //UTILS
 import Button from "../utils/Button";
 //SCREENS
@@ -30,6 +31,15 @@ import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiM
 import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
 import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
 import TimKiem from "../screens/khac-screens/TimKiem";
+import TaoNhom from "../screens/khac-screens/TaoNhom";
+import ChanhRecived from "../screens/test-screens/ChanhRecived";
+import ChanhSender from "../screens/test-screens/ChanhSender";
+import ThongTinNhom from "../screens/tinnhan-screens/ThongTinNhom";
+import ThanhVienNhom from "../screens/tinnhan-screens/ThanhVienNhom";
+import TruongNhomMoi from "../screens/tinnhan-screens/TruongNhomMoi";
+import ChuyenTiep from "../screens/tinnhan-screens/ChuyenTiep";
+import ThemNhieuThanhVienVaoNhom from "../screens/tinnhan-screens/ThemNhieuThanhVienVaoNhom";
+import ThemThanhVienVaoNhieuNhom from "../screens/tinnhan-screens/ThemThanhVienVaoNhieuNhom";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
@@ -40,17 +50,10 @@ export function StackNavigator() {
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
         headerShown: false,
-        animationTypeForReplace: "pop", // Sử dụng animationTypeForReplace
+        animationTypeForReplace: "pop",
         animation: "ios",
       }}>
-      <Stack.Screen
-        name="Tabs"
-        component={TabsComponent}
-        options={{
-          headerLeft: () => <SearchBar />,
-          headerShown: true,
-        }}
-      />
+      <Stack.Screen name="Tabs" component={TabsComponent} />
       <Stack.Screen
         name="TaiKhoanVaBaoMat"
         component={TaiKhoanVaBaoMat}
@@ -118,11 +121,10 @@ export function StackNavigator() {
       <Stack.Screen
         name="ChatScreen"
         component={ChatScreen}
-        options={{
-          headerLeft: () => <CustomBackButton routeName="Name" />,
+        options={({ route }) => ({
+          headerLeft: () => <HeaderTinNhan conversationData1={route.params.conversationId} />,
           headerShown: true,
-          headerStyle: { backgroundColor: "gray" },
-        }}
+        })}
       />
       <Stack.Screen
         name="DoiMatKhauScreen"
@@ -166,6 +168,83 @@ export function StackNavigator() {
           headerLeft: () => <CustomBackButton />,
           headerTitle: () => <SearchBarSelect />,
           animation: "fade",
+        }}
+      />
+      <Stack.Screen
+        name="TaoNhom"
+        component={TaoNhom}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Nhóm mới" />,
+          headerStyle: { backgroundColor: "gray" },
+        }}
+      />
+      <Stack.Screen
+        name="ChanhRecived"
+        component={ChanhRecived}
+        options={({ route }) => ({
+          headerShown: true,
+          headerLeft: () => <Header userData={route.params?.me} status={route.params?.status} />,
+        })}
+      />
+      <Stack.Screen
+        name="ChanhSender"
+        component={ChanhSender}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Chanh sender" />,
+        }}
+      />
+      <Stack.Screen
+        name="ThongTinNhom"
+        component={ThongTinNhom}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Tùy chọn" />,
+        }}
+      />
+      <Stack.Screen
+        name="ThanhVienNhom"
+        component={ThanhVienNhom}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Thành viên" />,
+        }}
+      />
+      <Stack.Screen
+        name="TruongNhomMoi"
+        component={TruongNhomMoi}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Chọn trưởng nhóm mới" />,
+        }}
+      />
+      <Stack.Screen
+        name="ChuyenTiep"
+        component={ChuyenTiep}
+        options={
+          {
+            // headerShown: true,
+            // headerLeft: () => <CustomBackButton routeName="Chuyển tiếp" />,
+          }
+        }
+      />
+      <Stack.Screen
+        name="ThemNhieuThanhVienVaoNhom"
+        component={ThemNhieuThanhVienVaoNhom}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Thêm thành viên" />,
+          headerStyle: { backgroundColor: "#A1A1A1" },
+        }}
+      />
+      <Stack.Screen
+        name="ThemThanhVienVaoNhieuNhom"
+        component={ThemThanhVienVaoNhieuNhom}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Thêm vào nhóm" />,
+          headerStyle: { backgroundColor: "#A1A1A1" },
         }}
       />
     </Stack.Navigator>

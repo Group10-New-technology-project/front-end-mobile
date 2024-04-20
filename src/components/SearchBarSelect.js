@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { View, TextInput, StyleSheet, Dimensions, TouchableOpacity, Text } from "react-native";
+import { View, TextInput, StyleSheet, Dimensions, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
@@ -22,7 +22,7 @@ export default function SearchBarSelect() {
 
   const handleSubmitEditing = () => {
     console.log("Giá trị nhập vào:", phone);
-    navigation.navigate("TimKiem", { searchText: phone });
+    navigation.navigate("TimKiem", { searchPhone: phone });
   };
 
   return (

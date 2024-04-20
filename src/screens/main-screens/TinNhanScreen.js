@@ -1,14 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { API_URL } from "@env";
+import { useIsFocused } from "@react-navigation/native";
+import { set } from "firebase/database";
+import io from "socket.io-client";
 
 export default function TinNhanScreen({ navigation }) {
-  const [userData, setUserData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const isFocused = useIsFocused();
   const [conversations, setConversations] = useState([]);
   const [lastMessages, setLastMessages] = useState({});
-
-  const userID = userData?._id;
+  const [userID, setUserID] = useState(""); // Thêm userID
+  const [loading, setLoading] = useState(true);
+  const [userData, setUserData] = useState({});
+  const socketRef = useRef(null);
+  const [TuiGui, setTuiGui] = useState("");
 
   const convertToStandardFormat = (createdAt) => {
     const regexIso8601 = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
@@ -19,55 +25,89 @@ export default function TinNhanScreen({ navigation }) {
     return createdAt;
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const storedUserData = await AsyncStorage.getItem("userData");
-        if (storedUserData) {
-          const user = JSON.parse(storedUserData);
-          console.log("Thông tin người dùng đã đăng nhập:", user);
-          setUserData(user);
-        } else {
-          console.log("Không có thông tin người dùng được lưu");
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error);
+  const fetchData = async () => {
+    try {
+      const storedUserData = await AsyncStorage.getItem("userData");
+      if (storedUserData) {
+        const user = JSON.parse(storedUserData);
+        // console.log("Thông tin người dùng đã đăng nhập:", user);
+        // console.log("ID người dùng 1", user._id);
+        setUserData(user);
+        setUserID(user._id); // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
+        // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
+        await fetchConversations(user._id);
+      } else {
+        console.log("Không có thông tin người dùng được lưu");
       }
-    };
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+    }
+  };
+  const fetchConversations = async (userID) => {
+    try {
+      const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByUserId/${userID}`);
+      const data = await response.json();
+      // console.log("Dữ liệu cuộc trò chuyện:", data);
+      if (Array.isArray(data)) {
+        setConversations(data);
+        setLoading(false);
 
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    const fetchConversations = async () => {
-      try {
-        if (!userID) return;
-
-        const response = await fetch(`http://192.168.99.218:3000/api/v1/conversation/getConversationByUserId/${userID}`);
-        const data = await response.json();
-
-        if (Array.isArray(data)) {
-          setConversations(data);
-          setLoading(false);
-
-          const lastMsgs = {};
-          data.forEach((item) => {
-            if (item.messages && item.messages.length > 0) {
-              lastMsgs[item._id] = item.messages[item.messages.length - 1].content;
+        const lastMsgs = {};
+        data.forEach((item) => {
+          if (item.messages && item.messages.length > 0) {
+            lastMsgs[item._id] = item.messages[item.messages.length - 1].content;
+            let check = item.messages[item.messages.length - 1].memberId.userId._id;
+            if (check == userID) {
+              setTuiGui("Bạn: ");
             }
-          });
-          setLastMessages(lastMsgs);
-        } else {
-          console.error("Dữ liệu trả về không phải là một mảng:", data);
-        }
-      } catch (error) {
-        console.error("Lỗi khi tải cuộc trò chuyện:", error);
+            let isImage = item.messages[item.messages.length - 1].type;
+            if (isImage === "image") {
+              lastMsgs[item._id] = "Hình ảnh";
+            } else if (isImage === "file") {
+              lastMsgs[item._id] = "Tài liệu";
+            } else if (isImage === "audio") {
+              lastMsgs[item._id] = "Voice message";
+            } else if (isImage === "video") {
+              lastMsgs[item._id] = "Video";
+            }
+          }
+        });
+        setLastMessages(lastMsgs);
+        // console.log("Tin nhắn cuối cùng:", lastMsgs);
+      } else {
+        console.error("Dữ liệu trả về không phải là một mảng:", data);
+      }
+    } catch (error) {
+      console.error("Lỗi khi tải cuộc trò chuyện:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (!socketRef.current) {
+      socketRef.current = io(`${API_URL}`);
+    }
+    listenToMessages();
+    fetchData();
+    const userId = userData._id;
+
+    if (isFocused) {
+      fetchData();
+    }
+    return () => {
+      if (socketRef.current) {
+        console.log("Ngắt kết nối socket");
+        socketRef.current.disconnect();
+        socketRef.current = null;
       }
     };
+  }, [isFocused]);
 
-    fetchConversations();
-  }, [userID]);
-
+  const listenToMessages = () => {
+    socketRef.current.on("sendMessage", (message) => {
+      console.log("Tin nhắn mới:", message);
+      fetchData();
+    });
+  };
   const truncateString = (str, maxLength) => {
     return str.length > maxLength ? str.slice(0, maxLength - 3) + "..." : str;
   };
@@ -82,66 +122,85 @@ export default function TinNhanScreen({ navigation }) {
     const diffSeconds = Math.floor((diffTime % (1000 * 60)) / 1000);
 
     if (diffDays > 0) {
-      return `${diffDays} days `;
+      return `${diffDays} ngày `;
     } else if (diffHours > 0) {
-      return `${diffHours} hours `;
+      return `${diffHours} giờ `;
     } else if (diffMinutes > 0) {
-      return `${diffMinutes} minutes `;
+      return `${diffMinutes} phút `;
     } else {
-      return `${diffSeconds} seconds `;
+      return `${diffSeconds} giây `;
     }
   };
 
   const findSender = (conversation) => {
-    if (conversation.type === "Direct") {
+    if (conversation.type === "Direct" || conversation.type === "Group") {
       const otherUser = conversation.members.find((member) => member.userId._id !== userID);
       return otherUser ? otherUser.userId : null;
     } else {
-      // Implement logic for finding sender in group conversation if needed
-
       return null;
     }
   };
 
   return (
     <View style={styles.container}>
-      <FlatList
-        data={conversations}
-        keyExtractor={(item) => item._id.toString()}
-        renderItem={({ item }) => {
-          if (!item.messages || item.messages.length === 0) {
-            return null;
-          }
-
-          const formattedCreatedAt = convertToStandardFormat(item.messages[item.messages.length - 1].createAt);
-          const messageTimeDiff = calculateTimeDiff(formattedCreatedAt);
-          console.log("Thời gian 2:", formattedCreatedAt);
-          let avatarUrl = "";
-          let nameMem = "loading";
-
-          const sender = findSender(item);
-          if (sender) {
-            avatarUrl = sender.avatar;
-            nameMem = sender.name;
-          }
-
-          const lastMsg = lastMessages[item._id] || "";
-          const messageColor = item.seen ? "#555" : "#000";
-
-          return (
-            <TouchableOpacity style={styles.cssMessage} onPress={() => navigation.navigate("ChatScreen", { conversationId: item._id })}>
-              <Image source={{ uri: avatarUrl }} style={{ width: 50, height: 50, borderRadius: 50 }} />
-              <View style={styles.section_header}>
-                <Text>{nameMem}</Text>
-                <Text style={styles.text_message}>
-                  {sender && sender._id === userID ? "Bạn: " + truncateString(lastMsg, 35) : truncateString(lastMsg, 35)}
-                </Text>
-              </View>
-              <Text style={{ color: messageColor, padding: 5 }}>{messageTimeDiff}</Text>
-            </TouchableOpacity>
-          );
-        }}
-      />
+      {loading ? ( // Kiểm tra nếu đang tải dữ liệu
+        <Text>Loading...</Text> // Hiển thị chữ "Loading..."
+      ) : (
+        <FlatList
+          data={conversations}
+          keyExtractor={(item) => item._id.toString()}
+          renderItem={({ item }) => {
+            var messageTimeDiff = "";
+            if (!item.messages || item.messages.length === 0) {
+              // không làm gì
+            } else {
+              const formattedCreatedAt = convertToStandardFormat(item.messages[item.messages.length - 1].createAt);
+              messageTimeDiff = calculateTimeDiff(formattedCreatedAt);
+            }
+            let avatarUrl = "";
+            let nameMem = "loading";
+            const sender = findSender(item);
+            if (sender) {
+              avatarUrl = sender.avatar;
+              nameMem = sender.name;
+            }
+            if (item.type === "Group") {
+              if (item.groupImage === "") {
+                avatarUrl = "https://dyybuket.s3.ap-southeast-2.amazonaws.com/DyyDiBien.jpg";
+              } else {
+                avatarUrl = item.groupImage;
+              }
+              nameMem = item.name;
+            }
+            let lastMsg = "Các bạn đã trở thành bạn bè!";
+            if (item.type === "Direct") {
+              lastMsg = lastMessages[item._id] || "Các bạn đã trở thành bạn bè";
+            } else if (item.type === "Group") {
+              lastMsg = lastMessages[item._id] || "Bạn đã trở thành thành viên của nhóm!";
+            }
+            const messageColor = item.seen ? "black" : "gray";
+            return (
+              <TouchableOpacity onPress={() => navigation.navigate("ChatScreen", { conversationId: item._id })}>
+                <View style={styles.conversation_view}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Image source={{ uri: avatarUrl }} style={{ width: 60, height: 60, borderRadius: 60 }} />
+                    <View style={styles.section_header}>
+                      <Text style={styles.text_content}>{nameMem}</Text>
+                      <Text style={styles.text_message}>
+                        {item.type === "Direct" && item.messages.length > 0 && item.messages[item.messages.length - 1].type != "notify"
+                          ? TuiGui + truncateString(lastMsg, 35)
+                          : truncateString(lastMsg, 35)}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text style={{ color: messageColor, paddingLeft: 30, fontSize: 15 }}>{messageTimeDiff}</Text>
+                </View>
+                <View style={{ borderWidth: 0.5, borderColor: "#DBDBDB" }} />
+              </TouchableOpacity>
+            );
+          }}
+        />
+      )}
     </View>
   );
 }
@@ -149,25 +208,32 @@ export default function TinNhanScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  cssMessage: {
-    width: "100%",
-    height: 80,
-    flexDirection: "row",
-    padding: 10,
-  },
-  section_header: {
-    flex: 1,
-    paddingLeft: 10,
+    backgroundColor: "#fff",
   },
   text_name: {
     fontSize: 20,
     fontWeight: "500",
     color: "#000",
   },
-  text_message: {
+  text_content: {
     fontSize: 17,
-    color: "#000",
-    paddingTop: 5,
+    fontWeight: "400",
+  },
+  text_message: {
+    marginTop: 4,
+    fontSize: 17,
+    fontWeight: "400",
+    color: "gray",
+  },
+  section_header: {
+    paddingLeft: 15,
+  },
+  conversation_view: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "white",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
 });

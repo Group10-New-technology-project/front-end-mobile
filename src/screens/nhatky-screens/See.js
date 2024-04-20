@@ -1,14 +1,5 @@
 import React, { useState } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Image,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  TextInput,
-} from "react-native"; // Import Text từ react-native
+import { View, StyleSheet, ScrollView, Image, Text, FlatList, TouchableOpacity, TextInput } from "react-native"; // Import Text từ react-native
 import Modal from "react-native-modal";
 import { useRoute } from "@react-navigation/native";
 
@@ -17,8 +8,7 @@ export default function See({ navigation }) {
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [comment, setComment] = useState("");
   const route = useRoute();
-  const selectedImage =
-    route.params && route.params.selectedImage ? route.params.selectedImage : null;
+  const selectedImage = route.params && route.params.selectedImage ? route.params.selectedImage : null;
 
   const toggleBottomSheet = () => {
     setIsBottomSheetVisible(!isBottomSheetVisible);
@@ -58,11 +48,7 @@ export default function See({ navigation }) {
         </View>
 
         <View>
-          <Image
-            source={{ uri: selectedImage }}
-            resizeMode="contain"
-            style={{ height: 400, width: 390 }}
-          />
+          <Image source={{ uri: selectedImage }} resizeMode="contain" style={{ height: 400, width: 390 }} />
         </View>
         <View style={{ height: 150 }}>
           <View style={{ height: 45 }}>
@@ -77,14 +63,8 @@ export default function See({ navigation }) {
             <View style={{ width: "93%", borderWidth: 0.01, borderColor: "#4C4C4C" }}></View>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", height: 22, marginTop: 10 }}>
-            <Image
-              source={require("../../../assets/img/tym.png")}
-              resizeMode="contain"
-              style={{ height: 18, width: 17, marginLeft: 17 }}
-            />
-            <Text style={{ fontSize: 13, fontWeight: 500, marginLeft: 5, color: "#ffff" }}>
-              100 người khác
-            </Text>
+            <Image source={require("../../../assets/img/tym.png")} resizeMode="contain" style={{ height: 18, width: 17, marginLeft: 17 }} />
+            <Text style={{ fontSize: 13, fontWeight: 500, marginLeft: 5, color: "#ffff" }}>100 người khác</Text>
           </View>
 
           {!isFocusedLike && (
@@ -247,11 +227,7 @@ export default function See({ navigation }) {
                 onChangeText={(text) => setComment(text)}
               />
               <TouchableOpacity>
-                <Image
-                  source={require("../../../assets/img/imageComment.png")}
-                  resizeMode="cover"
-                  style={{ height: 25, width: 25 }}
-                />
+                <Image source={require("../../../assets/img/imageComment.png")} resizeMode="cover" style={{ height: 25, width: 25 }} />
               </TouchableOpacity>
               {comment.length > 0 ? (
                 <TouchableOpacity>

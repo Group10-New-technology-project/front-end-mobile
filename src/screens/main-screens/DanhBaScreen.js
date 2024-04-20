@@ -5,14 +5,38 @@ import Modal from "react-native-modal";
 import { Dimensions, StyleSheet, Text, View, FlatList, Image, SafeAreaView, TouchableOpacity, Alert } from "react-native";
 import { FontAwesome5, FontAwesome, Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function DanhBaScreen({ navigation }) {
-  let ID = "60aae4843ae33121e0de8506";
   const isFocused = useIsFocused();
+  const [fetchData1Completed, setFetchData1Completed] = useState(false);
+  const [userData, setUserData] = useState(null);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [users, setUsers] = useState([]);
   const [pickedItem, setPickedItem] = useState([]);
+  const ID = userData?._id;
+  console.log(ID);
+  useEffect(() => {
+    const fetchDataUserLogin = async () => {
+      try {
+        const storedUserData = await AsyncStorage.getItem("userData");
+        if (storedUserData) {
+          const user = JSON.parse(storedUserData);
+          console.log("Thông tin người dùng đã đăng nhập:", user);
+          setUserData(user);
+        } else {
+          console.log("Không có thông tin người dùng được lưu");
+        }
+        // Đánh dấu fetchData1 đã hoàn thành
+        setFetchData1Completed(true);
+      } catch (error) {
+        console.error("Lỗi khi lấy thông tin người dùng:", error);
+      }
+    };
+    // Gọi fetchData1 khi component được render
+    fetchDataUserLogin();
+  }, []);
 
   const toggleBottomSheet = () => {
     setIsBottomSheetVisible(!isBottomSheetVisible);
@@ -25,7 +49,7 @@ export default function DanhBaScreen({ navigation }) {
     console.log("Danh bạ máy");
   };
   const goLoiMoiKetBan = () => {
-    navigation.navigate("LoiMoiKetBan");
+    navigation.navigate("LoiMoiKetBan", { ID: ID });
     console.log("Lời mời kết bạn");
   };
   const handleLoad = () => {
@@ -33,10 +57,11 @@ export default function DanhBaScreen({ navigation }) {
   };
 
   useEffect(() => {
-    if (isFocused) {
+    // Nếu isFocused và fetchData1 đã hoàn thành, gọi fetchData
+    if (isFocused && fetchData1Completed) {
       fetchData();
     }
-  }, [isFocused]);
+  }, [isFocused, fetchData1Completed]);
 
   const handle_deleteUser = async () => {
     try {
@@ -210,7 +235,7 @@ export default function DanhBaScreen({ navigation }) {
       <Modal
         style={styles.modal_container}
         isVisible={isBottomSheetVisible}
-        swipeDirection={["left", "right", "down", "up"]}
+        swipeDirection={["left", "right"]}
         animationIn="slideInLeft"
         animationOut="slideOutRight"
         onSwipeComplete={toggleBottomSheet}
@@ -241,10 +266,12 @@ export default function DanhBaScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "#FFF",
   },
   modal_container: {
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "FFFFFF",
   },
   modal_size: {
     backgroundColor: "white",
@@ -306,7 +333,9 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50,
   },
-  contacts_container: {},
+  contacts_container: {
+    // backgroundColor: "white",
+  },
   one_contact: {
     flexDirection: "row",
     alignItems: "center",

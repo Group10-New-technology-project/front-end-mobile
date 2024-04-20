@@ -49,8 +49,8 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
               <Image style={{ width: 50, height: 50, borderRadius: 50 }} source={{ uri: userData.avatar }} />
             ) : (
               <Image
-                style={{ width: 50, height: 50, borderRadius: 50 }}
-                source={require("../main-screens/image/Abstract1998.png")}
+                style={{ width: 24, height: 24 }}
+                source={{ uri: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/IMG_2024-04-12_18-16-9.png" }}
               />
             )}
 
@@ -112,9 +112,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/shield-check.png")} />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Kiểm tra bảo mật</Text>
-            <Text style={{ fontSize: 16, color: "#A8AA50", fontWeight: "400", marginTop: 3 }}>
-              2 vấn đề bảo mật cần xử lý
-            </Text>
+            <Text style={{ fontSize: 16, color: "#A8AA50", fontWeight: "400", marginTop: 3 }}>2 vấn đề bảo mật cần xử lý</Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -168,7 +166,10 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
         </View>
         <TouchableOpacity onPress={handleMatKhau}>
           <View style={styles.mat_khau}>
-            <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/unlock-keyhole.png")} />
+            <Image
+              style={{ width: 24, height: 24 }}
+              source={{ uri: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/IMG_2024-04-12_18-16-9.png" }}
+            />
             <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Mật khẩu</Text>
             <View style={{ position: "absolute", right: 10 }}>
               <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -237,5 +238,9 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 12,
   },
-  sodienthoai: { flexDirection: "row", alignItems: "center", paddingVertical: 12 },
+  sodienthoai: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+  },
 });
