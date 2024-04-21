@@ -2,7 +2,7 @@ import SegmentedControl from "@react-native-segmented-control/segmented-control"
 import React, { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import Modal from "react-native-modal";
-import { Dimensions, StyleSheet, Text, View, FlatList, Image, SafeAreaView, TouchableOpacity, Alert } from "react-native";
+import { Dimensions, StyleSheet, Text, View, FlatList, Image, SafeAreaView, TouchableOpacity, Alert, VirtualizedList } from "react-native";
 import { FontAwesome5, FontAwesome, Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -120,13 +120,13 @@ export default function DanhBaScreen({ navigation }) {
 
     const handlePickModal = () => {
       setIsBottomSheetVisible(true);
-      console.log(item.id);
-      console.log(item.name);
-      console.log(item.username);
+      // console.log(item.id);
+      // console.log(item.name);
+      // console.log(item.username);
       setPickedItem(item);
     };
     const handleChonUser = () => {
-      navigation.navigate("CaiDat");
+      navigation.navigate("XemTrangCaNhan");
     };
     return (
       <View style={styles.contacts}>
@@ -153,7 +153,7 @@ export default function DanhBaScreen({ navigation }) {
     switch (selectedIndex) {
       case 0:
         return (
-          <View style={{ backgroundColor: "white" }}>
+          <View style={{ backgroundColor: "white", flex: 1 }}>
             <View style={{ paddingLeft: 12 }}>
               <TouchableOpacity onPress={goLoiMoiKetBan}>
                 <View style={styles.function_loimoiketban}>

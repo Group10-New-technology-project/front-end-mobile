@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, TextInput, Alert, Dimensions, ActivityIndicator } from "react-native";
-import axios from "axios";
 import { Checkbox } from "expo-checkbox";
 import * as ImagePicker from "expo-image-picker";
-import { S3 } from "aws-sdk";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME, API_URL } from "@env";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { set } from "firebase/database";
+import { S3 } from "aws-sdk";
+import axios from "axios";
 import io from "socket.io-client";
 
 const s3 = new S3({

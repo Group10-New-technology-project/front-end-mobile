@@ -6,7 +6,6 @@ import SearchBarSelect from "../components/SearchBarSelect";
 import CustomBackButton from "../components/CustomBackButton";
 import Header from "../components/Header";
 import HeaderTinNhan from "../components/HeaderTinNhan";
-//UTILS
 import Button from "../utils/Button";
 //SCREENS
 import TaiKhoanVaBaoMat from "../screens/canhan-screens/TaiKhoanVaBaoMat";
@@ -31,7 +30,7 @@ import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiM
 import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
 import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
 import TimKiem from "../screens/khac-screens/TimKiem";
-import TaoNhom from "../screens/khac-screens/TaoNhom";
+import TaoNhom from "../screens/tinnhan-screens/TaoNhom";
 import ChanhRecived from "../screens/test-screens/ChanhRecived";
 import ChanhSender from "../screens/test-screens/ChanhSender";
 import ThongTinNhom from "../screens/tinnhan-screens/ThongTinNhom";
@@ -40,6 +39,7 @@ import TruongNhomMoi from "../screens/tinnhan-screens/TruongNhomMoi";
 import ChuyenTiep from "../screens/tinnhan-screens/ChuyenTiep";
 import ThemNhieuThanhVienVaoNhom from "../screens/tinnhan-screens/ThemNhieuThanhVienVaoNhom";
 import ThemThanhVienVaoNhieuNhom from "../screens/tinnhan-screens/ThemThanhVienVaoNhieuNhom";
+import XemTrangCaNhan from "../screens/khac-screens/XemTrangCaNhan";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
@@ -219,16 +219,7 @@ export function StackNavigator() {
           headerLeft: () => <CustomBackButton routeName="Chọn trưởng nhóm mới" />,
         }}
       />
-      <Stack.Screen
-        name="ChuyenTiep"
-        component={ChuyenTiep}
-        options={
-          {
-            // headerShown: true,
-            // headerLeft: () => <CustomBackButton routeName="Chuyển tiếp" />,
-          }
-        }
-      />
+      <Stack.Screen name="ChuyenTiep" component={ChuyenTiep} />
       <Stack.Screen
         name="ThemNhieuThanhVienVaoNhom"
         component={ThemNhieuThanhVienVaoNhom}
@@ -246,6 +237,16 @@ export function StackNavigator() {
           headerLeft: () => <CustomBackButton routeName="Thêm vào nhóm" />,
           headerStyle: { backgroundColor: "#A1A1A1" },
         }}
+      />
+      <Stack.Screen
+        name="XemTrangCaNhan"
+        component={XemTrangCaNhan}
+        options={
+          {
+            // headerShown: true,
+            // headerLeft: () => <CustomBackButton routeName="Trang cá nhân" />,
+          }
+        }
       />
     </Stack.Navigator>
   );

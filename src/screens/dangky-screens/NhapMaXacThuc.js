@@ -96,9 +96,7 @@ export default function NhapMaXacThuc({ navigation, route }) {
             <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
           </View>
           <View style={{ height: 30, alignItems: "center" }}>
-            <Text style={{ fontWeight: 500, fontSize: 14, color: "#444444" }}>
-              Nhập dãy 6 số được gửi đến số điện thoại
-            </Text>
+            <Text style={{ fontWeight: 500, fontSize: 14, color: "#444444" }}>Nhập dãy 6 số được gửi đến số điện thoại</Text>
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontWeight: 500, fontSize: 19 }}>(+84) </Text>
               <Text style={{ fontWeight: 500, fontSize: 19 }}>{phone2}</Text>
@@ -166,9 +164,7 @@ export default function NhapMaXacThuc({ navigation, route }) {
             }}>
             <Text style={{ fontWeight: 500, fontSize: 15 }}>Bạn không nhận được mã?</Text>
             <TouchableOpacity onPress={() => navigation.navigate("login")}>
-              <Text style={{ fontWeight: 500, fontSize: 15, color: "#6B6B6B", marginLeft: 4 }}>
-                Gửi lại ({countdown}s)
-              </Text>
+              <Text style={{ fontWeight: 500, fontSize: 15, color: "#6B6B6B", marginLeft: 4 }}>Gửi lại ({countdown}s)</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -181,9 +177,7 @@ export default function NhapMaXacThuc({ navigation, route }) {
           alignItems: "center",
         }}>
         <TouchableOpacity onPress={() => navigation.navigate("")}>
-          <Text style={{ fontWeight: 500, fontSize: 15, color: "#0187F9", marginLeft: 4 }}>
-            ? Tôi cần hỗ trợ thêm về mã xác thực
-          </Text>
+          <Text style={{ fontWeight: 500, fontSize: 15, color: "#0187F9", marginLeft: 4 }}>? Tôi cần hỗ trợ thêm về mã xác thực</Text>
         </TouchableOpacity>
       </View>
     </View>
