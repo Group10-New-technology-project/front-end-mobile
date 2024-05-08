@@ -5,11 +5,13 @@ import { API_URL } from "@env";
 import axios from "axios";
 import io from "socket.io-client";
 export default function ThongTinNhom({ navigation, route }) {
-  const { conversationId, userId } = route.params;
+  const { conversationId, userId, userName } = route.params;
   const [ConversationData, setConversationData] = useState(null);
   const [userFriendId, setUserFriendId] = useState(null);
   const [type, setType] = useState(null);
   const [name, setName] = useState("");
+  const [quantilyMember, setQuantilyMember] = useState(0);
+  const [memberId, setmemberId] = useState("");
   const [image, setImage] = useState("a");
   const socketRef = useRef(null);
   const [arrayimage, setArrayImage] = useState([]);
@@ -22,6 +24,7 @@ export default function ThongTinNhom({ navigation, route }) {
         conversationID: conversationId,
         userID: userId,
       });
+      fetchMessagesNotify(conversationId);
       socketRef.current.emit("sendMessage", { message: "messageContent", room: "conversationId" });
       navigation.navigate("Tabs");
     } catch (error) {
@@ -29,27 +32,27 @@ export default function ThongTinNhom({ navigation, route }) {
       Alert.alert("Error", "Failed to remove deputy from conversation. Please try again.");
     }
   };
-  const handleGiaiTanNhom = async () => {
+
+  const fetchMemberId = async (userID) => {
     try {
-      Alert.alert("Thông báo", "Bạn có chắc chắn muốn giải tán nhóm?", [
-        {
-          text: "Cancel",
-          onPress: () => console.log("Cancel Pressed"),
-          style: "cancel",
-        },
-        {
-          text: "OK",
-          onPress: async () => {
-            const response = await axios.post(`${API_URL}/api/v1/conversation/deleteConversationById/${conversationId}`);
-            console.log("Giai tan nhom thanh cong");
-            Alert.alert("Thông báo", "Đã giải tán nhóm thành công");
-            navigation.navigate("Tabs");
-          },
-        },
-      ]);
+      const response = await axios.get(`${API_URL}/api/v1/member/getMemberByUserId/${userID}`);
+      const data = response.data._id;
+      setmemberId(data);
     } catch (error) {
-      console.error("Error:", error.response.data);
-      Alert.alert("Error", "Failed. Please try again.");
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  const fetchMessagesNotify = async (con) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+        conversationId: con,
+        content: `${userName.split(" ").slice(-1)[0]} đã rời khỏi nhóm`,
+        memberId: memberId,
+        type: "notify",
+      });
+    } catch (error) {
+      console.error("Error creating conversation:", error);
     }
   };
 
@@ -65,6 +68,8 @@ export default function ThongTinNhom({ navigation, route }) {
     if (!socketRef.current) {
       socketRef.current = io(`${API_URL}`);
     }
+    getQuantilyMember();
+    fetchMemberId(userId);
     fetchConversationData();
     return () => {
       if (socketRef.current) {
@@ -109,6 +114,18 @@ export default function ThongTinNhom({ navigation, route }) {
     }
   };
 
+  const getQuantilyMember = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/conversation/getConversationById/${conversationId}`);
+      if (response.data) {
+        const length = response.data.members.length;
+        setQuantilyMember(length);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   const handleXemThanhVien = () => {
     navigation.navigate("ThanhVienNhom", { conversationId: conversationId });
   };
@@ -120,6 +137,10 @@ export default function ThongTinNhom({ navigation, route }) {
   };
   const handleTaoNhomVoi = () => {
     navigation.navigate("TaoNhom", { userFriendId: userFriendId });
+  };
+  const handleViewUser = () => {
+    console.log(userFriendId);
+    navigation.navigate("XemTrangCaNhan", { user_id: userFriendId });
   };
 
   return (
@@ -333,7 +354,7 @@ export default function ThongTinNhom({ navigation, route }) {
                 <Ionicons name="people-outline" size={21} color="#7F8284" />
                 <TouchableOpacity onPress={handleXemThanhVien}>
                   <Text style={{ marginLeft: 17, fontSize: 16 }}>
-                    Xem thành viên <Text style={{ fontSize: 15 }}>(5)</Text>
+                    Xem thành viên <Text style={{ fontSize: 15 }}>({quantilyMember})</Text>
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -539,7 +560,7 @@ export default function ThongTinNhom({ navigation, route }) {
                 <Text style={{ textAlign: "center", color: "#212121" }}>Tìm tin nhắn</Text>
               </View>
               <View style={{ marginHorizontal: 11, height: 80, width: 70, alignItems: "center", justifyContent: "center" }}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleViewUser}>
                   <View
                     style={{
                       borderRadius: 50,
@@ -751,9 +772,7 @@ export default function ThongTinNhom({ navigation, route }) {
               <View style={{ flexDirection: "row", marginLeft: 10 }}>
                 <Feather name="users" size={21} color="#7C828A" style={{ transform: [{ rotateY: "180deg" }] }} />
                 <TouchableOpacity>
-                  <Text style={{ marginLeft: 17, fontSize: 16 }}>
-                    Xem nhóm chung <Text style={{ fontSize: 11 }}>(11)</Text>
-                  </Text>
+                  <Text style={{ marginLeft: 17, fontSize: 16 }}>Xem nhóm chung</Text>
                 </TouchableOpacity>
               </View>
               <TouchableOpacity>

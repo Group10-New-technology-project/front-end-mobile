@@ -176,7 +176,6 @@ export function StackNavigator() {
         options={{
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Nhóm mới" />,
-          headerStyle: { backgroundColor: "gray" },
         }}
       />
       <Stack.Screen
@@ -226,7 +225,7 @@ export function StackNavigator() {
         options={{
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Thêm thành viên" />,
-          headerStyle: { backgroundColor: "#A1A1A1" },
+          // headerStyle: { backgroundColor: "#A1A1A1" },
         }}
       />
       <Stack.Screen
@@ -235,18 +234,15 @@ export function StackNavigator() {
         options={{
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Thêm vào nhóm" />,
-          headerStyle: { backgroundColor: "#A1A1A1" },
+          // headerStyle: { backgroundColor: "#A1A1A1" },
         }}
       />
       <Stack.Screen
         name="XemTrangCaNhan"
         component={XemTrangCaNhan}
-        options={
-          {
-            // headerShown: true,
-            // headerLeft: () => <CustomBackButton routeName="Trang cá nhân" />,
-          }
-        }
+        options={{
+          headerShown: false,
+        }}
       />
     </Stack.Navigator>
   );

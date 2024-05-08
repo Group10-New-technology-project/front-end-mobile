@@ -44,9 +44,12 @@ export default function HeaderTinNhan({ conversationData1 }) {
       statusName = "Bấm để xem thông tin";
     }
   }
-
   const goThongTinNhom = () => {
-    navigation.navigate("ThongTinNhom", { conversationId, userId: userData._id });
+    navigation.navigate("ThongTinNhom", {
+      conversationId,
+      userId: userData._id,
+      userName: userData.name,
+    });
   };
 
   return (

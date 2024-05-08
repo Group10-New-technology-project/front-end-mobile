@@ -3,7 +3,6 @@ import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 import { useIsFocused } from "@react-navigation/native";
-import { set } from "firebase/database";
 import io from "socket.io-client";
 
 export default function TinNhanScreen({ navigation }) {

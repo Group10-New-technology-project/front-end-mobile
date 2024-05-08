@@ -163,7 +163,7 @@ export default function LoiMoiKetBan({ route }) {
     }
   };
 
-  const creactConversation = async (memberId1, memberId2) => {
+  const createConversationApp = async (memberId1, memberId2) => {
     try {
       const response = await fetch(`${API_URL}/api/v1/conversation/createConversationApp`, {
         method: "POST",
@@ -206,7 +206,7 @@ export default function LoiMoiKetBan({ route }) {
       if (response.ok) {
         Alert.alert("Chấp nhận lời mời kết bạn thành công");
         fetchDataFriendRecived();
-        creactConversation(await getMemberIdByUserId(ID), await getMemberIdByUserId(item._id));
+        createConversationApp(await getMemberIdByUserId(ID), await getMemberIdByUserId(item._id));
       } else {
         console.error("Failed to delete friend request");
       }

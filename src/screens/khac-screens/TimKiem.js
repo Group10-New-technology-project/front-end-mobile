@@ -2,32 +2,16 @@ import React, { useEffect, useState, useRef } from "react";
 import { View, Text, StyleSheet, Image, Alert, TouchableOpacity, Dimensions } from "react-native";
 import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Ionicons } from "@expo/vector-icons";
+
 export default function TimKiemScreen({ route, navigation }) {
   const { searchPhone } = route.params;
   const [userLogin, setUserLogin] = useState(null);
   const ID = userLogin?._id;
-  console.log("ID người dùng đăng nhập", ID);
-  console.log("username", userLogin?.username);
   const [userData, setUserData] = useState(null);
   const isFirstRender = useRef(true);
   const [dataFriends, setDataFriends] = useState([]);
 
   useEffect(() => {
-    const fetchDataUserLogin = async () => {
-      try {
-        const storedUserData = await AsyncStorage.getItem("userData");
-        if (storedUserData) {
-          const user = JSON.parse(storedUserData);
-          setUserLogin(user);
-          console.log("Thông tin người dùng được lưu");
-        } else {
-          console.log("Không có thông tin người dùng được lưu");
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error);
-      }
-    };
     fetchDataUserLogin();
   }, []);
 
@@ -36,7 +20,6 @@ export default function TimKiemScreen({ route, navigation }) {
       isFirstRender.current = false;
       return;
     }
-
     const fetchUserData = async () => {
       try {
         const response = await fetch(`${API_URL}/api/v1/users/username/${searchPhone}`);
@@ -53,6 +36,21 @@ export default function TimKiemScreen({ route, navigation }) {
     fetchIds();
     fetchUserData();
   }, [searchPhone]);
+
+  const fetchDataUserLogin = async () => {
+    try {
+      const storedUserData = await AsyncStorage.getItem("userData");
+      if (storedUserData) {
+        const user = JSON.parse(storedUserData);
+        setUserLogin(user);
+        console.log("Thông tin người dùng được lưu");
+      } else {
+        console.log("Không có thông tin người dùng được lưu");
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+    }
+  };
 
   const fetchIds = async () => {
     try {
@@ -82,11 +80,15 @@ export default function TimKiemScreen({ route, navigation }) {
 
       if (response.ok) {
         Alert.alert("Gởi lời mời kết bạn thành công đến " + userData.name);
+        navigation.navigate("XemTrangCaNhan", { user_id: userData._id });
       }
     } catch (error) {
       console.error("Error:", error);
       Alert.alert("Error", "An error occurred, please try again later");
     }
+  };
+  const handleViewUser = () => {
+    navigation.navigate("XemTrangCaNhan", { user_id: userData._id });
   };
 
   return (
@@ -95,7 +97,7 @@ export default function TimKiemScreen({ route, navigation }) {
         <View>
           {userData._id ? (
             <>
-              <View style={{ justifyContent: "space-between", flexDirection: "row", backgroundColor: "#F3F3F3", padding: 20 }}>
+              <TouchableOpacity style={styles.userContainer} onPress={handleViewUser}>
                 <View style={{ flexDirection: "row" }}>
                   <Image source={{ uri: userData.avatar }} style={{ width: 55, height: 55, borderRadius: 55 }} />
                   <View style={{ paddingLeft: 15, justifyContent: "center" }}>
@@ -104,17 +106,22 @@ export default function TimKiemScreen({ route, navigation }) {
                   </View>
                 </View>
                 <View style={{ justifyContent: "center" }}>
-                  {dataFriends.includes(userData._id) || userData._id === ID ? null : (
+                  {/* {dataFriends.includes(userData._id) || userData._id === ID ? null : (
                     <TouchableOpacity style={{ paddingRight: 5 }} onPress={handleAddFriend}>
                       <Ionicons name="person-add" size={28} color="#0091FF" />
                     </TouchableOpacity>
-                  )}
+                  )} */}
                 </View>
-              </View>
+              </TouchableOpacity>
             </>
           ) : (
             <View
-              style={{ alignItems: "center", justifyContent: "center", backgroundColor: "white", paddingTop: Dimensions.get("window").height * 0.4 }}>
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "white",
+                paddingTop: Dimensions.get("window").height * 0.4,
+              }}>
               <Text style={{ fontSize: 20, fontWeight: "500", color: "gray" }}>Không tìm thấy người dùng</Text>
             </View>
           )}
@@ -133,5 +140,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "red",
+  },
+  userContainer: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    backgroundColor: "#F7F7F7",
+    padding: 20,
   },
 });

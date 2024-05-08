@@ -1,10 +1,11 @@
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState, useEffect } from "react";
 
 export default function CaNhanScreen({ navigation }) {
   const [userData, setUserData] = useState(null);
+
   handleTKVBM = () => {
     navigation.navigate("TaiKhoanVaBaoMat");
   };
@@ -17,7 +18,7 @@ export default function CaNhanScreen({ navigation }) {
         const storedUserData = await AsyncStorage.getItem("userData");
         if (storedUserData) {
           const user = JSON.parse(storedUserData);
-          console.log("Thông tin người dùng đã đăng nhập:", user);
+          // console.log("Thông tin người dùng đã đăng nhập:", user);
           setUserData(user);
         } else {
           console.log("Không có thông tin người dùng được lưu");
@@ -29,11 +30,15 @@ export default function CaNhanScreen({ navigation }) {
 
     fetchData();
   }, []);
+  const handleViewUser = () => {
+    // console.log("Xem trang cá nhân", userData._id);
+    navigation.navigate("XemTrangCaNhan", { user_id: userData._id });
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header_pofile}>
-        <View style={styles.tabs_menu}>
+        <TouchableOpacity onPress={handleViewUser} style={styles.tabs_menu}>
           {userData && userData.avatar ? (
             <Image style={{ width: 50, height: 50, borderRadius: 50 }} source={{ uri: userData.avatar }} />
           ) : (
@@ -49,7 +54,7 @@ export default function CaNhanScreen({ navigation }) {
           <View style={styles.vector_location}>
             <MaterialCommunityIcons name="account-sync" size={25} color="#0091FF" />
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
       <View style={styles.line2}></View>
       {/* -------------------- */}
@@ -157,7 +162,10 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     marginVertical: 16,
   },
-  tabs_menu: { flexDirection: "row", alignItems: "center" },
+  tabs_menu: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
   title: { fontSize: 17, fontWeight: "500", marginBottom: 5 },
   title1: { fontSize: 17, fontWeight: "500" },
   title2: { fontSize: 14, color: "#696969", fontWeight: "400" },
@@ -166,5 +174,9 @@ const styles = StyleSheet.create({
   line_view1: { paddingVertical: 15, alignItems: "flex-end" },
   line_view2: { paddingVertical: 16, alignItems: "flex-end" },
   vector_location: { position: "absolute", right: 18 },
-  view_title: { flexDirection: "column", paddingLeft: 16 },
+  view_title: {
+    flexDirection: "column",
+    paddingLeft: 16,
+    // backgroundColor: "green",
+  },
 });

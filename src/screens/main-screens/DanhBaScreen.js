@@ -126,7 +126,8 @@ export default function DanhBaScreen({ navigation }) {
       setPickedItem(item);
     };
     const handleChonUser = () => {
-      navigation.navigate("XemTrangCaNhan");
+      navigation.navigate("XemTrangCaNhan", { user_id: item.id });
+      // console.log("Chọn user", item.id);
     };
     return (
       <View style={styles.contacts}>

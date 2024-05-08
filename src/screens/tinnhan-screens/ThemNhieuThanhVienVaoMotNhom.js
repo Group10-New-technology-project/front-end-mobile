@@ -97,7 +97,8 @@ export default function ThemNhieuThanhVienVaoMotNhom({ navigation, route }) {
         arrayUserID: arrayNewFriends,
       });
       // console.log("response:", response.data);
-      fetchMessagesNotify(conversationId);
+      fetchArrayUser();
+      fetchMessagesNotify(conversationId, arrayNewFriends.length);
       socketRef.current.emit("sendMessage", { message: "messageContent", room: conversationId });
       Alert.alert("Thông báo", "Thêm thành viên mới vào nhóm thành công");
       navigation.goBack();
@@ -106,11 +107,11 @@ export default function ThemNhieuThanhVienVaoMotNhom({ navigation, route }) {
     }
   };
 
-  const fetchMessagesNotify = async (con) => {
+  const fetchMessagesNotify = async (con, length) => {
     try {
       const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
         conversationId: con,
-        content: `${myName.slice(myName.lastIndexOf(" ") + 1)} đã thêm 1 thành viên mới`,
+        content: `${myName.slice(myName.lastIndexOf(" ") + 1)} đã thêm ${length} thành viên mới`,
         memberId: memberId,
         type: "notify",
       });

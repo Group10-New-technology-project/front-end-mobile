@@ -18,7 +18,7 @@ const s3 = new S3({
 export default function TaoNhom({ navigation, route }) {
   const { userFriendId } = route.params;
 
-  const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/icon-camera.png");
+  const [image, setImage] = useState("https://i.pinimg.com/564x/e6/9c/53/e69c53672be67814eb21004d0c04b42b.jpg");
   const [imageURL, setImageURL] = useState(null);
   const [users, setUsers] = useState([]);
   const socketRef = useRef(null);

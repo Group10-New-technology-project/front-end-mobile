@@ -6,8 +6,8 @@ import { API_URL } from "@env";
 import Modal from "react-native-modal";
 import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { set } from "firebase/database";
 import io from "socket.io-client";
+
 export default function ThanhVienNhom({ route, navigation }) {
   const { conversationId } = route.params;
   console.log("conversationId:", conversationId);
@@ -100,7 +100,14 @@ export default function ThanhVienNhom({ route, navigation }) {
         conversationID: conversationId,
         deputyUserID: selectedUser._id,
       });
-
+      console.log("selectedUser:", selectedUser);
+      const response1 = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+        conversationId: conversationId,
+        content: `${myName.slice(myName.lastIndexOf(" ") + 1)} đã bầu ${selectedUser.name.split(" ").slice(-1)[0]} làm phó nhóm.`,
+        memberId: memberId,
+        type: "notify",
+      });
+      socketRef.current.emit("sendMessage", { message: "messageContent", room: conversationId });
       fetchUserData();
       Alert.alert("Thông báo", "Đã thêm nhóm phó cho thành viên thành công");
     } catch (error) {
@@ -116,7 +123,13 @@ export default function ThanhVienNhom({ route, navigation }) {
         conversationID: conversationId,
         deputyUserID: selectedUser._id,
       });
-
+      const response1 = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+        conversationId: conversationId,
+        content: `${myName.slice(myName.lastIndexOf(" ") + 1)} đã xóa vai trò phó nhóm của ${selectedUser.name.split(" ").slice(-1)[0]}.`,
+        memberId: memberId,
+        type: "notify",
+      });
+      socketRef.current.emit("sendMessage", { message: "messageContent", room: conversationId });
       fetchUserData();
       Alert.alert("Thông báo", "Đã xóa vai trò phó nhóm của thành viên thành công");
     } catch (error) {
@@ -150,6 +163,15 @@ export default function ThanhVienNhom({ route, navigation }) {
         conversationID: conversationId,
         newLeaderUserID: selectedUser._id,
       });
+      const response1 = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+        conversationId: conversationId,
+        content: `${myName.slice(myName.lastIndexOf(" ") + 1)} đã chuyển vai trò trưởng nhóm cho ${
+          selectedUser.name.split(" ").slice(-1)[0]
+        }.`,
+        memberId: memberId,
+        type: "notify",
+      });
+      socketRef.current.emit("sendMessage", { message: "messageContent", room: conversationId });
       fetchUserData();
       Alert.alert("Thông báo", `Chuyển trưởng nhóm đến ${selectedUser.name} thành công`);
     } catch (error) {
