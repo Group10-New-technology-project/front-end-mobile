@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
-export default function Home({ navigation }) {
+export default function TrangChu({ navigation }) {
   const [selectedLanguage, setSelectedLanguage] = useState("Vietnamese");
 
   return (

@@ -113,10 +113,10 @@ export default function ThongTinNhom({ navigation, route }) {
     navigation.navigate("ThanhVienNhom", { conversationId: conversationId });
   };
   const handleThemThanhVien = () => {
-    navigation.navigate("ThemNhieuThanhVienVaoNhom", { conversationId: conversationId });
+    navigation.navigate("ThemNhieuThanhVienVaoMotNhom", { conversationId: conversationId });
   };
   const AddFriendToGroup = () => {
-    navigation.navigate("ThemThanhVienVaoNhieuNhom", { userFriendId: userFriendId, name: name });
+    navigation.navigate("ThemMotThanhVienVaoNhieuNhom", { userFriendId: userFriendId, name: name });
   };
   const handleTaoNhomVoi = () => {
     navigation.navigate("TaoNhom", { userFriendId: userFriendId });

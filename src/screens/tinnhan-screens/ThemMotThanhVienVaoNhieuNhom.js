@@ -6,7 +6,7 @@ import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AntDesign } from "@expo/vector-icons";
 import io from "socket.io-client";
-export default function ThemThanhVienVaoNhieuNhom({ navigation, route }) {
+export default function ThemMotThanhVienVaoNhieuNhom({ navigation, route }) {
   const { userFriendId, name } = route.params;
   const [conversations, setConversations] = useState([]);
   const socketRef = useRef(null);

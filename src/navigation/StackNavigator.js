@@ -37,8 +37,8 @@ import ThongTinNhom from "../screens/tinnhan-screens/ThongTinNhom";
 import ThanhVienNhom from "../screens/tinnhan-screens/ThanhVienNhom";
 import TruongNhomMoi from "../screens/tinnhan-screens/TruongNhomMoi";
 import ChuyenTiep from "../screens/tinnhan-screens/ChuyenTiep";
-import ThemNhieuThanhVienVaoNhom from "../screens/tinnhan-screens/ThemNhieuThanhVienVaoNhom";
-import ThemThanhVienVaoNhieuNhom from "../screens/tinnhan-screens/ThemThanhVienVaoNhieuNhom";
+import ThemMotThanhVienVaoNhieuNhom from "../screens/tinnhan-screens/ThemMotThanhVienVaoNhieuNhom";
+import ThemNhieuThanhVienVaoMotNhom from "../screens/tinnhan-screens/ThemNhieuThanhVienVaoMotNhom";
 import XemTrangCaNhan from "../screens/khac-screens/XemTrangCaNhan";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
@@ -221,8 +221,8 @@ export function StackNavigator() {
       />
       <Stack.Screen name="ChuyenTiep" component={ChuyenTiep} />
       <Stack.Screen
-        name="ThemNhieuThanhVienVaoNhom"
-        component={ThemNhieuThanhVienVaoNhom}
+        name="ThemNhieuThanhVienVaoMotNhom"
+        component={ThemNhieuThanhVienVaoMotNhom}
         options={{
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Thêm thành viên" />,
@@ -230,8 +230,8 @@ export function StackNavigator() {
         }}
       />
       <Stack.Screen
-        name="ThemThanhVienVaoNhieuNhom"
-        component={ThemThanhVienVaoNhieuNhom}
+        name="ThemMotThanhVienVaoNhieuNhom"
+        component={ThemMotThanhVienVaoNhieuNhom}
         options={{
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Thêm vào nhóm" />,

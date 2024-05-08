@@ -6,7 +6,7 @@ import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import io from "socket.io-client";
 
-export default function ThemNhieuThanhVienVaoNhom({ navigation, route }) {
+export default function ThemNhieuThanhVienVaoMotNhom({ navigation, route }) {
   const { conversationId } = route.params;
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
