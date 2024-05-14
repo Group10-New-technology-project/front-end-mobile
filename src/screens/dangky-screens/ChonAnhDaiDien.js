@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, Dimensions, Image, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import { S3 } from "aws-sdk";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME, API_URL } from "@env";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const s3 = new S3({
   accessKeyId: ACCESS_KEY_ID,
@@ -14,10 +15,11 @@ export default function ChonAnhDaiDien({ navigation, route }) {
   const { password, SoDienThoai, name, birthday, Gender } = route.params;
   console.log("Da nhan", password, SoDienThoai, name, birthday, Gender);
   const [idUser, setIdUser] = useState(null);
-  const [image, setImage] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/demo3.png");
-  const [imageURL, setimageAvatar] = useState("https://chanh9999.s3.ap-southeast-1.amazonaws.com/demo3.png");
+  const [image, setImage] = useState("https://i.pinimg.com/564x/68/3d/8f/683d8f58c98a715130b1251a9d59d1b9.jpg");
+  const [imageURL, setimageAvatar] = useState("https://i.pinimg.com/564x/68/3d/8f/683d8f58c98a715130b1251a9d59d1b9.jpg");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handle_signup = async () => {
+  const handleDangKy = async () => {
     console.log("Fest", password, SoDienThoai, name, birthday, Gender, imageURL);
     try {
       const response = await fetch(`${API_URL}/api/v1/users/sinup`, {
@@ -38,13 +40,40 @@ export default function ChonAnhDaiDien({ navigation, route }) {
       if (!response.ok) {
         throw new Error("Failed to sign up");
       }
-
-      // Nếu tạo người dùng thành công, chờ lấy thông tin người dùng và tạo thành viên
       await fetchUserByUserName();
-      navigation.navigate("TrangChu");
+      handleLogin();
     } catch (error) {
       console.error("Error signing up:", error);
-      // Xử lý lỗi (ví dụ: hiển thị thông báo lỗi)
+    }
+  };
+
+  const handleLogin = async () => {
+    try {
+      const userData = {
+        username: SoDienThoai,
+        password: password,
+      };
+      await AsyncStorage.setItem("userData", JSON.stringify(userData));
+      const response = await fetch(`${API_URL}/api/v1/users/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
+
+      if (!response.ok) {
+        Alert.alert("Sai tên người dùng hoặc mật khẩu");
+      }
+      const data = await response.json();
+      if (data.user) {
+        await AsyncStorage.setItem("userData", JSON.stringify(data.user));
+        navigation.navigate("Tabs");
+      } else {
+        Alert.alert("Lỗi Server");
+      }
+    } catch (error) {
+      console.error("There was an error!", error);
     }
   };
 
@@ -84,34 +113,28 @@ export default function ChonAnhDaiDien({ navigation, route }) {
   };
 
   const uploadImageToS3 = async (imageUri) => {
+    setIsLoading(true);
     try {
       const response = await fetch(imageUri);
       const blob = await response.blob();
-      // Lấy ngày hiện tại và định dạng theo yêu cầu
       var now = new Date();
-      // Lấy giờ, phút và giây hiện tại
       var hours = now.getHours();
       var minutes = now.getMinutes();
       var seconds = now.getSeconds();
       const currentDate = new Date().toISOString().slice(0, 10); // Lấy ngày tháng theo định dạng YYYY-MM-DD
-      // Tạo tên file mới với định dạng 'IMG_Ngày hiện tại_Giờ'
       const fileName = `IMG_${currentDate}_${hours}-${minutes}-${seconds}.png`;
-
       const params = {
         Bucket: S3_BUCKET_NAME,
         Key: fileName,
         Body: blob,
-        ACL: "public-read", // Đảm bảo ảnh được tải lên có thể được truy cập công khai
+        ACL: "public-read",
       };
-
       const uploadResponse = await s3.upload(params).promise();
-      console.log("Tải lên thành công", uploadResponse.Location);
-
-      // Gán giá trị mới cho imageAvatar và thực hiện công việc cần thiết
-      const imageUrl = uploadResponse.Location.toString();
-      setimageAvatar(imageUrl);
-      console.log("URL Ảnh của bạn là:", imageUrl);
-      return imageUrl;
+      const imageURL = uploadResponse.Location.toString();
+      setimageAvatar(imageURL);
+      console.log("Upload thành công:", imageURL);
+      setIsLoading(false);
+      return imageURL;
     } catch (error) {
       console.error("Error uploading image", error);
       throw error;
@@ -126,14 +149,20 @@ export default function ChonAnhDaiDien({ navigation, route }) {
       quality: 1,
     });
     console.log(result);
-    Alert.alert("Chọn ảnh thành công");
-    //Đẩy lên S3
     if (!result.canceled) {
       setImage(result.assets[0].uri);
-      uploadImageToS3(result.assets[0].uri);
+      await uploadImageToS3(result.assets[0].uri);
     }
   };
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFF" }}>
+        <ActivityIndicator size="large" color="#0091FF" />
+        <Text style={{ marginTop: 10, fontSize: 16, fontWeight: "400", color: "#0091FF" }}>Đang tải..</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <View style={styles.title}>
@@ -145,7 +174,7 @@ export default function ChonAnhDaiDien({ navigation, route }) {
         <TouchableOpacity style={styles.btn_chonanh} onPress={pickImage}>
           <Text style={styles.text_4}>Chọn ảnh</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.btn_chonanh, { backgroundColor: "gray" }]} onPress={handle_signup}>
+        <TouchableOpacity style={[styles.btn_chonanh]} onPress={handleDangKy}>
           <Text style={styles.text_4}>Tiếp tục</Text>
         </TouchableOpacity>
       </View>

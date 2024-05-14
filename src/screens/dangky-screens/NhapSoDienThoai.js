@@ -1,10 +1,16 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity } from "react-native";
-
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Image, Text, TextInput, TouchableOpacity, Alert } from "react-native";
+import axios from "axios";
+import { API_URL } from "@env";
 export default function NhapSoDienThoai({ navigation }) {
   const [SoDienThoai, setSoDienThoai] = useState("");
   const [DieuKhoan, setDieuKhoan] = useState(false);
   const [DieuKhoanMang, setDieuKhoanMang] = useState(false);
+  const [listPhoneNumber, setListPhoneNumber] = useState([]);
+
+  useEffect(() => {
+    getPhoneNumber();
+  }, []);
 
   const sendVerification = () => {
     let formattedPhoneNumber = "";
@@ -13,10 +19,26 @@ export default function NhapSoDienThoai({ navigation }) {
     } else {
       formattedPhoneNumber = "+84" + SoDienThoai;
     }
-    navigation.navigate("NhapMaXacThuc", {
-      phone2: formattedPhoneNumber.slice(3),
-      SoDienThoai: formattedPhoneNumber,
-    });
+    console.log(listPhoneNumber);
+    console.log(formattedPhoneNumber);
+    if (listPhoneNumber.includes(formattedPhoneNumber)) {
+      console.log("Số điện thoại đã được đăng ký tài khoản");
+      Alert.alert("Số điện thoại đã được đăng ký tài khoản");
+    } else {
+      navigation.navigate("TaoMatKhau", {
+        phone2: formattedPhoneNumber.slice(3),
+        SoDienThoai: formattedPhoneNumber,
+      });
+    }
+  };
+
+  const getPhoneNumber = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/users/demo/getAllUserName`);
+      setListPhoneNumber(response.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (

@@ -19,12 +19,12 @@ export function TabsComponent() {
     <Tab.Navigator
       initialRouteName="TinNhan"
       screenOptions={{
-        headerShown: true,
-        headerTitle: "",
-        headerStyle: { backgroundColor: "#0091FF" },
+        headerShown: true, // Hiển thị header
+        headerTitle: "", // Tiêu đề của header
+        headerStyle: { backgroundColor: "#0091FF" }, // Màu sắc của header
         tabBarActiveTintColor: "#0091FF", // Màu sắc của tab khi được chọn
         tabBarInactiveTintColor: "#B7B7B7", // Màu sắc của tab khi không được chọn
-        tabBarShowLabel: true, // Hiển thị nhãn cho tab
+        tabBarShowLabel: true, // Hiển thị tabBarLabel
         tabBarStyle: {
           display: "flex",
           borderTopWidth: 1,

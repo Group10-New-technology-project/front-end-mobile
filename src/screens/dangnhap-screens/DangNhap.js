@@ -11,7 +11,7 @@ export default function DangNhap({ navigation }) {
     try {
       // Kiểm tra xem username và password đã được nhập hay chưa
       if (!username || !password) {
-        Alert.alert("Failed");
+        Alert.alert("Đăng nhập không thành công", "Vui lòng nhập đầy đủ thông tin đăng nhập");
         return;
       }
       // Tạo đối tượng JSON chứa thông tin đăng nhập

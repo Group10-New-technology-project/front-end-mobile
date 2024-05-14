@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
-import DateTimePickerModal from "react-native-modal-datetime-picker";
+import { View, StyleSheet, Image, Text, TouchableOpacity, Dimensions } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
 
-// Component Dropdown
 const Dropdown = ({ onSelect }) => {
   return (
     <View style={styles.dropdown}>
@@ -21,11 +20,11 @@ const Dropdown = ({ onSelect }) => {
 
 export default function NhapThongTinCaNhan({ navigation, route }) {
   const { password, SoDienThoai } = route.params;
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
-  const [dropdownVisible, setDropdownVisible] = useState(false); // State để kiểm soát hiển thị dropdown
+  const [dropdownVisible, setDropdownVisible] = useState(false);
   const [selectedGender, setSelectedGender] = useState(null);
-  const handle_NhapTen = () => {
+
+  const handleTiepTuc = () => {
     console.log(selectedDate);
     console.log(selectedGender);
     navigation.navigate("NhapTenNguoiDung", {
@@ -36,17 +35,8 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
     });
   };
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
-
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
-
-  const handleConfirm = (date) => {
-    setSelectedDate(date);
-    hideDatePicker();
+  const handleDateChange = (event, selectedDate) => {
+    setSelectedDate(selectedDate || selectedDate);
   };
 
   const toggleDropdown = () => {
@@ -54,9 +44,10 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
   };
 
   const selectGender = (gender) => {
-    setSelectedGender(gender); // Cập nhật giá trị giới tính đã chọn
-    setDropdownVisible(false); // Ẩn dropdown sau khi chọn
+    setSelectedGender(gender);
+    setDropdownVisible(false);
   };
+
   return (
     <View style={styles.container}>
       <View>
@@ -71,46 +62,44 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
               alignItems: "center",
               marginTop: 10,
             }}>
-            <Text style={{ fontSize: 24, fontWeight: "700", textAlign: "center", color: "#3D3D3D" }}>
-              Thêm thông tin cá nhân
-            </Text>
+            <Text style={{ fontSize: 24, fontWeight: "700", textAlign: "center", color: "#3D3D3D" }}>Thêm thông tin cá nhân</Text>
           </View>
 
-          <View style={{ width: "100%", alignItems: "center", marginTop: 10 }}>
-            <View
-              style={{
-                marginTop: 10,
-                alignItems: "center",
-                flexDirection: "row",
-                height: 50,
-                width: "90%",
-                justifyContent: "space-between",
-                alignItems: "center",
-                borderWidth: 2,
-                borderColor: "#3D3D3D",
-                borderRadius: 8,
-              }}>
-              {!selectedDate && (
-                <Text style={{ fontSize: 20, fontWeight: 500, color: "#343434", marginLeft: 20 }}>Sinh Nhật</Text>
-              )}
-              <View>
-                <DateTimePickerModal
-                  isVisible={isDatePickerVisible}
-                  mode="date"
-                  onConfirm={handleConfirm}
-                  onCancel={hideDatePicker}
-                />
-                {selectedDate && (
-                  <Text style={{ fontSize: 20, fontWeight: 500, color: "#343434", marginLeft: 20 }}>
-                    {selectedDate.toLocaleDateString()}
-                  </Text>
-                )}
-              </View>
+          <View>
+            <View style={{ paddingLeft: 20 }}>
+              <Text style={{ fontSize: 18, fontWeight: "500", color: "gray" }}>Chọn sinh nhật</Text>
+            </View>
+            <View style={{ width: "100%", alignItems: "center", marginTop: 20 }}>
+              <DateTimePicker value={selectedDate || new Date()} mode="date" display="spinner" onChange={handleDateChange} />
+            </View>
+          </View>
 
-              <View style={{}}>
-                <TouchableOpacity onPress={showDatePicker}>
+          <View style={{}}>
+            <View style={{ paddingLeft: 20 }}>
+              <Text style={{ fontSize: 18, fontWeight: "500", color: "gray" }}>Chọn giới tính</Text>
+            </View>
+            <View style={{ alignItems: "center" }}>
+              <View
+                style={{
+                  marginTop: 20,
+                  alignItems: "center",
+                  flexDirection: "row",
+                  height: 50,
+                  width: "85%",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  borderWidth: 1,
+                  borderColor: "#3D3D3D",
+                  borderRadius: 15,
+                }}>
+                {selectedGender ? (
+                  <Text style={{ fontSize: 20, fontWeight: "500", color: "#343434", marginLeft: 20 }}>{selectedGender}</Text>
+                ) : (
+                  <Text style={{ fontSize: 20, fontWeight: "500", color: "#343434", marginLeft: 20 }}>Giới tính</Text>
+                )}
+                <TouchableOpacity onPress={toggleDropdown}>
                   <Image
-                    source={require("../../../assets/img/calender.png")}
+                    source={require("../../../assets/img/arrowdown.png")}
                     resizeMode="contain"
                     style={{ height: 25, width: 25, marginRight: 20 }}
                   />
@@ -118,42 +107,11 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
               </View>
             </View>
           </View>
-
-          <View style={{ width: "100%", alignItems: "center", marginTop: 10 }}>
-            <View
-              style={{
-                marginTop: 10,
-                alignItems: "center",
-                flexDirection: "row",
-                height: 50,
-                width: "90%",
-                justifyContent: "space-between",
-                alignItems: "center",
-                borderWidth: 2,
-                borderColor: "#3D3D3D",
-                borderRadius: 8,
-              }}>
-              {selectedGender ? (
-                <Text style={{ fontSize: 20, fontWeight: 500, color: "#343434", marginLeft: 20 }}>
-                  {selectedGender}
-                </Text>
-              ) : (
-                <Text style={{ fontSize: 20, fontWeight: 500, color: "#343434", marginLeft: 20 }}>Giới tính</Text>
-              )}
-              <TouchableOpacity onPress={toggleDropdown}>
-                <Image
-                  source={require("../../../assets/img/arrowdown.png")}
-                  resizeMode="contain"
-                  style={{ height: 25, width: 25, marginRight: 20 }}
-                />
-              </TouchableOpacity>
-            </View>
-          </View>
         </View>
       </View>
       <View style={{ marginBottom: 40, height: 39, justifyContent: "center", alignItems: "center" }}>
-        {selectedDate && selectedGender ? (
-          <TouchableOpacity onPress={handle_NhapTen}>
+        {selectedGender ? (
+          <TouchableOpacity onPress={handleTiepTuc}>
             <View
               style={{
                 height: 44,
@@ -163,7 +121,7 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
                 alignItems: "center",
                 justifyContent: "center",
               }}>
-              <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>Tiếp tục</Text>
+              <Text style={{ fontSize: 15, fontWeight: "500", color: "white", textAlign: "center" }}>Tiếp tục</Text>
             </View>
           </TouchableOpacity>
         ) : (
@@ -176,7 +134,7 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
               alignItems: "center",
               justifyContent: "center",
             }}>
-            <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>Tiếp tục</Text>
+            <Text style={{ fontSize: 15, fontWeight: "500", color: "white", textAlign: "center" }}>Tiếp tục</Text>
           </View>
         )}
       </View>
@@ -191,31 +149,24 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    // alignItems: "center",
     justifyContent: "space-between",
-  },
-  background: {
-    position: "absolute",
-    left: 0,
-    right: 0,
-    top: 0,
-    height: 45,
   },
   dropdown: {
     position: "absolute",
-    top: 255,
-    left: 20,
-    right: 20,
+    top: Dimensions.get("window").height * 0.5185,
+    right: 21,
     backgroundColor: "#fff",
-    borderRadius: 8,
-    elevation: 5,
+    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: "#ccc",
     zIndex: 1,
   },
   option: {
     paddingVertical: 10,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   optionText: {
     fontSize: 16,
-    color: "#000",
   },
 });

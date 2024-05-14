@@ -8,7 +8,6 @@ export default function NhapTenNguoiDung({ navigation, route }) {
   const [name, setName] = useState("");
   const handle_chonAnh = () => {
     if (name.length < 2 || name.length > 40) {
-      // Show an alert if name length is not within the required range
       Alert.alert("Tên Zalo phải từ 2-40 ký tự");
     } else {
       navigation.navigate("ChonAnhDaiDien", {
@@ -64,15 +63,11 @@ export default function NhapTenNguoiDung({ navigation, route }) {
           <View style={{ marginLeft: 20, flexDirection: "row", height: 30, alignItems: "center" }}>
             <Text style={{ fontWeight: 700, fontSize: 30, marginBottom: 16 }}>.</Text>
             <Text style={{ fontWeight: 500, fontSize: 16, marginLeft: 4 }}>Không vi phạm</Text>
-            <Text style={{ fontWeight: 500, fontSize: 16, marginLeft: 3, color: "#2CA3DC" }}>
-              Quy định đặt tên zalo.
-            </Text>
+            <Text style={{ fontWeight: 500, fontSize: 16, marginLeft: 3, color: "#2CA3DC" }}>Quy định đặt tên zalo.</Text>
           </View>
           <View style={{ marginLeft: 20, flexDirection: "row", height: 30, alignItems: "center" }}>
             <Text style={{ fontWeight: 700, fontSize: 30, marginBottom: 16 }}>.</Text>
-            <Text style={{ fontWeight: 500, fontSize: 16, marginLeft: 4 }}>
-              Nên sử dụng tên thật giúp bạn bè dễ nhận ra
-            </Text>
+            <Text style={{ fontWeight: 500, fontSize: 16, marginLeft: 4 }}>Nên sử dụng tên thật giúp bạn bè dễ nhận ra</Text>
           </View>
         </View>
       </View>

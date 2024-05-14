@@ -50,10 +50,11 @@ export function StackNavigator() {
         headerStyle: { backgroundColor: "#0091FF" },
         headerTitle: "",
         headerShown: false,
-        animationTypeForReplace: "pop",
+        animationTypeForReplace: "push",
         animation: "ios",
       }}>
       <Stack.Screen name="Tabs" component={TabsComponent} />
+      <Stack.Screen name="TrangChu" component={TrangChu} />
       <Stack.Screen
         name="TaiKhoanVaBaoMat"
         component={TaiKhoanVaBaoMat}
@@ -91,14 +92,6 @@ export function StackNavigator() {
       <Stack.Screen name="TaoMatKhau" component={TaoMatKhau} />
       <Stack.Screen name="NhapTenNguoiDung" component={NhapTenNguoiDung} />
       <Stack.Screen name="ChonAnhDaiDien" component={ChonAnhDaiDien} />
-      <Stack.Screen
-        name="TrangChu"
-        component={TrangChu}
-        options={{
-          headerShown: false,
-          headerStyle: { backgroundColor: "white" },
-        }}
-      />
       <Stack.Screen
         name="DangNhap"
         component={DangNhap}

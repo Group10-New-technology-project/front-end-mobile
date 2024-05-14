@@ -14,11 +14,9 @@ export default function NhapMaXacThuc({ navigation, route }) {
   const recaptchaVerifier = useRef(null);
 
   const sendVerification = () => {
-    console.log("Đã gửi đến số:", SoDienThoai);
-    console.log("sdt", phone2);
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     phoneProvider.verifyPhoneNumber(SoDienThoai, recaptchaVerifier.current).then((id) => setVerificationId(id));
-    Alert.alert("Mã xác thực đã được gửi đến số điện thoại của bạn");
+    // Alert.alert("Mã xác thực đã được gửi đến số điện thoại của bạn");
   };
   useEffect(() => {
     sendVerification();

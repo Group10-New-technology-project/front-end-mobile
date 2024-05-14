@@ -31,7 +31,6 @@ import {
 } from "@expo/vector-icons";
 import { ACCESS_KEY_ID, SECRET_ACCESS_KEY, REGION, S3_BUCKET_NAME, API_URL } from "@env";
 import io from "socket.io-client";
-import { set } from "firebase/database";
 import { Audio, Video } from "expo-av";
 import * as DocumentPicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
@@ -41,7 +40,6 @@ import * as MediaLibrary from "expo-media-library";
 import { S3 } from "aws-sdk";
 import { useNavigation } from "@react-navigation/native";
 import { Zocial } from "@expo/vector-icons";
-import { render } from "react-dom";
 import ImageZoom from "react-native-image-pan-zoom";
 
 const heightApp = Dimensions.get("window").height;
@@ -1250,10 +1248,13 @@ export default function ChatScreen({ route }) {
     }
   };
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#F2F2F2" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
       <View style={styles.container}>
         <View style={styles.header}>{/* <Text style={styles.title}>Zelo chat</Text> */}</View>
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : undefined} keyboardVerticalOffset={90}>
+        <KeyboardAvoidingView
+          style={{ flex: 1, backgroundColor: "#F2F2F2" }}
+          behavior={Platform.OS === "ios" ? "padding" : undefined}
+          keyboardVerticalOffset={88}>
           <FlatList
             ref={flatListRef}
             data={messages}
@@ -1419,11 +1420,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
   header: {
     alignItems: "center",
     justifyContent: "center",
-    height: 30,
+    height: 20,
+    backgroundColor: "#F2F2F2",
   },
   title: {
     fontSize: 20,
@@ -1501,7 +1502,7 @@ const styles = StyleSheet.create({
     paddingLeft: 18,
     paddingRight: 18,
     paddingVertical: 5,
-    // backgroundColor: "green",
+    backgroundColor: "#FFFFFF",
   },
   textInput_container: {
     height: 42,
@@ -1510,7 +1511,7 @@ const styles = StyleSheet.create({
     borderColor: "#0091FF",
     fontSize: 16,
     paddingLeft: 14,
-    // backgroundColor: "#fff",
+    // backgroundColor: "green",
   },
   imageList: {
     flexDirection: "row",

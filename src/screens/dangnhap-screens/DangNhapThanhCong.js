@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput } from "react-native"; // Import Text từ react-native
-
-import { AntDesign } from "@expo/vector-icons";
 export default function DangNhapThanhCong({ navigation }) {
   const [sodienthoai, setsodienthoai] = useState("");
 
@@ -50,8 +48,7 @@ export default function DangNhapThanhCong({ navigation }) {
               fontSize: 15,
               color: "black",
             }}>
-            Bây giờ bạn có thể tạo mật khẩu mới. Tài khoản và mật khẩu này dừng để đăng nhập trên
-            bất cứ thiết bị nào.
+            Bây giờ bạn có thể tạo mật khẩu mới. Tài khoản và mật khẩu này dừng để đăng nhập trên bất cứ thiết bị nào.
           </Text>
         </View>
       </View>
@@ -73,9 +70,7 @@ export default function DangNhapThanhCong({ navigation }) {
                 backgroundColor: "#00A3FF",
                 justifyContent: "center",
               }}>
-              <Text style={{ fontSize: 13, color: "white", textAlign: "center" }}>
-                Tạo Mật Khẩu
-              </Text>
+              <Text style={{ fontSize: 13, color: "white", textAlign: "center" }}>Tạo Mật Khẩu</Text>
             </View>
           </TouchableOpacity>
         </View>
