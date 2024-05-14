@@ -152,8 +152,6 @@ export default function LoiMoiKetBan({ route }) {
     try {
       const response = await fetch(`${API_URL}/api/v1/member/getMemberByUserId/${userId}`);
       if (!response.ok) {
-        console.log("Không tìm thấy người dùng");
-        return;
       }
       const data = await response.json();
       console.log("ID người dùng:", data._id);
@@ -165,14 +163,12 @@ export default function LoiMoiKetBan({ route }) {
 
   const createConversationApp = async (memberId1, memberId2) => {
     try {
-      const response = await fetch(`${API_URL}/api/v1/conversation/createConversationApp`, {
+      const response = await fetch(`${API_URL}/api/v1/conversation/createConversation`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: "Name",
-          type: "Direct",
           members: [memberId1, memberId2],
           leader: memberId1,
         }),
@@ -182,8 +178,6 @@ export default function LoiMoiKetBan({ route }) {
         return;
       }
       const data = await response.json();
-      console.log("ID cuộc trò chuyện:", data._id);
-      return data._id;
     } catch (error) {
       console.error("Error fetching user data:", error);
     }
@@ -261,7 +255,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   segment_control: {
-    height: Dimensions.get("window").height * 0.045,
+    height: Dimensions.get("window").height * 0.04,
   },
   btn_tuchoi: {
     backgroundColor: "#EAEAEA",

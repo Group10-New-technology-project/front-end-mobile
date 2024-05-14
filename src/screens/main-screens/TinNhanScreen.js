@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Dimensions, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 import { useIsFocused } from "@react-navigation/native";
 import io from "socket.io-client";
+import Modal from "react-native-modal";
+import axios from "axios";
 
 export default function TinNhanScreen({ navigation }) {
   const isFocused = useIsFocused();
@@ -14,6 +16,8 @@ export default function TinNhanScreen({ navigation }) {
   const [userData, setUserData] = useState({});
   const socketRef = useRef(null);
   const [TuiGui, setTuiGui] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
+  const [conversationId, setConversationId] = useState("");
 
   const convertToStandardFormat = (createdAt) => {
     const regexIso8601 = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/;
@@ -29,11 +33,8 @@ export default function TinNhanScreen({ navigation }) {
       const storedUserData = await AsyncStorage.getItem("userData");
       if (storedUserData) {
         const user = JSON.parse(storedUserData);
-        // console.log("Thông tin người dùng đã đăng nhập:", user);
-        // console.log("ID người dùng 1", user._id);
         setUserData(user);
         setUserID(user._id); // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
-        // Truyền user._id cho fetchConversations sau khi lấy được dữ liệu người dùng
         await fetchConversations(user._id);
       } else {
         console.log("Không có thông tin người dùng được lưu");
@@ -139,11 +140,31 @@ export default function TinNhanScreen({ navigation }) {
       return null;
     }
   };
+  toggleBottom = () => {
+    setIsVisible(!isVisible);
+  };
+
+  const handleNhanGiu = (conversationId) => {
+    console.log("CON", conversationId);
+    setConversationId(conversationId);
+    setIsVisible(true);
+  };
+
+  handle_deleteConver = async () => {
+    const response = await axios.post(`${API_URL}/api/v1/conversation/deleteConversationById/${conversationId}`);
+    const data = await response.data;
+    Alert.alert("Xóa cuộc trò chuyện thành công!");
+    console.log("Xóa cuộc trò chuyện thành công!", conversationId);
+    setIsVisible(false);
+    fetchData();
+  };
 
   return (
     <View style={styles.container}>
       {loading ? ( // Kiểm tra nếu đang tải dữ liệu
-        <Text>Loading...</Text> // Hiển thị chữ "Loading..."
+        <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
+          <Text style={{ fontSize: 18, fontWeight: "500", color: "gray" }}>Loading...</Text>
+        </View>
       ) : (
         <FlatList
           data={conversations}
@@ -171,15 +192,17 @@ export default function TinNhanScreen({ navigation }) {
               }
               nameMem = item.name;
             }
-            let lastMsg = "Các bạn đã trở thành bạn bè!";
+            let lastMsg = "Hãy bắt đầu trò chuyện !";
             if (item.type === "Direct") {
-              lastMsg = lastMessages[item._id] || "Các bạn đã trở thành bạn bè";
+              lastMsg = lastMessages[item._id] || "Hãy bắt đầu trò chuyện !";
             } else if (item.type === "Group") {
               lastMsg = lastMessages[item._id] || "Bạn đã trở thành thành viên của nhóm!";
             }
             const messageColor = item.seen ? "black" : "gray";
             return (
-              <TouchableOpacity onPress={() => navigation.navigate("ChatScreen", { conversationId: item._id })}>
+              <TouchableOpacity
+                onLongPress={() => handleNhanGiu(item._id)}
+                onPress={() => navigation.navigate("ChatScreen", { conversationId: item._id })}>
                 <View style={styles.conversation_view}>
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <Image source={{ uri: avatarUrl }} style={{ width: 60, height: 60, borderRadius: 60 }} />
@@ -200,6 +223,25 @@ export default function TinNhanScreen({ navigation }) {
           }}
         />
       )}
+      <Modal
+        style={styles.modal_container}
+        isVisible={isVisible}
+        onSwipeComplete={toggleBottom}
+        onBackdropPress={toggleBottom}
+        animationIn="fadeIn"
+        animationOut="fadeOut">
+        <View style={styles.modal_size}>
+          <TouchableOpacity
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              flex: 1,
+            }}
+            onPress={handle_deleteConver}>
+            <Text style={styles.content_delete}>Xóa cuộc trò chuyện</Text>
+          </TouchableOpacity>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -234,5 +276,21 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 10,
     paddingHorizontal: 15,
+  },
+  modal_container: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "FFFFFF",
+  },
+  modal_size: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    height: 100,
+    width: 220,
+  },
+  content_delete: {
+    fontSize: 18,
+    fontWeight: "500",
+    color: "red",
   },
 });

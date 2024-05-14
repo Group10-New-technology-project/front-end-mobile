@@ -13,7 +13,7 @@ export default function SearchBarSelect() {
   }, []);
 
   const handleCaiDat = () => {
-    navigation.navigate("CaiDat");
+    navigation.navigate("CaiDatNhanh");
   };
 
   const handleInputChange = (text) => {

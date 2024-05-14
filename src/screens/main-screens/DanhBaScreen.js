@@ -2,8 +2,8 @@ import SegmentedControl from "@react-native-segmented-control/segmented-control"
 import React, { useEffect, useState } from "react";
 import { useIsFocused } from "@react-navigation/native";
 import Modal from "react-native-modal";
-import { Dimensions, StyleSheet, Text, View, FlatList, Image, SafeAreaView, TouchableOpacity, Alert, VirtualizedList } from "react-native";
-import { FontAwesome5, FontAwesome, Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { Dimensions, StyleSheet, Text, View, FlatList, Image, SafeAreaView, TouchableOpacity, Alert } from "react-native";
+import { FontAwesome, FontAwesome5, Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -34,7 +34,6 @@ export default function DanhBaScreen({ navigation }) {
         console.error("Lỗi khi lấy thông tin người dùng:", error);
       }
     };
-    // Gọi fetchData1 khi component được render
     fetchDataUserLogin();
   }, []);
 
@@ -181,7 +180,6 @@ export default function DanhBaScreen({ navigation }) {
                   </View>
                 </View>
               </TouchableOpacity>
-
               <View style={styles.function_lichsinhnhat}>
                 <View style={styles.loimoiketban}>
                   <View style={styles.icon_contacts}>
@@ -226,7 +224,7 @@ export default function DanhBaScreen({ navigation }) {
       <View style={styles.segmentContainer}>
         <SegmentedControl
           style={styles.segment_control}
-          values={["Bạn bè", "Nhóm", "OA"]}
+          values={["Bạn bè", "Nhóm", "Khác"]}
           selectedIndex={selectedIndex}
           onChange={onChange}
           fontStyle={{ fontSize: 16 }}
@@ -327,7 +325,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   segment_control: {
-    height: Dimensions.get("window").height * 0.045,
+    height: Dimensions.get("window").height * 0.04,
   },
   avatar_user: {
     width: 50,
@@ -379,11 +377,11 @@ const styles = StyleSheet.create({
   loimoiketban: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 14,
+    paddingVertical: 13,
   },
   line: {
-    height: 8,
-    backgroundColor: "#DBDBDB",
+    height: 7,
+    backgroundColor: "#F0F0F0",
   },
   content_delete: {
     paddingTop: 20,

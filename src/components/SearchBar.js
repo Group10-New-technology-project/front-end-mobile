@@ -7,7 +7,7 @@ export default function SearchBar() {
 
   const handleCaiDat = () => {
     console.log("Cài đặt");
-    navigation.navigate("CaiDat");
+    navigation.navigate("CaiDatNhanh");
   };
   const handleQR = () => {
     navigation.navigate("QRCodeScreen");

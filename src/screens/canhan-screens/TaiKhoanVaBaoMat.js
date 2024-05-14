@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from "rea
 import ToggleSwitch from "toggle-switch-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect } from "react";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, FontAwesome, FontAwesome5, AntDesign } from "@expo/vector-icons";
 
 export default function TaiKhoanVaBaoMat({ navigation }) {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -14,6 +14,16 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
   const handleMatKhau = () => {
     navigation.navigate("DoiMatKhauScreen");
   };
+
+  const formatDate = (isoString) => {
+    const date = new Date(isoString);
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng trong JavaScript bắt đầu từ 0
+    const year = date.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  };
+  const formattedDate = userData ? formatDate(userData.dateofbirth) : "Sinh nhật";
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,11 +74,40 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           </View>
         </View>
         <View style={styles.sodienthoai}>
-          <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/phone.png")} />
+          <FontAwesome name="phone" size={26} color="black" />
           <View style={{ flexDirection: "column", paddingLeft: 16 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Số điện thoại</Text>
             <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>
               {userData ? userData.username : "Số điện thoại"}
+            </Text>
+          </View>
+          <View style={{ position: "absolute", right: 10 }}>
+            <Ionicons name="chevron-forward" size={18} color="gray" />
+          </View>
+        </View>
+
+        <View style={{ marginTop: 3, alignItems: "flex-end" }}>
+          <View style={{ borderWidth: 1, borderColor: "#ECECEC", width: 345 }} />
+        </View>
+        <View style={styles.sodienthoai}>
+          <FontAwesome name="birthday-cake" size={21} color="black" />
+          <View style={{ flexDirection: "column", paddingLeft: 16 }}>
+            <Text style={{ fontSize: 17, fontWeight: "500" }}>Sinh nhật</Text>
+            <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>{formattedDate}</Text>
+          </View>
+          <View style={{ position: "absolute", right: 10 }}>
+            <Ionicons name="chevron-forward" size={18} color="gray" />
+          </View>
+        </View>
+        <View style={{ marginTop: 3, alignItems: "flex-end" }}>
+          <View style={{ borderWidth: 1, borderColor: "#ECECEC", width: 345 }} />
+        </View>
+        <View style={styles.sodienthoai}>
+          <FontAwesome name="transgender" size={26} color="black" />
+          <View style={{ flexDirection: "column", paddingLeft: 15 }}>
+            <Text style={{ fontSize: 17, fontWeight: "500" }}>Giới tính</Text>
+            <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>
+              {userData ? userData.gender : "Giới tính"}
             </Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
@@ -81,8 +120,8 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
         <View style={styles.dinhdanhtaikhoan}>
           <View style={styles.khoazalo}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
-              <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/user-search.png")} />
-              <Text style={{ fontSize: 17, fontWeight: "500", marginHorizontal: 16 }}>Định danh tài khoản</Text>
+              <FontAwesome5 name="user-check" size={20} color="black" />
+              <Text style={{ fontSize: 17, fontWeight: "500", marginHorizontal: 13 }}>Định danh tài khoản</Text>
             </View>
             <Text style={{ fontSize: 16, color: "#696969", fontWeight: "500", marginRight: 40 }}>Chưa định danh</Text>
             <View style={{ position: "absolute", right: 10 }}>
@@ -95,8 +134,8 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
         </View>
         <View style={styles.maqrcuatoi}>
           <View style={{ flexDirection: "row", alignItems: "center", paddingVertical: 14 }}>
-            <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/qr-code-a.png")} />
-            <Text style={{ fontSize: 17, fontWeight: "500", marginHorizontal: 16 }}>Mã QR của tôi</Text>
+            <FontAwesome name="qrcode" size={26} color="black" />
+            <Text style={{ fontSize: 17, fontWeight: "500", marginHorizontal: 18 }}>Mã QR của tôi</Text>
             <View style={{ position: "absolute", right: 10 }}>
               <Ionicons name="chevron-forward" size={18} color="gray" />
             </View>
@@ -180,12 +219,13 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
       <View style={{ height: 7, backgroundColor: "#E6E6E6" }}></View>
 
       <View style={styles.xoa_tai_khoan}>
-        <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/badge-x.png")} />
-        <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Xóa tài khoản</Text>
+        <AntDesign name="delete" size={24} color="red" />
+        <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16, color: "red" }}>Xóa tài khoản</Text>
         <View style={{ position: "absolute", right: 10 + 12 }}>
           <Ionicons name="chevron-forward" size={18} color="gray" />
         </View>
       </View>
+      <View style={{ height: 50 }}></View>
     </ScrollView>
   );
 }
@@ -193,6 +233,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
+    flex: 1,
   },
   header_taikhoan: {
     marginTop: 1,

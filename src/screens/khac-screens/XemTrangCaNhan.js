@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useCallback } from "react";
 import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image, ImageBackground, Alert } from "react-native";
 import { Ionicons, AntDesign, Feather, SimpleLineIcons } from "@expo/vector-icons";
 import axios from "axios";
 import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function XemTrangCaNhan({ navigation, route }) {
   const { user_id } = route.params;
-  // const { user_id } = route.params ? route.params : { user_id: "66209dab4fa436ede9c7e261" };
   const [user_login, setUserData] = useState(null);
   const [listFriends, setListFriends] = useState([]);
   const [listFriendsRequest, setListFriendsRequest] = useState([]);
@@ -17,24 +17,32 @@ export default function XemTrangCaNhan({ navigation, route }) {
   const [name, setName] = useState("Chanh");
   const [reloadData, setReloadData] = useState(false);
 
-  useEffect(() => {
-    fetchDataLogin();
-    getThongTinUser();
-    setReloadData(false);
-  }, [reloadData]);
+  useFocusEffect(
+    useCallback(() => {
+      fetchDataLogin();
+      getThongTinUser();
+      setReloadData(false);
+    }, [reloadData])
+  );
+
+  const CheckIdConversationByUserId = async (user_login, user_id) => {
+    try {
+      const response = await axios.post(`${API_URL}/api/v1/conversation/getIdConversationByUserId`, {
+        user1: user_login,
+        user2: user_id,
+      });
+      console.log("Dữ liệu cuộc trò chuyện:", response.data);
+      navigation.navigate("ChatScreen", { conversationId: response.data });
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
 
   const handleNhanTin = () => {
-    console.log("Nhắn tin", user_id);
-    Alert.alert(
-      "",
-      "Bạn có chắc chắn muốn nhắn tin với " + name + "?",
-      [
-        { text: "Cancel", onPress: () => console.log("Cancel Pressed"), style: "cancel" },
-        { text: "OK", onPress: () => console.log("OK Pressed") },
-      ],
-      { cancelable: false }
-    );
+    CheckIdConversationByUserId(user_login, user_id);
+    console.log("user2", user_id);
   };
+
   const handleKetBan = async () => {
     try {
       const response = await fetch(`${API_URL}/api/v1/users/addFriendRequest`, {
@@ -55,14 +63,16 @@ export default function XemTrangCaNhan({ navigation, route }) {
       console.error("Error:", error);
     }
   };
+
   const handleChinhSuaTen = () => {
     console.log("Chỉnh sửa tên");
   };
+
   const handleGoiThoai = () => {
     console.log("Gọi thoại");
   };
   const handleCaiDat = () => {
-    navigation.navigate("CaiDat");
+    navigation.navigate("ChinhSuaThongTinCaNhan", { user_id: user_login });
   };
 
   const handleHuyKetBan = () => {
@@ -118,6 +128,7 @@ export default function XemTrangCaNhan({ navigation, route }) {
       console.error("Error:", error);
     }
   };
+
   const handleChapNhanLoiMoi = async () => {
     try {
       const response = await fetch(`${API_URL}/api/v1/users/acceptFriendRequest`, {
@@ -132,6 +143,7 @@ export default function XemTrangCaNhan({ navigation, route }) {
       });
       if (response.ok) {
         Alert.alert("Đã chấp nhận lời mời kết bạn từ " + name + "!");
+        setReloadData(true);
       } else {
         console.error("Failed to delete friend request");
       }
@@ -139,6 +151,7 @@ export default function XemTrangCaNhan({ navigation, route }) {
       console.error("Error:", error);
     }
   };
+
   const handleTuChoiLoiMoi = async () => {
     try {
       const response = await fetch(`${API_URL}/api/v1/users/deleteFriendRequest`, {
@@ -236,6 +249,9 @@ export default function XemTrangCaNhan({ navigation, route }) {
           </TouchableOpacity>
         )}
       </View>
+      <View style={{ alignItems: "center", paddingVertical: 7 }}>
+        <Text style={{ fontSize: 15, fontWeight: "400", color: "gray" }}>Giới thiệu bản thân của Profile</Text>
+      </View>
       {/* Nếu là chính mình thì hiển thị nút cập nhật giới thiệu bản thân */}
       {user_id === user_login && (
         <View style={styles.button_profile}>
@@ -312,7 +328,6 @@ const styles = StyleSheet.create({
   },
   header_profile: {
     height: Dimensions.get("window").height * 0.32,
-    // backgroundColor: "red",
   },
   container_profile: {
     paddingTop: 22,

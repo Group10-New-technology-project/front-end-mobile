@@ -11,7 +11,7 @@ import Button from "../utils/Button";
 import TaiKhoanVaBaoMat from "../screens/canhan-screens/TaiKhoanVaBaoMat";
 import QuyenRiengTu from "../screens/canhan-screens/QuyenRiengTu";
 import ReelScreen from "../screens/khampha-screens/ReelScreen";
-import CaiDat from "../screens/khac-screens/CaiDatNhanh";
+import CaiDatNhanh from "../screens/khac-screens/CaiDatNhanh";
 import QRCodeScreen from "../screens/khac-screens/QRCodeScreen";
 import TaoMatKhau from "../screens/dangky-screens/TaoMatKhau";
 import ChonAnhDaiDien from "../screens/dangky-screens/ChonAnhDaiDien";
@@ -40,6 +40,7 @@ import ChuyenTiep from "../screens/tinnhan-screens/ChuyenTiep";
 import ThemMotThanhVienVaoNhieuNhom from "../screens/tinnhan-screens/ThemMotThanhVienVaoNhieuNhom";
 import ThemNhieuThanhVienVaoMotNhom from "../screens/tinnhan-screens/ThemNhieuThanhVienVaoMotNhom";
 import XemTrangCaNhan from "../screens/khac-screens/XemTrangCaNhan";
+import ChinhSuaThongTinCaNhan from "../screens/canhan-screens/ChinhSuaThongTinCaNhan";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
@@ -55,6 +56,14 @@ export function StackNavigator() {
       }}>
       <Stack.Screen name="Tabs" component={TabsComponent} />
       <Stack.Screen name="TrangChu" component={TrangChu} />
+      <Stack.Screen
+        name="ChinhSuaThongTinCaNhan"
+        component={ChinhSuaThongTinCaNhan}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Chỉnh sửa thông tin" />,
+        }}
+      />
       <Stack.Screen
         name="TaiKhoanVaBaoMat"
         component={TaiKhoanVaBaoMat}
@@ -72,8 +81,8 @@ export function StackNavigator() {
         }}
       />
       <Stack.Screen
-        name="CaiDat"
-        component={CaiDat}
+        name="CaiDatNhanh"
+        component={CaiDatNhanh}
         options={{
           headerLeft: () => <CustomBackButton routeName="Cài đặt" />,
           headerShown: true,

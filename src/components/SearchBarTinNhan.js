@@ -15,7 +15,7 @@ export default function SearchBarTinNhan() {
 
   const handleCaiDat = () => {
     console.log("Cài đặt");
-    navigation.navigate("CaiDat");
+    navigation.navigate("CaiDatNhanh");
   };
   const handleAdd = () => {
     setModalVisible(!isModalVisible);

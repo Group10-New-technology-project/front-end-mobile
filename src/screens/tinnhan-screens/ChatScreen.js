@@ -764,7 +764,7 @@ export default function ChatScreen({ route }) {
       const pickerResult = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Videos,
         allowsEditing: false,
-        quality: 0.5,
+        quality: 0.1,
         allowsMultipleSelection: true,
         videoMaxSize: 10 * 1024 * 1024, // 10MB
       });
@@ -888,7 +888,7 @@ export default function ChatScreen({ route }) {
       const pickerResult = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: false,
-        quality: 0.5,
+        quality: 0.1,
         allowsMultipleSelection: true,
       });
 
@@ -913,7 +913,7 @@ export default function ChatScreen({ route }) {
       }
       const pickerResult = await ImagePicker.launchCameraAsync({
         allowsEditing: false,
-        quality: 0.5,
+        quality: 0.1,
       });
 
       if (!pickerResult.cancelled && pickerResult.assets) {
