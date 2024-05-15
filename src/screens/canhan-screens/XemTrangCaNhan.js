@@ -71,8 +71,13 @@ export default function XemTrangCaNhan({ navigation, route }) {
   const handleGoiThoai = () => {
     console.log("Gọi thoại");
   };
-  const handleCaiDat = () => {
-    navigation.navigate("ChinhSuaThongTinCaNhan", { user_id: user_login });
+  const handleXemThem = () => {
+    console.log(user_id);
+    if (user_id === user_login) {
+      navigation.navigate("ChinhSuaThongTinCaNhan", { user_id: user_login });
+    } else {
+      navigation.navigate("XemThongTinProfile", { user_id: user_id });
+    }
   };
 
   const handleHuyKetBan = () => {
@@ -254,13 +259,22 @@ export default function XemTrangCaNhan({ navigation, route }) {
     }
   };
   const handleDangBaiViet = () => {
-    Alert.alert("Đang phát triển");
+    Alert.alert("Từ từ đang phát triển");
+  };
+  const handleXemAnh = (image) => {
+    console.log("Xem ảnh", image);
+    navigation.navigate("XemAnh", { image: image });
+  };
+  handleCapNhatGioiThieu = () => {
+    Alert.alert("Từ từ đang phát triển");
   };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header_profile}>
-        <ImageBackground source={{ uri: imageCover }} style={{ width: "100%", height: "100%" }}></ImageBackground>
+        <TouchableOpacity onPress={() => handleXemAnh(imageCover)}>
+          <ImageBackground source={{ uri: imageCover }} style={{ width: "100%", height: "100%" }}></ImageBackground>
+        </TouchableOpacity>
         <View style={styles.btn_top}>
           <TouchableOpacity style={{ paddingLeft: 10 }} onPress={() => navigation.goBack()}>
             <Ionicons name="chevron-back" size={27} color="white" />
@@ -269,15 +283,15 @@ export default function XemTrangCaNhan({ navigation, route }) {
             <TouchableOpacity onPress={handleGoiThoai}>
               <SimpleLineIcons name="phone" size={21} color="white" />
             </TouchableOpacity>
-            <TouchableOpacity style={{ paddingRight: 16, paddingLeft: 16 }} onPress={handleCaiDat}>
+            <TouchableOpacity style={{ paddingRight: 16, paddingLeft: 16 }} onPress={handleXemThem}>
               <Feather name="more-horizontal" size={28} color="white" />
             </TouchableOpacity>
           </View>
         </View>
       </View>
-      <View style={styles.avatar_profile}>
+      <TouchableOpacity onPress={() => handleXemAnh(imageAvatar)} style={styles.avatar_profile}>
         <Image source={{ uri: imageAvatar }} style={styles.imageAvatar} />
-      </View>
+      </TouchableOpacity>
       <View style={styles.content_name}>
         <Text style={{ fontSize: 24, fontWeight: "600" }}>{name}</Text>
         {user_id !== user_login && (
@@ -287,12 +301,12 @@ export default function XemTrangCaNhan({ navigation, route }) {
         )}
       </View>
       <View style={{ alignItems: "center", paddingVertical: 10 }}>
-        <Text style={{ fontSize: 15, fontWeight: "400", color: "gray" }}>Giới thiệu bản thân của Profile</Text>
+        <Text style={{ fontSize: 15, fontWeight: "400", color: "gray" }}>Ahihi đồ ngốc 😂</Text>
       </View>
       {/* Nếu là chính mình thì hiển thị nút cập nhật giới thiệu bản thân */}
       {user_id === user_login && (
         <View style={styles.button_profile}>
-          <TouchableOpacity style={styles.btn_capnhatgioithieu}>
+          <TouchableOpacity onPress={handleCapNhatGioiThieu} style={styles.btn_capnhatgioithieu}>
             <AntDesign name="edit" size={18} color="#005ECD" />
             <Text style={{ fontSize: 14, paddingLeft: 4, fontWeight: "600", color: "#005ECD" }}>Cập nhật giới thiệu bản thân</Text>
           </TouchableOpacity>
@@ -389,6 +403,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     top: Dimensions.get("window").height * 0.24,
     left: Dimensions.get("window").width / 3.2,
+    zIndex: 9999,
   },
   button_profile: {
     flexDirection: "row",

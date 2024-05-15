@@ -42,6 +42,7 @@ import ThemNhieuThanhVienVaoMotNhom from "../screens/tinnhan-screens/ThemNhieuTh
 import XemTrangCaNhan from "../screens/canhan-screens/XemTrangCaNhan";
 import ChinhSuaThongTinCaNhan from "../screens/canhan-screens/ChinhSuaThongTinCaNhan";
 import XemThongTinProfile from "../screens/canhan-screens/XemThongTinProfile";
+import XemAnh from "../screens/canhan-screens/XemAnh";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
@@ -58,6 +59,13 @@ export function StackNavigator() {
       <Stack.Screen name="Tabs" component={TabsComponent} />
       <Stack.Screen name="TrangChu" component={TrangChu} />
       <Stack.Screen name="XemThongTinProfile" component={XemThongTinProfile} />
+      <Stack.Screen
+        name="XemAnh"
+        component={XemAnh}
+        options={{
+          animation: "fade_from_bottom",
+        }}
+      />
       <Stack.Screen
         name="ChinhSuaThongTinCaNhan"
         component={ChinhSuaThongTinCaNhan}
