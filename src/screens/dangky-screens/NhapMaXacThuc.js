@@ -1,25 +1,28 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert } from "react-native";
+import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert, ActivityIndicator } from "react-native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { firebaseConfig } from "../../config/FirebaseConfig";
 
 export default function NhapMaXacThuc({ navigation, route }) {
-  const { SoDienThoai, phone2 } = route.params;
+  const { SoDienThoai } = route.params;
   const [otp, setOTP] = useState(["", "", "", "", "", ""]);
   const refs = useRef([...Array(6)].map(() => React.createRef()));
   const [countdown, setCountdown] = useState(60);
   const [verificationId, setVerificationId] = useState(null);
   const recaptchaVerifier = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const sendVerification = () => {
+    console.log("Đã gửi đến số:", SoDienThoai);
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     phoneProvider.verifyPhoneNumber(SoDienThoai, recaptchaVerifier.current).then((id) => setVerificationId(id));
     // Alert.alert("Mã xác thực đã được gửi đến số điện thoại của bạn");
   };
   useEffect(() => {
     sendVerification();
+    refs.current[0].current.focus();
   }, []);
 
   useEffect(() => {
@@ -28,22 +31,15 @@ export default function NhapMaXacThuc({ navigation, route }) {
         setCountdown(countdown - 1);
       }
     }, 1000);
-
     return () => clearTimeout(timer);
   }, [countdown]);
-
-  useEffect(() => {
-    refs.current[0].current.focus();
-  }, []);
 
   const handleChangeText = (index, value) => {
     const newOTP = [...otp];
     newOTP[index] = value;
-
     if (index < 5 && value.length === 1) {
       refs.current[index + 1].current.focus();
     }
-
     setOTP(newOTP);
   };
 
@@ -52,12 +48,14 @@ export default function NhapMaXacThuc({ navigation, route }) {
   }
 
   const confirmCode = () => {
+    setIsLoading(true);
     const otpString = convertArrayToString(otp);
     const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, otpString);
     firebase
       .auth()
       .signInWithCredential(credential)
       .then(() => {
+        setIsLoading(false);
         navigation.navigate("TaoMatKhau", {
           SoDienThoai: SoDienThoai,
         });
@@ -67,7 +65,14 @@ export default function NhapMaXacThuc({ navigation, route }) {
         setOTP(["", "", "", "", "", ""]);
       });
   };
-
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFF" }}>
+        <ActivityIndicator size="large" color="#0091FF" />
+        <Text style={{ marginTop: 10, fontSize: 16, fontWeight: "400", color: "#0091FF" }}>Đang kiểm tra...</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <View>
@@ -97,7 +102,7 @@ export default function NhapMaXacThuc({ navigation, route }) {
             <Text style={{ fontWeight: 500, fontSize: 14, color: "#444444" }}>Nhập dãy 6 số được gửi đến số điện thoại</Text>
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontWeight: 500, fontSize: 19 }}>(+84) </Text>
-              <Text style={{ fontWeight: 500, fontSize: 19 }}>{phone2}</Text>
+              <Text style={{ fontWeight: 500, fontSize: 19 }}>{SoDienThoai.slice(3)}</Text>
             </View>
           </View>
           <View style={{ width: "100%", alignItems: "center", marginTop: 20 }}>
@@ -174,8 +179,8 @@ export default function NhapMaXacThuc({ navigation, route }) {
           justifyContent: "center",
           alignItems: "center",
         }}>
-        <TouchableOpacity onPress={() => navigation.navigate("")}>
-          <Text style={{ fontWeight: 500, fontSize: 15, color: "#0187F9", marginLeft: 4 }}>? Tôi cần hỗ trợ thêm về mã xác thực</Text>
+        <TouchableOpacity style={{ paddingBottom: 20 }} onPress={() => navigation.navigate("")}>
+          <Text style={{ fontWeight: 500, fontSize: 15, color: "#0187F9" }}>Tôi cần hỗ trợ thêm về mã xác thực</Text>
         </TouchableOpacity>
       </View>
     </View>

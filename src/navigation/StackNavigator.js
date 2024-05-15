@@ -24,7 +24,6 @@ import NhapMaXacThuc from "../screens/dangky-screens/NhapMaXacThuc";
 import NhapThongTinCaNhan from "../screens/dangky-screens/NhapThongTinCaNhan";
 import ChatScreen from "../screens/tinnhan-screens/ChatScreen";
 import DoiMatKhauScreen from "../screens/khac-screens/DoiMatKhauScreen";
-import DangNhapThanhCong from "../screens/dangnhap-screens/DangNhapThanhCong";
 import LayLaiMatKhau from "../screens/dangnhap-screens/LayLaiMatKhau";
 import MaXacThucLayLaiMatKhau from "../screens/dangnhap-screens/MaXacThucLayLaiMatKhau";
 import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
@@ -34,13 +33,15 @@ import TaoNhom from "../screens/tinnhan-screens/TaoNhom";
 import ChanhRecived from "../screens/test-screens/ChanhRecived";
 import ChanhSender from "../screens/test-screens/ChanhSender";
 import ThongTinNhom from "../screens/tinnhan-screens/ThongTinNhom";
+import NhapMatKhauMoi from "../screens/dangnhap-screens/NhapMatKhauMoi";
 import ThanhVienNhom from "../screens/tinnhan-screens/ThanhVienNhom";
 import TruongNhomMoi from "../screens/tinnhan-screens/TruongNhomMoi";
 import ChuyenTiep from "../screens/tinnhan-screens/ChuyenTiep";
 import ThemMotThanhVienVaoNhieuNhom from "../screens/tinnhan-screens/ThemMotThanhVienVaoNhieuNhom";
 import ThemNhieuThanhVienVaoMotNhom from "../screens/tinnhan-screens/ThemNhieuThanhVienVaoMotNhom";
-import XemTrangCaNhan from "../screens/khac-screens/XemTrangCaNhan";
+import XemTrangCaNhan from "../screens/canhan-screens/XemTrangCaNhan";
 import ChinhSuaThongTinCaNhan from "../screens/canhan-screens/ChinhSuaThongTinCaNhan";
+import XemThongTinProfile from "../screens/canhan-screens/XemThongTinProfile";
 //-------------------------------------
 const Stack = createNativeStackNavigator();
 export function StackNavigator() {
@@ -56,6 +57,7 @@ export function StackNavigator() {
       }}>
       <Stack.Screen name="Tabs" component={TabsComponent} />
       <Stack.Screen name="TrangChu" component={TrangChu} />
+      <Stack.Screen name="XemThongTinProfile" component={XemThongTinProfile} />
       <Stack.Screen
         name="ChinhSuaThongTinCaNhan"
         component={ChinhSuaThongTinCaNhan}
@@ -102,6 +104,14 @@ export function StackNavigator() {
       <Stack.Screen name="NhapTenNguoiDung" component={NhapTenNguoiDung} />
       <Stack.Screen name="ChonAnhDaiDien" component={ChonAnhDaiDien} />
       <Stack.Screen
+        name="NhapMatKhauMoi"
+        component={NhapMatKhauMoi}
+        options={{
+          headerShown: true,
+          headerLeft: () => <CustomBackButton routeName="Tạo mật khẩu" />,
+        }}
+      />
+      <Stack.Screen
         name="DangNhap"
         component={DangNhap}
         options={{
@@ -136,7 +146,6 @@ export function StackNavigator() {
           headerShown: true,
         }}
       />
-      <Stack.Screen name="DangNhapThanhCong" component={DangNhapThanhCong} />
       <Stack.Screen
         name="LayLaiMatKhau"
         component={LayLaiMatKhau}

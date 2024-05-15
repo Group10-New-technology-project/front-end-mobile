@@ -1,39 +1,62 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useFocusEffect } from "@react-navigation/native";
+import axios from "axios";
+import { API_URL } from "@env";
 
 export default function CaNhanScreen({ navigation }) {
   const [userData, setUserData] = useState(null);
 
+  const fetchDataLogin = async () => {
+    try {
+      const storedUserData = await AsyncStorage.getItem("userData");
+      if (storedUserData) {
+        const user = JSON.parse(storedUserData);
+        fetchDataUser(user._id);
+      } else {
+        console.log("Không có thông tin người dùng được lưu");
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+    }
+  };
+
+  const fetchDataUser = async (userID) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/users/${userID}`);
+      console.log("response", response.data);
+      setUserData(response.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+    }
+  };
+
   handleTKVBM = () => {
     navigation.navigate("TaiKhoanVaBaoMat");
   };
+
   handleQuyenRiengTu = () => {
     navigation.navigate("QuyenRiengTu");
   };
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const storedUserData = await AsyncStorage.getItem("userData");
-        if (storedUserData) {
-          const user = JSON.parse(storedUserData);
-          // console.log("Thông tin người dùng đã đăng nhập:", user);
-          setUserData(user);
-        } else {
-          console.log("Không có thông tin người dùng được lưu");
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error);
-      }
-    };
 
-    fetchData();
-  }, []);
   const handleViewUser = () => {
-    // console.log("Xem trang cá nhân", userData._id);
     navigation.navigate("XemTrangCaNhan", { user_id: userData._id });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchDataLogin();
+    }, [])
+  );
+
+  useEffect(() => {
+    if (userData) {
+      console.log("userData", userData.name);
+      console.log("userData", userData.avatar);
+    }
+  }, [userData]);
 
   return (
     <View style={styles.container}>
@@ -44,7 +67,7 @@ export default function CaNhanScreen({ navigation }) {
           ) : (
             <Image
               style={{ width: 50, height: 50, borderRadius: 50 }}
-              source={{ uri: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/IMG_2024-04-12_18-16-9.png" }}
+              source={{ uri: "https://i.pinimg.com/564x/68/3d/8f/683d8f58c98a715130b1251a9d59d1b9.jpg" }}
             />
           )}
           <View style={styles.view_title}>

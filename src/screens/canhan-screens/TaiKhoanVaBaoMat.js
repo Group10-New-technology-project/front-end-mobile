@@ -1,12 +1,15 @@
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Alert } from "react-native";
 import ToggleSwitch from "toggle-switch-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import React, { useState, useEffect } from "react";
-import { Ionicons, FontAwesome, FontAwesome5, AntDesign } from "@expo/vector-icons";
+import { Ionicons, FontAwesome, FontAwesome5, AntDesign, MaterialIcons, Fontisto } from "@expo/vector-icons";
+import axios from "axios";
+import { API_URL } from "@env";
 
 export default function TaiKhoanVaBaoMat({ navigation }) {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
   const [userData, setUserData] = useState(null);
+
   const onToggle = () => {
     setIsSwitchOn(!isSwitchOn);
   };
@@ -18,7 +21,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
   const formatDate = (isoString) => {
     const date = new Date(isoString);
     const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0"); // Tháng trong JavaScript bắt đầu từ 0
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
 
     return `${day}/${month}/${year}`;
@@ -26,23 +29,36 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
   const formattedDate = userData ? formatDate(userData.dateofbirth) : "Sinh nhật";
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const storedUserData = await AsyncStorage.getItem("userData");
-        if (storedUserData) {
-          const user = JSON.parse(storedUserData);
-          console.log("Thông tin người dùng đã đăng nhập:", user);
-          setUserData(user);
-        } else {
-          console.log("Không có thông tin người dùng được lưu");
-        }
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin người dùng:", error);
-      }
-    };
-
-    fetchData();
+    fetchDataLogin();
   }, []);
+
+  const fetchDataLogin = async () => {
+    try {
+      const storedUserData = await AsyncStorage.getItem("userData");
+      if (storedUserData) {
+        const user = JSON.parse(storedUserData);
+        fetchDataUser(user._id);
+      } else {
+        console.log("Không có thông tin người dùng được lưu");
+      }
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+    }
+  };
+
+  const fetchDataUser = async (userID) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/v1/users/${userID}`);
+      console.log("response", response.data);
+      setUserData(response.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy thông tin người dùng:", error);
+    }
+  };
+  const handleXoaTaiKhoan = () => {
+    Alert.alert("Đang phát triển");
+  };
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.container_taikhoan}>
@@ -143,12 +159,12 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
         </View>
       </View>
 
-      <View style={{ height: 7, backgroundColor: "#E6E6E6" }}></View>
+      <View style={{ height: 7, backgroundColor: "#E9E9E9" }}></View>
 
       <View style={styles.container_baomat}>
         <Text style={{ fontSize: 15, fontWeight: "bold", color: "#0008C0", marginTop: 10 }}>Bảo mật</Text>
         <View style={styles.kiemtrabaomat}>
-          <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/shield-check.png")} />
+          <MaterialIcons name="security" size={24} color="black" />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Kiểm tra bảo mật</Text>
             <Text style={{ fontSize: 16, color: "#A8AA50", fontWeight: "400", marginTop: 3 }}>2 vấn đề bảo mật cần xử lý</Text>
@@ -162,7 +178,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
         </View>
         <View style={styles.khoazalo}>
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/lock.png")} />
+            <MaterialIcons name="password" size={25} color="black" />
             <Text style={{ fontSize: 17, fontWeight: "500", marginHorizontal: 16 }}>Khóa Zalo</Text>
           </View>
           <Text style={{ fontSize: 16, color: "#696969", fontWeight: "500", marginRight: 40 }}>Đang tắt</Text>
@@ -171,7 +187,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           </View>
         </View>
       </View>
-      <View style={{ height: 7, backgroundColor: "#E6E6E6" }}></View>
+      <View style={{ height: 7, backgroundColor: "#E9E9E9" }}></View>
       <View style={styles.container_dangnhap}>
         <Text style={{ fontSize: 15, fontWeight: "bold", color: "#0008C0", marginTop: 10 }}>Đăng nhập</Text>
         <View style={styles.kiemtrabaomat}>
@@ -205,10 +221,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
         </View>
         <TouchableOpacity onPress={handleMatKhau}>
           <View style={styles.mat_khau}>
-            <Image
-              style={{ width: 24, height: 24 }}
-              source={{ uri: "https://chanh9999.s3.ap-southeast-1.amazonaws.com/IMG_2024-04-12_18-16-9.png" }}
-            />
+            <MaterialIcons name="lock" size={25} color="black" />
             <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Mật khẩu</Text>
             <View style={{ position: "absolute", right: 10 }}>
               <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -216,23 +229,22 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           </View>
         </TouchableOpacity>
       </View>
-      <View style={{ height: 7, backgroundColor: "#E6E6E6" }}></View>
-
-      <View style={styles.xoa_tai_khoan}>
+      <View style={{ height: 7, backgroundColor: "#E9E9E9" }}></View>
+      <TouchableOpacity onPress={handleXoaTaiKhoan} style={styles.xoa_tai_khoan}>
         <AntDesign name="delete" size={24} color="red" />
         <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16, color: "red" }}>Xóa tài khoản</Text>
         <View style={{ position: "absolute", right: 10 + 12 }}>
           <Ionicons name="chevron-forward" size={18} color="gray" />
         </View>
-      </View>
-      <View style={{ height: 50 }}></View>
+      </TouchableOpacity>
+      <View style={{ height: 100, backgroundColor: "#E9E9E9" }}></View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "white",
+    backgroundColor: "#E9E9E9",
     flex: 1,
   },
   header_taikhoan: {
@@ -278,6 +290,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     padding: 12,
+    backgroundColor: "white",
   },
   sodienthoai: {
     flexDirection: "row",

@@ -1,10 +1,10 @@
 import React, { useState, useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { View, Text, StyleSheet, Dimensions, ScrollView, TouchableOpacity, Image, ImageBackground, Alert } from "react-native";
 import { Ionicons, AntDesign, Feather, SimpleLineIcons } from "@expo/vector-icons";
 import axios from "axios";
 import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "@react-navigation/native";
 
 export default function XemTrangCaNhan({ navigation, route }) {
   const { user_id } = route.params;
@@ -14,7 +14,7 @@ export default function XemTrangCaNhan({ navigation, route }) {
   const [listFriendsRecived, setListFriendsRecived] = useState([]);
   const [imageAvatar, setImageAvatar] = useState(null);
   const [imageCover, setImageCover] = useState(null);
-  const [name, setName] = useState("Chanh");
+  const [name, setName] = useState("Name");
   const [reloadData, setReloadData] = useState(false);
 
   useFocusEffect(
@@ -143,12 +143,46 @@ export default function XemTrangCaNhan({ navigation, route }) {
       });
       if (response.ok) {
         Alert.alert("Đã chấp nhận lời mời kết bạn từ " + name + "!");
+        createConversationApp(await getMemberIdByUserId(user_login), await getMemberIdByUserId(user_id));
         setReloadData(true);
       } else {
         console.error("Failed to delete friend request");
       }
     } catch (error) {
       console.error("Error:", error);
+    }
+  };
+
+  const getMemberIdByUserId = async (userId) => {
+    try {
+      const response = await fetch(`${API_URL}/api/v1/member/getMemberByUserId/${userId}`);
+      if (!response.ok) {
+        console.error("Failed to fetch user data");
+      }
+      const data = await response.json();
+      return data._id;
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+    }
+  };
+
+  const createConversationApp = async (memberId1, memberId2) => {
+    try {
+      const response = await fetch(`${API_URL}/api/v1/conversation/createConversation`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          members: [memberId1, memberId2],
+          leader: memberId1,
+        }),
+      });
+      if (!response.ok) {
+        console.log("Failed to create conversation");
+      }
+    } catch (error) {
+      console.error("Error fetching user data:", error);
     }
   };
 
@@ -219,6 +253,9 @@ export default function XemTrangCaNhan({ navigation, route }) {
       console.error("Lỗi khi lấy dữ liệu:", error);
     }
   };
+  const handleDangBaiViet = () => {
+    Alert.alert("Đang phát triển");
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -249,7 +286,7 @@ export default function XemTrangCaNhan({ navigation, route }) {
           </TouchableOpacity>
         )}
       </View>
-      <View style={{ alignItems: "center", paddingVertical: 7 }}>
+      <View style={{ alignItems: "center", paddingVertical: 10 }}>
         <Text style={{ fontSize: 15, fontWeight: "400", color: "gray" }}>Giới thiệu bản thân của Profile</Text>
       </View>
       {/* Nếu là chính mình thì hiển thị nút cập nhật giới thiệu bản thân */}
@@ -317,6 +354,22 @@ export default function XemTrangCaNhan({ navigation, route }) {
         )}
       <View style={styles.container_profile}>
         <View style={{ borderWidth: 0.5, borderColor: "#DADADA" }} />
+        {user_id === user_login && (
+          <View style={{ alignItems: "center", paddingTop: 18 }}>
+            <TouchableOpacity
+              onPress={handleDangBaiViet}
+              style={{
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "#0091FF",
+                width: Dimensions.get("window").width * 0.5,
+                height: 40,
+                borderRadius: 30,
+              }}>
+              <Text style={{ fontSize: 16, fontWeight: "600", color: "#FFF" }}>Đăng lên nhật ký</Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </ScrollView>
   );
@@ -330,7 +383,7 @@ const styles = StyleSheet.create({
     height: Dimensions.get("window").height * 0.32,
   },
   container_profile: {
-    paddingTop: 22,
+    paddingTop: 18,
   },
   avatar_profile: {
     position: "absolute",
@@ -399,6 +452,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    paddingTop: 10,
+    paddingTop: 0,
   },
 });

@@ -1,24 +1,37 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput } from "react-native"; // Import Text từ react-native
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, Alert } from "react-native";
+import axios from "axios";
+import { API_URL } from "@env";
 
-import { AntDesign } from "@expo/vector-icons";
 export default function LayLaiMatKhau({ navigation }) {
   const [sodienthoai, setsodienthoai] = useState("");
+  const [listPhoneNumber, setListPhoneNumber] = useState([]);
 
-  const handleNext = async () => {
+  useEffect(() => {
+    getPhoneNumber();
+  }, []);
+
+  const getPhoneNumber = async () => {
     try {
-      if (!sodienthoai) {
-        alert("Vui lòng nhập số điện thoại");
-        return;
-      }
-      navigation.navigate("MaXacThucLayLaiMatKhau", {
-        SoDienThoai: sodienthoai,
-      });
+      const response = await axios.get(`${API_URL}/api/v1/users/demo/getAllUserName`);
+      setListPhoneNumber(response.data);
     } catch (error) {
-      console.error('There was an error!', error);
+      console.error(error);
     }
   };
 
+  const handleNext = () => {
+    if (!sodienthoai || sodienthoai.length !== 10) {
+      Alert.alert("Số điện thoại không hợp lệ!");
+      return;
+    } else if (listPhoneNumber.includes("+84" + sodienthoai.slice(1))) {
+      navigation.navigate("MaXacThucLayLaiMatKhau", {
+        SoDienThoai: "+84" + sodienthoai.slice(1),
+      });
+    } else {
+      Alert.alert("Số điện thoại không tồn tại trong hệ thống!");
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -26,10 +39,9 @@ export default function LayLaiMatKhau({ navigation }) {
         <View style={{ height: 39, backgroundColor: "#F9FAFE", justifyContent: "center" }}>
           <Text
             style={{
-              marginBottom: 5,
               marginLeft: 10,
               fontWeight: 500,
-              fontSize: 13,
+              fontSize: 14,
               color: "black",
             }}>
             Nhập số điện thoại để lấy lại mật khẩu
@@ -39,7 +51,7 @@ export default function LayLaiMatKhau({ navigation }) {
           <TextInput
             placeholder="Số điện thoại"
             placeholderTextColor="#7E828B"
-            keyboardType="numbers-and-punctuation"
+            keyboardType="number-pad"
             style={{
               height: 50,
               fontSize: 20,
@@ -48,56 +60,25 @@ export default function LayLaiMatKhau({ navigation }) {
               borderBottomColor: "#F1F3F4",
               color: "black",
               backgroundColor: "#fff",
-              fontWeight:'bold'
-              // outlineColor: 'transparent', // Đặt màu viền trong suốt
-              // outlineWidth: 0, // Đặt độ rộng của viền là 0
+              fontWeight: "bold",
             }}
             onChangeText={(text) => setsodienthoai(text)}
           />
-          <AntDesign
-            name="closecircle"
-            size={18}
-            color="#0091FF"
-            style={{
-              position: "absolute",
-              top: 10,
-              right: 20,
-              zIndex: 1, // Đảm bảo biểu tượng hiển thị trên top
-              opacity: 0.5,
-            }}
-            onPress={() => setsodienthoai("")}
-          />
         </View>
         <TouchableOpacity>
-          <View
-            style={{ marginTop: 15, height: 39, justifyContent: "center", alignItems: "center" }}>
-            {sodienthoai.length > 9 || sodienthoai.length <15 ? (
-              <TouchableOpacity onPress={handleNext}>
-                <View
-                  style={{
-                    height: 37,
-                    width: 182,
-                    borderRadius: 50,
-                    backgroundColor: "#00A3FF",
-                    justifyContent: "center",
-                  }}>
-                  <Text style={{ fontSize: 13, color: "white", textAlign: "center" }}>
-                    Đăng nhập
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            ) : (
+          <View style={{ marginTop: 30, height: 39, justifyContent: "center", alignItems: "center" }}>
+            <TouchableOpacity onPress={handleNext}>
               <View
                 style={{
-                  height: 37,
-                  width: 182,
+                  height: 40,
+                  width: 190,
                   borderRadius: 50,
-                  backgroundColor: "#C1D4E3",
+                  backgroundColor: "#00A3FF",
                   justifyContent: "center",
                 }}>
-                <Text style={{ fontSize: 13, color: "white", textAlign: "center" }}>Tiếp Tục</Text>
+                <Text style={{ fontSize: 15, color: "white", textAlign: "center", fontWeight: "500" }}>Tiếp tục</Text>
               </View>
-            )}
+            </TouchableOpacity>
           </View>
         </TouchableOpacity>
       </View>

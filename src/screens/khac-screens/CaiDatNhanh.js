@@ -1,15 +1,32 @@
-import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
+import React, { useState } from "react";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator } from "react-native";
 import { Ionicons, MaterialCommunityIcons, AntDesign, Feather, FontAwesome } from "@expo/vector-icons";
 
 export default function CaiDatNhanh({ navigation }) {
-  const handle_dangxuat = () => {
-    navigation.navigate("TrangChu");
-  };
+  const [isLoading, setIsLoading] = useState(false);
 
+  const handle_dangxuat = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setIsLoading(false);
+      navigation.navigate("TrangChu");
+    }, 1000);
+  };
   const handle_taikhoanvabaomat = () => {
     navigation.navigate("TaiKhoanVaBaoMat");
   };
+  const handleQuyenRiengTu = () => {
+    navigation.navigate("QuyenRiengTu");
+  };
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFF" }}>
+        <ActivityIndicator size="large" color="#0091FF" />
+        <Text style={{ marginTop: 10, fontSize: 16, fontWeight: "400", color: "#0091FF" }}>Đang đăng xuất</Text>
+      </View>
+    );
+  }
   return (
     <ScrollView style={styles.container}>
       <View style={styles.menu_1}>
@@ -25,14 +42,17 @@ export default function CaiDatNhanh({ navigation }) {
         <View style={styles.location_line}>
           <View style={styles.line}></View>
         </View>
-        <View style={styles.title_1}>
-          <MaterialCommunityIcons name="lock-outline" size={24} color="#0091FF" />
-          <Text style={styles.title1}>Quyền riêng tư</Text>
-          <View style={styles.vector_location}>
-            <Ionicons name="chevron-forward" size={18} color="gray" />
+        <TouchableOpacity onPress={handleQuyenRiengTu}>
+          <View style={styles.title_1}>
+            <MaterialCommunityIcons name="lock-outline" size={24} color="#0091FF" />
+            <Text style={styles.title1}>Quyền riêng tư</Text>
+            <View style={styles.vector_location}>
+              <Ionicons name="chevron-forward" size={18} color="gray" />
+            </View>
           </View>
-        </View>
+        </TouchableOpacity>
       </View>
+
       <View style={styles.line2}></View>
       <View style={styles.menu_2}>
         <View style={styles.title_1}>

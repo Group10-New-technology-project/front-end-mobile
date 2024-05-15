@@ -1324,9 +1324,9 @@ export default function ChatScreen({ route }) {
           {showMicro && (
             <View style={{ height: 268, backgroundColor: "#fff", justifyContent: "center", alignItems: "center" }}>
               <TouchableWithoutFeedback onPressIn={handlePressIn} onPressOut={handlePressOut}>
-                <Ionicons name="mic-outline" style={[styles.iconOthers, { fontSize: iconSize, color: "blue" }]} />
+                <Ionicons name="mic-outline" style={[styles.iconOthers, { fontSize: iconSize, color: "#0091FF" }]} />
               </TouchableWithoutFeedback>
-              <Button title="Xem ghi am" onPress={goXemGhiAm}></Button>
+              <Button title="Nhấn giữ để ghi âm" onPress={goXemGhiAm}></Button>
             </View>
           )}
           {showOthers && (

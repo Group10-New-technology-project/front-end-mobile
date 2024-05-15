@@ -83,7 +83,6 @@ export default function ChinhSuaThongTinCaNhan({ navigation, route }) {
           id: user_id,
           avatar: imageURL,
         });
-        // console.log(response.data);
         setIsLoading(false);
         Alert.alert("Cập nhật ảnh đại diện thành công");
       } catch (error) {

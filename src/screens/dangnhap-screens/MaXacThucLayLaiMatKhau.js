@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert } from "react-native";
+import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert, ActivityIndicator } from "react-native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
@@ -12,16 +12,17 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
   const [countdown, setCountdown] = useState(60);
   const [verificationId, setVerificationId] = useState(null);
   const recaptchaVerifier = useRef(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const sendVerification = () => {
     console.log("Đã gửi đến số:", SoDienThoai);
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
-    phoneProvider
-      .verifyPhoneNumber(SoDienThoai, recaptchaVerifier.current)
-      .then((id) => setVerificationId(id));
+    phoneProvider.verifyPhoneNumber(SoDienThoai, recaptchaVerifier.current).then((id) => setVerificationId(id));
+    // Alert.alert("Mã xác thực đã được gửi đến số điện thoại của bạn");
   };
   useEffect(() => {
     sendVerification();
+    refs.current[0].current.focus();
   }, []);
 
   useEffect(() => {
@@ -30,22 +31,15 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
         setCountdown(countdown - 1);
       }
     }, 1000);
-
     return () => clearTimeout(timer);
   }, [countdown]);
-
-  useEffect(() => {
-    refs.current[0].current.focus();
-  }, []);
 
   const handleChangeText = (index, value) => {
     const newOTP = [...otp];
     newOTP[index] = value;
-
     if (index < 5 && value.length === 1) {
       refs.current[index + 1].current.focus();
     }
-
     setOTP(newOTP);
   };
 
@@ -54,13 +48,15 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
   }
 
   const confirmCode = () => {
+    setIsLoading(true);
     const otpString = convertArrayToString(otp);
     const credential = firebase.auth.PhoneAuthProvider.credential(verificationId, otpString);
     firebase
       .auth()
       .signInWithCredential(credential)
       .then(() => {
-        navigation.navigate("DangNhapThanhCong", {
+        setIsLoading(false);
+        navigation.navigate("NhapMatKhauMoi", {
           SoDienThoai: SoDienThoai,
         });
       })
@@ -69,7 +65,14 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
         setOTP(["", "", "", "", "", ""]);
       });
   };
-
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFF" }}>
+        <ActivityIndicator size="large" color="#0091FF" />
+        <Text style={{ marginTop: 10, fontSize: 16, fontWeight: "400", color: "#0091FF" }}>Đang kiểm tra...</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <View>
@@ -92,21 +95,14 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
               alignItems: "center",
               marginTop: 10,
             }}>
-            <Text style={{ fontSize: 24, fontWeight: "700", textAlign: "center" }}>
-              Nhập mã xác thực
-            </Text>
-            <FirebaseRecaptchaVerifierModal
-              ref={recaptchaVerifier}
-              firebaseConfig={firebaseConfig}
-            />
+            <Text style={{ fontSize: 24, fontWeight: "700", textAlign: "center" }}>Nhập mã xác thực</Text>
+            <FirebaseRecaptchaVerifierModal ref={recaptchaVerifier} firebaseConfig={firebaseConfig} />
           </View>
           <View style={{ height: 30, alignItems: "center" }}>
-            <Text style={{ fontWeight: 500, fontSize: 14, color: "#444444" }}>
-              Nhập dãy 6 số được gửi đến số điện thoại
-            </Text>
+            <Text style={{ fontWeight: 500, fontSize: 14, color: "#444444" }}>Nhập dãy 6 số được gửi đến số điện thoại</Text>
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontWeight: 500, fontSize: 19 }}>(+84) </Text>
-              <Text style={{ fontWeight: 500, fontSize: 19 }}>787847378</Text>
+              <Text style={{ fontWeight: 500, fontSize: 19 }}>{SoDienThoai.slice(3)}</Text>
             </View>
           </View>
           <View style={{ width: "100%", alignItems: "center", marginTop: 20 }}>
@@ -132,8 +128,7 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
               ))}
             </View>
           </View>
-          <View
-            style={{ marginTop: 25, height: 39, justifyContent: "center", alignItems: "center" }}>
+          <View style={{ marginTop: 25, height: 39, justifyContent: "center", alignItems: "center" }}>
             {otp.every((val) => val.length === 1) ? (
               <TouchableOpacity onPress={confirmCode}>
                 <View
@@ -145,10 +140,7 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
                     alignItems: "center",
                     justifyContent: "center",
                   }}>
-                  <Text
-                    style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>
-                    Tiếp tục
-                  </Text>
+                  <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>Tiếp tục</Text>
                 </View>
               </TouchableOpacity>
             ) : (
@@ -161,10 +153,7 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
                   alignItems: "center",
                   justifyContent: "center",
                 }}>
-                <Text
-                  style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>
-                  Tiếp tục
-                </Text>
+                <Text style={{ fontSize: 15, fontWeight: 500, color: "white", textAlign: "center" }}>Tiếp tục</Text>
               </View>
             )}
           </View>
@@ -178,9 +167,7 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
             }}>
             <Text style={{ fontWeight: 500, fontSize: 15 }}>Bạn không nhận được mã?</Text>
             <TouchableOpacity onPress={() => navigation.navigate("login")}>
-              <Text style={{ fontWeight: 500, fontSize: 15, color: "#6B6B6B", marginLeft: 4 }}>
-                Gửi lại ({countdown}s)
-              </Text>
+              <Text style={{ fontWeight: 500, fontSize: 15, color: "#6B6B6B", marginLeft: 4 }}>Gửi lại ({countdown}s)</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -192,10 +179,8 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
           justifyContent: "center",
           alignItems: "center",
         }}>
-        <TouchableOpacity onPress={() => navigation.navigate("")}>
-          <Text style={{ fontWeight: 500, fontSize: 15, color: "#0187F9", marginLeft: 4 }}>
-            ? Tôi cần hỗ trợ thêm về mã xác thực
-          </Text>
+        <TouchableOpacity style={{ paddingBottom: 20 }} onPress={() => navigation.navigate("")}>
+          <Text style={{ fontWeight: 500, fontSize: 15, color: "#0187F9" }}>Tôi cần hỗ trợ thêm về mã xác thực</Text>
         </TouchableOpacity>
       </View>
     </View>

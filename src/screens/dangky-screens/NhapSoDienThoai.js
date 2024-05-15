@@ -25,8 +25,7 @@ export default function NhapSoDienThoai({ navigation }) {
       console.log("Số điện thoại đã được đăng ký tài khoản");
       Alert.alert("Số điện thoại đã được đăng ký tài khoản");
     } else {
-      navigation.navigate("TaoMatKhau", {
-        phone2: formattedPhoneNumber.slice(3),
+      navigation.navigate("NhapMaXacThuc", {
         SoDienThoai: formattedPhoneNumber,
       });
     }
