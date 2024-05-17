@@ -6,6 +6,7 @@ import { Dimensions, StyleSheet, Text, View, FlatList, Image, SafeAreaView, Touc
 import { FontAwesome, FontAwesome5, Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { set } from "firebase/database";
 
 export default function DanhBaScreen({ navigation }) {
   const isFocused = useIsFocused();
@@ -16,7 +17,7 @@ export default function DanhBaScreen({ navigation }) {
   const [users, setUsers] = useState([]);
   const [pickedItem, setPickedItem] = useState([]);
   const ID = userData?._id;
-  console.log(ID);
+
   useEffect(() => {
     const fetchDataUserLogin = async () => {
       try {
@@ -63,35 +64,49 @@ export default function DanhBaScreen({ navigation }) {
   }, [isFocused, fetchData1Completed]);
 
   const handle_deleteUser = async () => {
-    try {
-      const response = await fetch(`${API_URL}/api/v1/users/deleteFriends`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+    Alert.alert(
+      "",
+      `Bạn có chắc chắn muốn hủy kết bạn với ${pickedItem.name}?`, // Sử dụng template literals để tạo chuỗi
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
         },
-        body: JSON.stringify({
-          id_sender: ID,
-          id_receiver: pickedItem.id,
-        }),
-      });
-      if (response.ok) {
-        Alert.alert(`Xóa bạn ${pickedItem.name} thành công`);
-        setIsBottomSheetVisible(false);
-        fetchData();
-      } else {
-        console.error("Failed to delete friend request");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
+        {
+          text: "OK",
+          onPress: async () => {
+            try {
+              const response = await fetch(`${API_URL}/api/v1/users/deleteFriends`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  id_sender: ID,
+                  id_receiver: pickedItem.id,
+                }),
+              });
+              if (response.ok) {
+                Alert.alert(`Xóa bạn ${pickedItem.name} thành công`);
+                setIsBottomSheetVisible(false);
+                fetchData();
+              } else {
+                console.error("Failed to delete friend request");
+              }
+            } catch (error) {
+              console.error("Error:", error);
+            }
+          },
+        },
+      ]
+    );
   };
 
   const fetchData = async () => {
     try {
-      // Gửi yêu cầu lấy thông tin user
       const response = await fetch(`${API_URL}/api/v1/users/${ID}`);
       const userData = await response.json();
-      // Lọc thông tin của user trong danh sách bạn bè
       const friendIds = userData.friends;
       const friendInfoPromises = friendIds.map(async (friendId) => {
         const friendResponse = await fetch(`${API_URL}/api/v1/users/${friendId}`);
@@ -110,6 +125,22 @@ export default function DanhBaScreen({ navigation }) {
     }
   };
 
+  const formatPhoneNumber = (phoneNumberString) => {
+    const cleaned = ("" + phoneNumberString).replace(/\D/g, "");
+    const match = cleaned.match(/^(84|0)?(\d{3})(\d{3})(\d{3})$/);
+    if (match) {
+      return "0" + match[2] + " " + match[3] + " " + match[4];
+    }
+    return phoneNumberString;
+  };
+
+  const handleXemTrangCaNhan = () => {
+    setIsBottomSheetVisible(false);
+    setTimeout(() => {
+      navigation.navigate("XemTrangCaNhan", { user_id: pickedItem.id });
+    }, 400); // 3000 milliseconds = 3 seconds
+  };
+
   /// Sắp xếp dữ liệu theo thuộc tính 'name'
   const totalUsers = users.length;
   const sortedUsers = [...users].sort((a, b) => a.name.localeCompare(b.name));
@@ -119,14 +150,10 @@ export default function DanhBaScreen({ navigation }) {
 
     const handlePickModal = () => {
       setIsBottomSheetVisible(true);
-      // console.log(item.id);
-      // console.log(item.name);
-      // console.log(item.username);
       setPickedItem(item);
     };
     const handleChonUser = () => {
       navigation.navigate("XemTrangCaNhan", { user_id: item.id });
-      // console.log("Chọn user", item.id);
     };
     return (
       <View style={styles.contacts}>
@@ -234,9 +261,9 @@ export default function DanhBaScreen({ navigation }) {
       <Modal
         style={styles.modal_container}
         isVisible={isBottomSheetVisible}
-        swipeDirection={["left", "right"]}
-        animationIn="slideInLeft"
-        animationOut="slideOutRight"
+        swipeDirection={["down"]}
+        animationIn="fadeInUp"
+        animationOut="fadeOutDown"
         onSwipeComplete={toggleBottomSheet}
         onBackdropPress={toggleBottomSheet}>
         <View style={styles.modal_size}>
@@ -249,9 +276,15 @@ export default function DanhBaScreen({ navigation }) {
               <Image source={{ uri: pickedItem.avatar }} style={styles.avatar_user} />
               <View style={{}}>
                 <Text style={styles.content_3}>{pickedItem.name}</Text>
-                <Text style={styles.content_2}>{pickedItem.username}</Text>
+                <Text style={styles.content_2}>{formatPhoneNumber(pickedItem.username)}</Text>
               </View>
             </View>
+            <TouchableOpacity onPress={handleXemTrangCaNhan}>
+              <Text style={styles.content_xemtrang}>Xem trang cá nhân</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleXemTrangCaNhan}>
+              <Text style={styles.content_xemtrang}>Nhắn tin</Text>
+            </TouchableOpacity>
             <TouchableOpacity onPress={handle_deleteUser}>
               <Text style={styles.content_delete}>Xóa bạn</Text>
             </TouchableOpacity>
@@ -268,18 +301,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFF",
   },
   modal_container: {
-    justifyContent: "center",
+    margin: 0,
     alignItems: "center",
+    justifyContent: "flex-end",
     backgroundColor: "FFFFFF",
   },
   modal_size: {
     backgroundColor: "white",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
-    height: "55%",
-    width: Dimensions.get("window").width * 0.8,
+    height: "30%",
+    width: Dimensions.get("window").width,
   },
   line_modal: {
     marginTop: 10,
@@ -294,10 +326,9 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     margin: 10,
   },
-
   content_3: {
     fontSize: 17,
-    fontWeight: "400",
+    fontWeight: "500",
     marginLeft: 12,
   },
   container_user: {
@@ -332,9 +363,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 50,
   },
-  contacts_container: {
-    // backgroundColor: "white",
-  },
+  contacts_container: {},
   one_contact: {
     flexDirection: "row",
     alignItems: "center",
@@ -365,6 +394,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     marginLeft: 12,
     color: "gray",
+    marginTop: 4,
   },
   icon_contacts: {
     width: 40,
@@ -383,10 +413,16 @@ const styles = StyleSheet.create({
     height: 7,
     backgroundColor: "#F0F0F0",
   },
+  content_xemtrang: {
+    paddingTop: 16,
+    fontSize: 18,
+    fontWeight: "400",
+  },
+
   content_delete: {
-    paddingTop: 20,
-    fontSize: 20,
+    paddingTop: 16,
+    fontSize: 18,
     color: "red",
-    fontWeight: "500",
+    fontWeight: "400",
   },
 });

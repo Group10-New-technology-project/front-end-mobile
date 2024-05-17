@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function TimKiemScreen({ route, navigation }) {
   const { searchPhone } = route.params;
+
   const [userLogin, setUserLogin] = useState(null);
   const ID = userLogin?._id;
   const [userData, setUserData] = useState(null);
@@ -15,14 +16,34 @@ export default function TimKiemScreen({ route, navigation }) {
     fetchDataUserLogin();
   }, []);
 
+  const formatPhoneNumber = (phone) => {
+    // Xóa tất cả các ký tự không phải số
+    let cleanedPhone = phone.replace(/[^\d]/g, "");
+    // Kiểm tra và xử lý các trường hợp
+    if (cleanedPhone.startsWith("0")) {
+      // Nếu bắt đầu bằng '0', thay thế '0' bằng '+84'
+      cleanedPhone = "+84" + cleanedPhone.slice(1);
+    } else if (cleanedPhone.startsWith("84")) {
+      // Nếu bắt đầu bằng '84', thêm dấu '+' vào đầu
+      cleanedPhone = "+" + cleanedPhone;
+    } else if (!cleanedPhone.startsWith("+84")) {
+      // Nếu không bắt đầu bằng '+84', không làm gì cả (giữ nguyên)
+      return phone;
+    }
+    return cleanedPhone;
+  };
+
+  const formattedPhone = formatPhoneNumber(searchPhone);
+
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
       return;
     }
     const fetchUserData = async () => {
+      console.log("Đang tìm kiếm người dùng có số điện thoại:", formattedPhone);
       try {
-        const response = await fetch(`${API_URL}/api/v1/users/username/${searchPhone}`);
+        const response = await fetch(`${API_URL}/api/v1/users/username/${formattedPhone}`);
         if (!response.ok) {
           console.log("Không tìm thấy người dùng");
           // Alert.alert("Không tìm thấy người dùng");
@@ -35,7 +56,7 @@ export default function TimKiemScreen({ route, navigation }) {
     };
     fetchIds();
     fetchUserData();
-  }, [searchPhone]);
+  }, [formattedPhone]);
 
   const fetchDataUserLogin = async () => {
     try {
@@ -102,7 +123,7 @@ export default function TimKiemScreen({ route, navigation }) {
                   <Image source={{ uri: userData.avatar }} style={{ width: 55, height: 55, borderRadius: 55 }} />
                   <View style={{ paddingLeft: 15, justifyContent: "center" }}>
                     <Text style={{ fontSize: 18, fontWeight: "500", marginBottom: 5 }}>{userData.name}</Text>
-                    <Text style={{ fontSize: 16, fontWeight: 400, color: "#7F7F7F" }}>{userData.username}</Text>
+                    <Text style={{ fontSize: 16, fontWeight: 400, color: "#7F7F7F" }}>0{userData.username.slice(3)}</Text>
                   </View>
                 </View>
                 <View style={{ justifyContent: "center" }}>

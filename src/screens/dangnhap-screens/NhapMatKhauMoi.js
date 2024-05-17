@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import axios from "axios";
+import { API_URL } from "@env";
 
 export default function NhapMatKhauMoi({ route, navigation }) {
   const { SoDienThoai } = route.params;
@@ -53,7 +54,7 @@ export default function NhapMatKhauMoi({ route, navigation }) {
 
   const updatePassword = async (SoDienThoai, confirmPassword) => {
     try {
-      const response = await axios.post("http://192.168.3.84:3000/api/v1/users/updatePassword", {
+      const response = await axios.post(`${API_URL}/api/v1/users/updatePassword`, {
         username: SoDienThoai,
         password: confirmPassword,
       });

@@ -1,10 +1,11 @@
+import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity, Alert } from "react-native";
 import ToggleSwitch from "toggle-switch-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import React, { useState, useEffect } from "react";
-import { Ionicons, FontAwesome, FontAwesome5, AntDesign, MaterialIcons, Fontisto } from "@expo/vector-icons";
+import { Ionicons, FontAwesome, FontAwesome5, AntDesign, MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import axios from "axios";
 import { API_URL } from "@env";
+import * as Clipboard from "expo-clipboard";
 
 export default function TaiKhoanVaBaoMat({ navigation }) {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -55,15 +56,20 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
       console.error("Lỗi khi lấy thông tin người dùng:", error);
     }
   };
-  const handleXoaTaiKhoan = () => {
+  const handleXoaTaiKhoan = async () => {
+    await Clipboard.setStringAsync("Đang phát triển");
     Alert.alert("Đang phát triển");
+  };
+
+  const handleViewProfile = () => {
+    navigation.navigate("XemTrangCaNhan", { user_id: userData._id });
   };
 
   return (
     <ScrollView style={styles.container}>
       <View style={styles.container_taikhoan}>
         <Text style={{ fontSize: 15, fontWeight: "bold", color: "#0008C0", marginVertical: 10 }}>Tài khoản</Text>
-        <View style={styles.header_taikhoan}>
+        <TouchableOpacity onPress={handleViewProfile} style={styles.header_taikhoan}>
           <View
             style={{
               flexDirection: "row",
@@ -88,13 +94,13 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
               <Ionicons name="chevron-forward" size={18} color="gray" />
             </View>
           </View>
-        </View>
+        </TouchableOpacity>
         <View style={styles.sodienthoai}>
           <FontAwesome name="phone" size={26} color="black" />
           <View style={{ flexDirection: "column", paddingLeft: 16 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Số điện thoại</Text>
             <Text style={{ fontSize: 16, color: "#696969", fontWeight: "400", marginTop: 3 }}>
-              {userData ? userData.username : "Số điện thoại"}
+              0{userData ? userData.username.slice(3) : "Số điện thoại"}
             </Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
@@ -167,7 +173,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           <MaterialIcons name="security" size={24} color="black" />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Kiểm tra bảo mật</Text>
-            <Text style={{ fontSize: 16, color: "#A8AA50", fontWeight: "400", marginTop: 3 }}>2 vấn đề bảo mật cần xử lý</Text>
+            <Text style={{ fontSize: 16, color: "#A8AA50", fontWeight: "400", marginTop: 3 }}>Không có vấn đề bảo mật cần xử lý</Text>
           </View>
           <View style={{ position: "absolute", right: 10 }}>
             <Ionicons name="chevron-forward" size={18} color="gray" />
@@ -191,7 +197,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
       <View style={styles.container_dangnhap}>
         <Text style={{ fontSize: 15, fontWeight: "bold", color: "#0008C0", marginTop: 10 }}>Đăng nhập</Text>
         <View style={styles.kiemtrabaomat}>
-          <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/shield-alert.png")} />
+          <MaterialCommunityIcons name="shield-alert-outline" size={24} color="black" />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Bảo mật 2 lớp</Text>
             <Text style={{ fontSize: 16, fontWeight: "400" }}>
@@ -207,7 +213,7 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
           <View style={{ borderWidth: 1, borderColor: "#ECECEC", width: 345 }} />
         </View>
         <View style={styles.thietbidangnhap}>
-          <Image style={{ width: 24, height: 24 }} source={require("../../../assets/image/smartphone.png")} />
+          <Ionicons name="phone-portrait" size={24} color="black" />
           <View style={{ flexDirection: "column", marginLeft: 16, marginTop: 5 }}>
             <Text style={{ fontSize: 17, fontWeight: "500" }}>Thiết bị đăng nhập</Text>
             <Text style={{ fontSize: 16, fontWeight: "400", marginTop: 3 }}>Quản lý các thiết bị đăng nhập</Text>
@@ -221,8 +227,8 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
         </View>
         <TouchableOpacity onPress={handleMatKhau}>
           <View style={styles.mat_khau}>
-            <MaterialIcons name="lock" size={25} color="black" />
-            <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16 }}>Mật khẩu</Text>
+            <MaterialIcons name="lock" size={23} color="black" />
+            <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 18 }}>Mật khẩu</Text>
             <View style={{ position: "absolute", right: 10 }}>
               <Ionicons name="chevron-forward" size={18} color="gray" />
             </View>
@@ -231,8 +237,8 @@ export default function TaiKhoanVaBaoMat({ navigation }) {
       </View>
       <View style={{ height: 7, backgroundColor: "#E9E9E9" }}></View>
       <TouchableOpacity onPress={handleXoaTaiKhoan} style={styles.xoa_tai_khoan}>
-        <AntDesign name="delete" size={24} color="red" />
-        <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 16, color: "red" }}>Xóa tài khoản</Text>
+        <AntDesign name="delete" size={22} color="red" />
+        <Text style={{ fontSize: 17, fontWeight: "500", marginLeft: 17, color: "red" }}>Xóa tài khoản</Text>
         <View style={{ position: "absolute", right: 10 + 12 }}>
           <Ionicons name="chevron-forward" size={18} color="gray" />
         </View>
@@ -252,6 +258,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 12,
     borderColor: "#A9A0A0",
+    // backgroundColor: "green",
   },
   container_taikhoan: {
     backgroundColor: "white",
@@ -284,13 +291,14 @@ const styles = StyleSheet.create({
   mat_khau: {
     flexDirection: "row",
     alignItems: "center",
-    paddingVertical: 12,
+    paddingVertical: 14,
   },
   xoa_tai_khoan: {
     flexDirection: "row",
     alignItems: "center",
-    padding: 12,
+    paddingVertical: 14,
     backgroundColor: "white",
+    paddingLeft: 12,
   },
   sodienthoai: {
     flexDirection: "row",

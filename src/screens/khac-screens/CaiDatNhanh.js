@@ -10,7 +10,7 @@ export default function CaiDatNhanh({ navigation }) {
     setTimeout(() => {
       setIsLoading(false);
       navigation.navigate("TrangChu");
-    }, 1000);
+    }, 500);
   };
   const handle_taikhoanvabaomat = () => {
     navigation.navigate("TaiKhoanVaBaoMat");

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import axios from "axios";
 import { API_URL } from "@env";
-import { Ionicons, Octicons, FontAwesome6 } from "@expo/vector-icons";
+import { Ionicons, Octicons } from "@expo/vector-icons";
 
 export default function XemThongTinProfile({ route, navigation }) {
   const { user_id } = route.params;
@@ -63,7 +63,7 @@ export default function XemThongTinProfile({ route, navigation }) {
         <View style={styles.line} />
         <View style={styles.content1}>
           <Text style={styles.title1}>Số điện thoại</Text>
-          <Text style={{ fontSize: 16 }}>{dataUser.username}</Text>
+          <Text style={{ fontSize: 16 }}>{dataUser.username ? `0${dataUser.username.slice(3)}` : ""}</Text>
         </View>
         <View style={styles.line} />
         <View style={styles.content1}>

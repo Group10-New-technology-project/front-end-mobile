@@ -18,7 +18,7 @@ import ChonAnhDaiDien from "../screens/dangky-screens/ChonAnhDaiDien";
 import NhapTenNguoiDung from "../screens/dangky-screens/NhapTenNguoiDung";
 import TrangChu from "../screens/trangchu-screens/TrangChu";
 import DangNhap from "../screens/dangnhap-screens/DangNhap";
-import See from "../screens/nhatky-screens/See";
+import XemAnhBaiViet from "../screens/nhatky-screens/XemAnhBaiViet";
 import NhapSoDienThoai from "../screens/dangky-screens/NhapSoDienThoai";
 import NhapMaXacThuc from "../screens/dangky-screens/NhapMaXacThuc";
 import NhapThongTinCaNhan from "../screens/dangky-screens/NhapThongTinCaNhan";
@@ -127,7 +127,7 @@ export function StackNavigator() {
           headerLeft: () => <CustomBackButton routeName="Đăng nhập" />,
         }}
       />
-      <Stack.Screen name="See" component={See} />
+      <Stack.Screen name="XemAnhBaiViet" component={XemAnhBaiViet} />
       <Stack.Screen
         name="NhapSoDienThoai"
         component={NhapSoDienThoai}

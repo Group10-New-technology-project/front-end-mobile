@@ -259,14 +259,14 @@ export default function XemTrangCaNhan({ navigation, route }) {
     }
   };
   const handleDangBaiViet = () => {
-    Alert.alert("Từ từ đang phát triển");
+    Alert.alert("Đang phát triển");
   };
   const handleXemAnh = (image) => {
     console.log("Xem ảnh", image);
     navigation.navigate("XemAnh", { image: image });
   };
   handleCapNhatGioiThieu = () => {
-    Alert.alert("Từ từ đang phát triển");
+    Alert.alert("Đang phát triển");
   };
 
   return (

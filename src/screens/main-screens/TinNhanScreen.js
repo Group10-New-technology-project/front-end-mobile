@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Dimensions, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 import { useIsFocused } from "@react-navigation/native";
@@ -47,11 +47,12 @@ export default function TinNhanScreen({ navigation }) {
     try {
       const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByUserId/${userID}`);
       const data = await response.json();
-      // console.log("Dữ liệu cuộc trò chuyện:", data);
-      if (Array.isArray(data)) {
-        setConversations(data);
+      const sortedConversations = data.sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
+      const times = sortedConversations.map((conversation) => conversation.createAt);
+      // console.log("Danh sách thời gian của các cuộc trò chuyện:", times);
+      if (Array.isArray(sortedConversations)) {
+        setConversations(sortedConversations);
         setLoading(false);
-
         const lastMsgs = {};
         data.forEach((item) => {
           if (item.messages && item.messages.length > 0) {
@@ -73,7 +74,6 @@ export default function TinNhanScreen({ navigation }) {
           }
         });
         setLastMessages(lastMsgs);
-        // console.log("Tin nhắn cuối cùng:", lastMsgs);
       } else {
         console.error("Dữ liệu trả về không phải là một mảng:", data);
       }
@@ -154,7 +154,6 @@ export default function TinNhanScreen({ navigation }) {
     const response = await axios.post(`${API_URL}/api/v1/conversation/deleteConversationById/${conversationId}`);
     const data = await response.data;
     Alert.alert("Xóa cuộc trò chuyện thành công!");
-    console.log("Xóa cuộc trò chuyện thành công!", conversationId);
     setIsVisible(false);
     fetchData();
   };
@@ -172,7 +171,7 @@ export default function TinNhanScreen({ navigation }) {
           renderItem={({ item }) => {
             var messageTimeDiff = "";
             if (!item.messages || item.messages.length === 0) {
-              // không làm gì
+              console.log("Không có tin nhắn");
             } else {
               const formattedCreatedAt = convertToStandardFormat(item.messages[item.messages.length - 1].createAt);
               messageTimeDiff = calculateTimeDiff(formattedCreatedAt);

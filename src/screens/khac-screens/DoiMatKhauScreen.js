@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
 
@@ -29,9 +29,8 @@ export default function DoiMatKhauScreen({ navigation }) {
     fetchData();
   }, []);
 
-  handleUpdate = async () => {
+  const handleUpdate = async () => {
     try {
-      // Gọi API để cập nhật mật khẩu
       const response = await fetch(`${API_URL}/api/v1/users/updateMK`, {
         method: "POST",
         headers: {
@@ -53,18 +52,18 @@ export default function DoiMatKhauScreen({ navigation }) {
         await AsyncStorage.setItem("userData", JSON.stringify(updatedUserData));
 
         // Thông báo cho người dùng và đặt lại các state về rỗng
-        alert("Cập nhật mật khẩu thành công");
+        alert.alert("Cập nhật mật khẩu thành công");
         setPasswordOld("");
         setPasswordNew("");
         setPasswordReNew("");
         navigation.navigate("TrangChu");
       } else {
         // Xử lý lỗi từ API
-        alert(data.error || "Đã có lỗi xảy ra khi cập nhật mật khẩu");
+        Alert.alert(data.error || "Đã có lỗi xảy ra khi cập nhật mật khẩu");
       }
     } catch (error) {
       console.error("Lỗi khi cập nhật mật khẩu:", error);
-      alert("Đã có lỗi xảy ra khi cập nhật mật khẩu. Vui lòng thử lại sau");
+      Alert.alert("Đã có lỗi xảy ra khi cập nhật mật khẩu. Vui lòng thử lại sau");
     }
   };
 
@@ -164,7 +163,7 @@ const styles = StyleSheet.create({
 
   subSection: {},
   btnUpdate: {
-    backgroundColor: "#C0D4E3",
+    backgroundColor: "#0091FF",
     alignSelf: "center",
     alignItems: "center",
     justifyContent: "center",
@@ -175,7 +174,7 @@ const styles = StyleSheet.create({
   },
   btnText: {
     fontSize: 18,
-    fontWeight: "200",
+    fontWeight: "400",
     color: "#fff",
   },
   textOption: {

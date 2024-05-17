@@ -18,7 +18,7 @@ const s3 = new S3({
 export default function TaoNhom({ navigation, route }) {
   const { userFriendId } = route.params;
 
-  const [image, setImage] = useState("https://i.pinimg.com/564x/e6/9c/53/e69c53672be67814eb21004d0c04b42b.jpg");
+  const [image, setImage] = useState("https://i.pinimg.com/564x/4c/4f/fb/4c4ffb521a7db96b2d7d2c572e706029.jpg");
   const [imageURL, setImageURL] = useState(null);
   const [users, setUsers] = useState([]);
   const socketRef = useRef(null);
@@ -319,6 +319,8 @@ const styles = StyleSheet.create({
     height: 55,
     width: 55,
     borderRadius: 55,
+    // borderWidth: 1,
+    // borderColor: "gray",
     backgroundColor: "#D5D5D5",
   },
   btn_continue: {

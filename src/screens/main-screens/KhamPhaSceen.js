@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, Dimensions, ScrollView, Pressable, FlatL
 import { useState, useRef, useEffect } from "react";
 import { Video, ResizeMode } from "expo-av";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
+
 export default function KhamPhaScreen() {
   const iconsData = [
     { key: 1, imageSource: require("../../../assets/image/Icon Zalo Video.png"), text: "Zalo Video" },

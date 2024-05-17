@@ -3,7 +3,7 @@ import { View, StyleSheet, ScrollView, Image, Text, FlatList, TouchableOpacity, 
 import Modal from "react-native-modal";
 import { useRoute } from "@react-navigation/native";
 
-export default function See({ navigation }) {
+export default function XemAnhBaiViet({ navigation }) {
   const [isFocusedLike, setisFocusedLike] = useState(false);
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
   const [comment, setComment] = useState("");

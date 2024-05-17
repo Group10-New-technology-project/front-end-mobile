@@ -3,7 +3,6 @@ import { View, StyleSheet, Dimensions, TouchableOpacity, Text } from "react-nati
 import { useNavigation } from "@react-navigation/native";
 import Modal from "react-native-modal";
 import { Feather, MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function SearchBarTinNhan() {
   const navigation = useNavigation();
@@ -27,7 +26,16 @@ export default function SearchBarTinNhan() {
 
   const handleTaoNhom = () => {
     setModalVisible(!isModalVisible);
-    navigation.navigate("TaoNhom", { userFriendId: null });
+    setTimeout(() => {
+      navigation.navigate("TaoNhom", { userFriendId: null });
+    }, 500); // 3000 milliseconds = 3 seconds
+  };
+
+  const handleAddFriend = () => {
+    setModalVisible(!isModalVisible);
+    setTimeout(() => {
+      navigation.navigate("TimKiem", { searchPhone: "123" });
+    }, 500); // 3000 milliseconds = 3 seconds
   };
 
   return (
@@ -56,7 +64,7 @@ export default function SearchBarTinNhan() {
         animationIn="fadeInDown"
         animationOut="fadeOutUp">
         <View style={styles.modalSize}>
-          <TouchableOpacity style={styles.content_container} onPress={handleAdd}>
+          <TouchableOpacity style={styles.content_container} onPress={handleAddFriend}>
             <MaterialCommunityIcons name="account-plus-outline" size={25} color="#BCBCBC" />
             <Text style={styles.content_2}>Thêm bạn</Text>
           </TouchableOpacity>

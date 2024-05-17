@@ -4,6 +4,7 @@ import { AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons, Feather, Fo
 import { API_URL } from "@env";
 import axios from "axios";
 import io from "socket.io-client";
+
 export default function ThongTinNhom({ navigation, route }) {
   const { conversationId, userId, userName } = route.params;
   const [ConversationData, setConversationData] = useState(null);
@@ -16,21 +17,56 @@ export default function ThongTinNhom({ navigation, route }) {
   const socketRef = useRef(null);
   const [arrayimage, setArrayImage] = useState([]);
   const [isFirstSelected, setIsFirstSelected] = useState([true, true, true]);
-  const handleXoaThanhVien = async () => {
+  const [leader, setLeader] = useState("");
+
+  useEffect(() => {
+    fetchUserDataLeader();
+  }, []);
+
+  const fetchUserDataLeader = async () => {
     try {
-      console.log("conversationId", conversationId);
-      console.log("userId", userId);
-      const response = await axios.post(`${API_URL}/api/v1/conversation/leaveConversation`, {
-        conversationID: conversationId,
-        userID: userId,
-      });
-      fetchMessagesNotify(conversationId);
-      socketRef.current.emit("sendMessage", { message: "messageContent", room: "conversationId" });
-      navigation.navigate("Tabs");
+      const response = await axios.get(`${API_URL}/api/v1/conversation/getConversationById/${conversationId}`);
+      if (response.data) {
+        const leaderUsers = response.data.leader?.userId;
+        setLeader(leaderUsers._id);
+        console.log("leader", leader);
+      }
     } catch (error) {
-      console.error("Error:", error.response.data);
-      Alert.alert("Error", "Failed to remove deputy from conversation. Please try again.");
+      console.error("Error fetching data:", error);
     }
+  };
+
+  const handleXoaThanhVien = async () => {
+    Alert.alert(
+      "",
+      `Bạn có chắc chắn muốn rời nhóm ${name}?`, // Sử dụng template literals để tạo chuỗi
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            try {
+              const response = await axios.post(`${API_URL}/api/v1/conversation/leaveConversation`, {
+                conversationID: conversationId,
+                userID: userId,
+              });
+              fetchMessagesNotify(conversationId);
+              socketRef.current.emit("sendMessage", { message: "messageContent", room: "conversationId" });
+              Alert.alert("Bạn đã rời khỏi nhóm");
+              navigation.navigate("Tabs");
+            } catch (error) {
+              console.error("Error:", error.response.data);
+              Alert.alert("Error", "Failed to remove deputy from conversation. Please try again.");
+            }
+          },
+        },
+      ],
+      { cancelable: false }
+    );
   };
 
   const fetchMemberId = async (userID) => {
@@ -144,7 +180,7 @@ export default function ThongTinNhom({ navigation, route }) {
   };
 
   return (
-    <ScrollView nestedScrollEnabled={true}>
+    <ScrollView style={{ backgroundColor: "#FFF" }} nestedScrollEnabled={true}>
       {type === "Group" ? (
         <View style={styles.container}>
           <View style={{ height: 230, justifyContent: "flex-start", alignItems: "center" }}>
@@ -378,7 +414,7 @@ export default function ThongTinNhom({ navigation, route }) {
             </View>
           </View>
           <View style={{ height: 8, backgroundColor: "#F7F8FA" }}></View>
-          <View style={{ height: 220, justifyContent: "flex-start", alignItems: "center" }}>
+          <View style={{ height: 230, justifyContent: "flex-start", alignItems: "center" }}>
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10 }}>
                 <AntDesign name="pushpino" size={20} color="#7C828A" style={{ transform: [{ rotateY: "180deg" }] }} />
@@ -481,7 +517,7 @@ export default function ThongTinNhom({ navigation, route }) {
             </View>
           </View>
           <View style={{ height: 8, backgroundColor: "#F7F8FA" }}></View>
-          <View style={{ height: 220, justifyContent: "flex-start", alignItems: "center" }}>
+          <View style={{ height: leader === userId ? 180 : 230, justifyContent: "flex-start", alignItems: "center" }}>
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10, justifyContent: "center" }}>
                 <AntDesign name="warning" size={20} color="#7C828A" style={{ transform: [{ rotateY: "180deg" }] }} />
@@ -491,7 +527,6 @@ export default function ThongTinNhom({ navigation, route }) {
               </View>
               <View></View>
             </View>
-
             <View style={{ marginTop: 5, height: 1, width: 350, backgroundColor: "#E0E0E0", marginLeft: 40 }}></View>
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10, justifyContent: "center" }}>
@@ -512,16 +547,26 @@ export default function ThongTinNhom({ navigation, route }) {
               </View>
               <View></View>
             </View>
-            <View style={{ marginTop: 5, height: 1, width: 350, backgroundColor: "#E0E0E0", marginLeft: 40 }}></View>
-            <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-              <View style={{ flexDirection: "row", marginLeft: 10, alignItems: "center" }}>
-                <Ionicons name="log-out-outline" size={20} color="#EC514C" style={{ transform: [{ rotateY: "180deg" }] }} />
-                <TouchableOpacity onPress={() => handleXoaThanhVien()}>
-                  <Text style={{ marginLeft: 17, fontSize: 16, color: "#EC514C" }}>Rời nhóm</Text>
-                </TouchableOpacity>
+            {leader === userId ? null : (
+              <View style={{ marginTop: 5, height: 1, width: 350, backgroundColor: "#E0E0E0", marginLeft: 40 }} />
+            )}
+            {leader === userId ? null : (
+              <View
+                style={{
+                  width: "100%",
+                  height: 50,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}>
+                <View style={{ flexDirection: "row", marginLeft: 10, alignItems: "center" }}>
+                  <Ionicons name="log-out-outline" size={20} color="#EC514C" style={{ transform: [{ rotateY: "180deg" }] }} />
+                  <TouchableOpacity onPress={() => handleXoaThanhVien()}>
+                    <Text style={{ marginLeft: 17, fontSize: 16, color: "#EC514C" }}>Rời nhóm</Text>
+                  </TouchableOpacity>
+                </View>
               </View>
-              <View></View>
-            </View>
+            )}
           </View>
         </View>
       ) : type === "Direct" ? (
@@ -613,7 +658,7 @@ export default function ThongTinNhom({ navigation, route }) {
             </View>
           </View>
           <View style={{ height: 8, backgroundColor: "#F7F8FA" }}></View>
-          <View style={{ height: 170, justifyContent: "flex-start", alignItems: "center" }}>
+          <View style={{ height: 180, justifyContent: "flex-start", alignItems: "center" }}>
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10, alignItems: "center" }}>
                 <AntDesign name="edit" size={21} color="#7C828A" />
@@ -742,7 +787,7 @@ export default function ThongTinNhom({ navigation, route }) {
             </View>
           </View>
           <View style={{ height: 8, backgroundColor: "#F7F8FA" }}></View>
-          <View style={{ height: 170, justifyContent: "flex-start", alignItems: "center" }}>
+          <View style={{ height: 180, justifyContent: "flex-start", alignItems: "center" }}>
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10 }}>
                 <AntDesign name="addusergroup" size={21} color="#7F8284" />
@@ -894,7 +939,7 @@ export default function ThongTinNhom({ navigation, route }) {
             </View>
           </View>
           <View style={{ height: 8, backgroundColor: "#F7F8FA" }}></View>
-          <View style={{ height: 220, justifyContent: "flex-start", alignItems: "center" }}>
+          <View style={{ height: 230, justifyContent: "flex-start", alignItems: "center" }}>
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10, justifyContent: "center" }}>
                 <AntDesign name="warning" size={20} color="#7C828A" style={{ transform: [{ rotateY: "180deg" }] }} />
@@ -926,6 +971,7 @@ export default function ThongTinNhom({ navigation, route }) {
               </View>
               <View></View>
             </View>
+
             <View style={{ marginTop: 7, height: 1, width: 350, backgroundColor: "#E0E0E0", marginLeft: 40 }}></View>
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10 }}>
