@@ -43,36 +43,58 @@ export default function TinNhanScreen({ navigation }) {
       console.error("Lỗi khi lấy thông tin người dùng:", error);
     }
   };
+  const sortConversationsByLastMessage = (conversations) => {
+    return conversations.sort((a, b) => {
+      const lastMsgTimeA = getLastMessageTime(a.messages);
+      const lastMsgTimeB = getLastMessageTime(b.messages);
+      return new Date(lastMsgTimeB) - new Date(lastMsgTimeA);
+    });
+  };
+
+  const getLastMessageTime = (messages) => {
+    if (messages.length === 0) return null;
+    const lastMessage = messages[messages.length - 1];
+    return lastMessage.createAt;
+  };
+
   const fetchConversations = async (userID) => {
     try {
       const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByUserId/${userID}`);
       const data = await response.json();
-      const sortedConversations = data.sort((a, b) => new Date(b.createAt) - new Date(a.createAt));
-      const times = sortedConversations.map((conversation) => conversation.createAt);
-      // console.log("Danh sách thời gian của các cuộc trò chuyện:", times);
-      if (Array.isArray(sortedConversations)) {
+
+      if (Array.isArray(data)) {
+        const sortedConversations = sortConversationsByLastMessage(data);
+        console.log(
+          "Danh sách thời gian của các cuộc trò chuyện:",
+          sortedConversations.map((conversation) => getLastMessageTime(conversation.messages))
+        );
+
+        // Cập nhật state và dừng hiệu ứng loading
         setConversations(sortedConversations);
         setLoading(false);
+
+        // Xử lý tin nhắn cuối cùng của mỗi cuộc trò chuyện
         const lastMsgs = {};
-        data.forEach((item) => {
-          if (item.messages && item.messages.length > 0) {
-            lastMsgs[item._id] = item.messages[item.messages.length - 1].content;
-            let check = item.messages[item.messages.length - 1].memberId.userId._id;
+        sortedConversations.forEach((conversation) => {
+          if (conversation.messages.length > 0) {
+            lastMsgs[conversation._id] = conversation.messages[conversation.messages.length - 1].content;
+            let check = conversation.messages[conversation.messages.length - 1].memberId.userId._id;
             if (check == userID) {
               setTuiGui("Bạn: ");
             }
-            let isImage = item.messages[item.messages.length - 1].type;
+            let isImage = conversation.messages[conversation.messages.length - 1].type;
             if (isImage === "image") {
-              lastMsgs[item._id] = "Hình ảnh";
+              lastMsgs[conversation._id] = "Hình ảnh";
             } else if (isImage === "file") {
-              lastMsgs[item._id] = "Tài liệu";
+              lastMsgs[conversation._id] = "Tài liệu";
             } else if (isImage === "audio") {
-              lastMsgs[item._id] = "Voice message";
+              lastMsgs[conversation._id] = "Voice message";
             } else if (isImage === "video") {
-              lastMsgs[item._id] = "Video";
+              lastMsgs[conversation._id] = "Video";
             }
           }
         });
+        // Cập nhật state cho tin nhắn cuối cùng của mỗi cuộc trò chuyện
         setLastMessages(lastMsgs);
       } else {
         console.error("Dữ liệu trả về không phải là một mảng:", data);
@@ -210,7 +232,7 @@ export default function TinNhanScreen({ navigation }) {
                       <Text style={styles.text_message}>
                         {item.type === "Direct" && item.messages.length > 0 && item.messages[item.messages.length - 1].type != "notify"
                           ? TuiGui + truncateString(lastMsg, 35)
-                          : truncateString(lastMsg, 35)}
+                          : truncateString(lastMsg, 30)}
                       </Text>
                     </View>
                   </View>

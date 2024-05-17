@@ -50,9 +50,8 @@ export default function DoiMatKhauScreen({ navigation }) {
         // Cập nhật mật khẩu mới trong AsyncStorage
         const updatedUserData = { ...userData, password: passwordNew };
         await AsyncStorage.setItem("userData", JSON.stringify(updatedUserData));
-
         // Thông báo cho người dùng và đặt lại các state về rỗng
-        alert.alert("Cập nhật mật khẩu thành công");
+        Alert.alert("Cập nhật mật khẩu thành công");
         setPasswordOld("");
         setPasswordNew("");
         setPasswordReNew("");
