@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, useMemo } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import {
   FlatList,
   KeyboardAvoidingView,
@@ -65,12 +65,9 @@ function MessageBubble({
   const navigation = useNavigation();
   const [viewedImage, setViewedImage] = useState(null);
   const [isPlaying, setIsPlaying] = React.useState(false);
-
   const avatar = message.memberId?.userId?.avatar;
-
   const modalWidth = Dimensions.get("window").width;
   const modalHeight = Dimensions.get("window").height;
-
   // Kích thước cụ thể cho khung zoom và ảnh (ví dụ: 80% của kích thước modal)
   const zoomWidth = modalWidth * 0.8;
   const zoomHeight = modalHeight * 0.8;
@@ -99,7 +96,7 @@ function MessageBubble({
     const date = new Date(timestamp);
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    return `${hours}:${minutes < 10 ? "0" : ""}${minutes}`; // Định dạng 'giờ:phút'
+    return `${hours}:${minutes < 10 ? "0" : ""}${minutes}`;
   };
   const findMemberId = () => {
     if (!conversation || !userData) return null;
@@ -275,13 +272,10 @@ function MessageBubble({
     if (underscoreIndex !== -1) {
       // Lấy phần từ từ đầu đến vị trí của dấu `_`
       const fileNameWithExtension = filePath.substring(0, underscoreIndex);
-
       // Xóa phần mở rộng và 10 ký tự đầu
       const fileNameWithoutPrefix = fileNameWithExtension.slice(50, -5);
-
       // Tìm vị trí của dấu `.`, đánh dấu phần mở rộng của tệp
       const dotIndex = fileNameWithExtension.lastIndexOf(".");
-
       // Kiểm tra xem có dấu "." không
       if (dotIndex !== -1) {
         // Lấy phần từ từ đầu đến vị trí của dấu `.`
@@ -300,26 +294,20 @@ function MessageBubble({
   const renderFile = (filePath) => {
     // Tìm vị trí của dấu `_` trong đường dẫn file
     const underscoreIndex = filePath.indexOf("_");
-
     // Kiểm tra xem có dấu "_" không
     if (underscoreIndex !== -1) {
       // Lấy phần từ từ đầu đến vị trí của dấu `_`
       const fileNameWithExtension = filePath.substring(0, underscoreIndex);
-
       // Xóa phần mở rộng và 10 ký tự đầu
       const fileNameWithoutPrefix = fileNameWithExtension.slice(50, -5);
-
       // Tìm vị trí của dấu `.`, đánh dấu phần mở rộng của tệp
       const dotIndex = fileNameWithExtension.lastIndexOf(".");
-
       // Kiểm tra xem có dấu "." không
       if (dotIndex !== -1) {
         // Lấy phần từ từ đầu đến vị trí của dấu `.`
         const fileName = fileNameWithoutPrefix.substring(0, dotIndex);
-
         // Lấy phần mở rộng của tệp từ vị trí dấu `.`
         const fileExtension = fileNameWithExtension.substring(dotIndex + 1);
-
         // Hiển thị phần tên tệp kèm phần mở rộng
         return (
           <Text>
@@ -340,6 +328,7 @@ function MessageBubble({
       console.error("Lỗi khi mở file:", error);
     }
   };
+
   // xoa message
   const deleteMessage = async (messageId) => {
     try {
@@ -356,10 +345,10 @@ function MessageBubble({
       });
 
       if (response.ok) {
-        console.log("Tin nhắn đã được xóa thành công");
+        // console.log("Tin nhắn đã được xóa thành công");
         Alert.alert("Thông báo", "Tin nhắn đã được xóa thành công");
-        console.log("ID tin nhắn:", messageId);
-        console.log("ID cuộc trò chuyện:", conversation?._id);
+        // console.log("ID tin nhắn:", messageId);
+        // console.log("ID cuộc trò chuyện:", conversation?._id);
         console.log("ID thành viên:", findMemberId());
         const updatedMessages = conversation.messages.filter((msg) => msg._id !== messageId);
         // Cập nhật lại conversation với danh sách tin nhắn mới
@@ -580,7 +569,7 @@ function MessageBubble({
         // Xử lý cập nhật giao diện nếu cần
         socketRef.current.emit("sendMessage", { message: "Tin nhắn đã được thả cảm xúc", room: conversation?._id });
         fetchData();
-        console.log("Reaction added successfully:", data);
+        // console.log("Reaction added successfully:", data);
         setModalVisible(false);
       } else {
         // Xử lý lỗi
@@ -691,7 +680,7 @@ function MessageBubble({
       if (response.ok) {
         console.log("Xóa phản ứng thành công");
         socketRef.current.emit("sendMessage", { message: "Tin nhắn đã được thu hồi hết cảm xúc", room: conversation?._id });
-        alert("Bạn đã gỡ cảm xúc ");
+        Alert.alert("Bạn đã gỡ cảm xúc ");
         setModalVisibleReaction(false);
         fetchData();
       } else {
@@ -706,7 +695,7 @@ function MessageBubble({
   const renderReactionDetails = ({ item }) => {
     return (
       <View style={styles.reactionContainer}>
-        {item?.memberId?.userId?.avatar && <Image source={{ uri: item.memberId.userId.avatar }} style={styles.avatar1} />}
+        {item?.memberId?.userId?.avatar && <Image source={{ uri: item.memberId.userId.avatar }} style={styles.avatarReaction} />}
         <View style={styles.memberDetails}>
           <Text style={styles.memberName}>{item?.memberId?.userId?.name}</Text>
           <View style={styles.reactionIconsContainer}>
@@ -744,6 +733,10 @@ function MessageBubble({
     }
   };
 
+  const handleViewProfile = () => {
+    navigation.navigate("XemTrangCaNhan", { user_id: message.memberId.userId._id });
+  };
+
   return (
     <View>
       <View>
@@ -753,7 +746,9 @@ function MessageBubble({
           ) : (
             <View style={[styles.rowContainer, { alignSelf: !isCurrentUserMessage ? "flex-start" : "flex-end" }]}>
               {!isCurrentUserMessage && !(message.deleteMember && message.deleteMember.length > 0) && (
-                <Image source={{ uri: avatar }} style={styles.avatar} />
+                <TouchableOpacity onPress={handleViewProfile}>
+                  <Image source={{ uri: avatar }} style={styles.avatar} />
+                </TouchableOpacity>
               )}
               {message.deleteMember && message.deleteMember.length > 0 ? null : (
                 <TouchableOpacity
@@ -776,7 +771,6 @@ function MessageBubble({
                         borderRadius: 10,
                         paddingHorizontal: 5,
                         paddingVertical: 3,
-                        // marginBottom: 15,
                         flexDirection: "row",
                       }}
                       onPress={openModalReaction}>
@@ -974,7 +968,7 @@ function MessageBubble({
 }
 
 export default function ChatScreen({ route }) {
-  const flatListRef = useRef();
+  const flatListRef = useRef(null);
   const [conversation, setConversation] = useState([]);
   const { conversationId } = route.params;
   const [messages, setMessages] = useState([]);
@@ -1058,7 +1052,7 @@ export default function ChatScreen({ route }) {
 
   const listenToMessages = () => {
     socketRef.current.on("sendMessage", (message) => {
-      console.log("Tin nhắn mới:", message);
+      // console.log("Tin nhắn mới:", message);
       fetchData();
     });
   };
@@ -1074,7 +1068,6 @@ export default function ChatScreen({ route }) {
       }
 
       const response = await fetch(`${API_URL}/api/v1/conversation/getConversationByIdApp/${conversationId}`);
-      // const response = await fetch(`http://192.168.3.106:3000/api/v1/conversation/getConversationByIdApp/${conversationId}`);
       const data = await response.json();
       setConversation(data);
       if (data && data.messages) {
@@ -1087,8 +1080,10 @@ export default function ChatScreen({ route }) {
   };
 
   useEffect(() => {
-    flatListRef.current.scrollToEnd({ animated: true });
-  }, []);
+    if (messages.length > 0) {
+      flatListRef.current.scrollToEnd({ animated: true });
+    }
+  }, [messages]);
 
   const findMemberId = () => {
     if (!conversation || !userData) return null;
@@ -1319,6 +1314,7 @@ export default function ChatScreen({ route }) {
   };
 
   const sendMessage = async () => {
+    Keyboard.dismiss();
     try {
       const imageUrls = await Promise.all(selectedImages.map(uploadImageToS3));
       let fileUrl = "";
@@ -1335,12 +1331,12 @@ export default function ChatScreen({ route }) {
         messageContent = fileUrl;
       }
       let repMessage = messageRepply ? messageRepply : null;
-      console.log("Nội dung", messageContent);
-      console.log("ID", conversationId);
-      console.log("MemberID", findMemberId());
-      console.log("Type", messageType);
-      console.log("repMessage", repMessage);
-      console.log("ID Rep", repMessage?._id);
+      // console.log("Nội dung", messageContent);
+      // console.log("ID", conversationId);
+      // console.log("MemberID", findMemberId());
+      // console.log("Type", messageType);
+      // console.log("repMessage", repMessage);
+      // console.log("ID Rep", repMessage?._id);
       let response;
       if (repMessage) {
         console.log("Tin nhắn đã được trả lời");
@@ -1568,10 +1564,6 @@ export default function ChatScreen({ route }) {
     }
   };
 
-  useEffect(() => {
-    console.log("SelectedFile", selectedFile);
-  }, [selectedFile]);
-
   //reply
 
   //close reply
@@ -1701,9 +1693,7 @@ export default function ChatScreen({ route }) {
         </TouchableOpacity>
       </View>
     );
-    console.log("Last pinned message:", lastPinnedMessage);
-    console.log("Messages:", messages);
-    console.log("Show all pinned messages:", showAllPinnedMessages);
+
     return (
       <View>
         {!showAllPinnedMessages && (
@@ -1726,9 +1716,9 @@ export default function ChatScreen({ route }) {
             <View style={styles.modalContainerghim}>
               <View style={styles.modalContentghim}>
                 <View style={{ width: 350, height: 30, alignItems: "center", justifyContent: "center" }}>
-                  <Text style={{ fontSize: 15 }}>Danh sách ghim</Text>
+                  <Text style={{ fontSize: 16, fontWeight: "500" }}>Danh sách ghim</Text>
                 </View>
-                <View style={{ width: "100%", height: 1, backgroundColor: "#000" }}></View>
+                <View style={{ width: "100%", height: 0.5, backgroundColor: "gray" }}></View>
                 <FlatList
                   data={messages}
                   renderItem={({ item }) => (
@@ -1767,7 +1757,9 @@ export default function ChatScreen({ route }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
       <View style={styles.container}>
-        <View style={styles.header}></View>
+        <View style={styles.header}>
+          <Text></Text>
+        </View>
         {conversation.pinMessages && <RenderPinMessage pinnedMessages={conversation.pinMessages} />}
         <KeyboardAvoidingView
           style={{ flex: 1, backgroundColor: "#F2F2F2" }}
@@ -1776,8 +1768,8 @@ export default function ChatScreen({ route }) {
           <FlatList
             ref={flatListRef}
             data={messages}
+            initialScrollIndex={messages.length - 1}
             renderItem={({ item }) => {
-              // Xác định xem tin nhắn có được gửi bởi người dùng hiện tại không
               const isCurrentUserMessage = item.memberId?.userId?._id === userData?._id;
               const replyMessage = messageRepply;
               return (
@@ -1786,7 +1778,7 @@ export default function ChatScreen({ route }) {
                   message={item}
                   conversation={conversation}
                   userData={userData}
-                  isCurrentUserMessage={isCurrentUserMessage} // Truyền giá trị boolean cho MessageBubble
+                  isCurrentUserMessage={isCurrentUserMessage}
                   setConversation={setConversation}
                   socketRef={socketRef}
                   listenToMessages={listenToMessages}
@@ -1799,7 +1791,7 @@ export default function ChatScreen({ route }) {
             }}
             keyExtractor={(_, index) => index.toString()}
             contentContainerStyle={{ paddingHorizontal: 10, gap: 10 }}
-            onContentSizeChange={() => flatListRef.current.scrollToEnd({ animated: true })}
+            getItemLayout={(data, index) => ({ length: 100, offset: 100 * index, index })}
           />
 
           {messageRepply && (
@@ -1813,7 +1805,7 @@ export default function ChatScreen({ route }) {
             </View>
           )}
 
-          <View style={styles.inputContainer}>
+          <View style={[styles.inputContainer, { backgroundColor: "#FFF" }]}>
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity onPress={handleShowMicro}>
                 <FontAwesome name="microphone" size={24} color="gray" />
@@ -1963,7 +1955,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
-    // backgroundColor: "green",
   },
   avatar: {
     width: 30,
@@ -2325,7 +2316,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginBottom: 10,
   },
-  avatar1: {
+  avatarReaction: {
     height: 50,
     width: 50,
     borderRadius: 25,

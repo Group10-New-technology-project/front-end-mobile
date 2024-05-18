@@ -64,10 +64,10 @@ export default function TinNhanScreen({ navigation }) {
 
       if (Array.isArray(data)) {
         const sortedConversations = sortConversationsByLastMessage(data);
-        console.log(
-          "Danh sách thời gian của các cuộc trò chuyện:",
-          sortedConversations.map((conversation) => getLastMessageTime(conversation.messages))
-        );
+        // console.log(
+        //   "Danh sách thời gian của các cuộc trò chuyện:",
+        //   sortedConversations.map((conversation) => getLastMessageTime(conversation.messages))
+        // );
 
         // Cập nhật state và dừng hiệu ứng loading
         setConversations(sortedConversations);

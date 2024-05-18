@@ -30,8 +30,6 @@ import DanhBaMay from "../screens/danhba-screens/DanhBaMay";
 import LoiMoiKetBan from "../screens/danhba-screens/LoiMoiKetBan";
 import TimKiem from "../screens/khac-screens/TimKiem";
 import TaoNhom from "../screens/tinnhan-screens/TaoNhom";
-import ChanhRecived from "../screens/test-screens/ChanhRecived";
-import ChanhSender from "../screens/test-screens/ChanhSender";
 import ThongTinNhom from "../screens/tinnhan-screens/ThongTinNhom";
 import NhapMatKhauMoi from "../screens/dangnhap-screens/NhapMatKhauMoi";
 import ThanhVienNhom from "../screens/tinnhan-screens/ThanhVienNhom";
@@ -195,22 +193,6 @@ export function StackNavigator() {
         options={{
           headerShown: true,
           headerLeft: () => <CustomBackButton routeName="Nhóm mới" />,
-        }}
-      />
-      <Stack.Screen
-        name="ChanhRecived"
-        component={ChanhRecived}
-        options={({ route }) => ({
-          headerShown: true,
-          headerLeft: () => <Header userData={route.params?.me} status={route.params?.status} />,
-        })}
-      />
-      <Stack.Screen
-        name="ChanhSender"
-        component={ChanhSender}
-        options={{
-          headerShown: true,
-          headerLeft: () => <CustomBackButton routeName="Chanh sender" />,
         }}
       />
       <Stack.Screen
