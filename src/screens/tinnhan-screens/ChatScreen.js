@@ -42,6 +42,7 @@ import { S3 } from "aws-sdk";
 import { useNavigation } from "@react-navigation/native";
 import { Zocial } from "@expo/vector-icons";
 import ImageZoom from "react-native-image-pan-zoom";
+import axios from "axios";
 
 const heightApp = Dimensions.get("window").height;
 const widthApp = Dimensions.get("window").width;
@@ -143,7 +144,7 @@ function MessageBubble({
     if (message.deleteMember && message.deleteMember.length > 0) {
       for (let i = 0; i < message.deleteMember.length; i++) {
         if (message.deleteMember[i]._id === memberID) {
-          console.log("ID", message.deleteMember[i]._id);
+          // console.log("ID", message.deleteMember[i]._id);
           return null;
         }
       }
@@ -173,7 +174,7 @@ function MessageBubble({
     if (message.deleteMember && message.deleteMember.length > 0) {
       for (let i = 0; i < message.deleteMember.length; i++) {
         if (message.deleteMember[i]._id === memberID) {
-          console.log("ID", message.deleteMember[i]._id);
+          // console.log("ID", message.deleteMember[i]._id);
           // Nếu trùng khớp, trả về null để không hiển thị tin nhắn
           return null;
         }
@@ -463,6 +464,18 @@ function MessageBubble({
     setIsPlaying(!isPlaying);
   };
 
+  const formatMessageContent = (content) => {
+    // Loại bỏ các ký tự '<', '>', '/', và "strong"
+    content = content.replace(/<|>|\/|strong/g, "");
+    // Chuyển nhiều khoảng trắng liên tiếp thành một khoảng trắng duy nhất
+    content = content.replace(/\s{2,}/g, " ");
+
+    // if (content.length > 35) {
+    //   return content.substring(0, 35) + "...";
+    // }
+    return content;
+  };
+
   const renderNotifyMessage = () => {
     const [isAdd, setIsAdd] = useState(false);
     const [isDelete, setIsDelete] = useState(false);
@@ -476,7 +489,7 @@ function MessageBubble({
       if (!isAdd && !isDelete && !isChange) {
         if (mes.includes("thêm")) {
           setIsAdd(true);
-        } else if (mes.includes("đuổi")) {
+        } else if (mes.includes("xóa")) {
           setIsDelete(true);
         } else if (mes.includes("bổ nhiệm")) {
           setIsChange(true);
@@ -486,8 +499,8 @@ function MessageBubble({
     return (
       <View style={styles.notifyContainer}>
         {isChange && <FontAwesome5 name="key" size={20} color="#79B836" />}
-        <Image source={{ uri: message.memberId.userId.avatar }} style={{ width: 20, height: 20, borderRadius: 20 }}></Image>
-        <Text style={styles.notifyText}>{message.content}</Text>
+        <Image source={{ uri: message.memberId.userId.avatar }} style={{ width: 18, height: 18, borderRadius: 20 }}></Image>
+        <Text style={styles.notifyText}>{formatMessageContent(message.content)}</Text>
         {isAdd && <MaterialIcons style={{ paddingLeft: 10 }} name="accessibility-new" size={20} color="#FBC94C" />}
         {isDelete && <FontAwesome style={{ paddingLeft: 10 }} name="sign-out" size={20} color="black" />}
       </View>
@@ -509,6 +522,17 @@ function MessageBubble({
 
       // Kiểm tra xem yêu cầu đã thành công hay không
       if (response.ok) {
+        const memberID = findMemberId();
+        try {
+          const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+            conversationId: conversation._id,
+            content: `${userData.name.split(" ").slice(-1)[0]} đã ghim một tin nhắn`,
+            memberId: memberID,
+            type: "notify",
+          });
+        } catch (error) {
+          console.error("Error creating conversation:", error);
+        }
         console.log("Ghim tin nhắn thành công");
         socketRef.current.emit("sendMessage", { message: "Tin nhắn đã được ghim", room: conversation?._id });
         setModalVisible(false);
@@ -536,6 +560,17 @@ function MessageBubble({
       });
       // Kiểm tra xem yêu cầu đã thành công hay không
       if (response.ok) {
+        const memberID = findMemberId();
+        try {
+          const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+            conversationId: conversation._id,
+            content: `${userData.name.split(" ").slice(-1)[0]} đã bỏ ghim một tin nhắn.`,
+            memberId: memberID,
+            type: "notify",
+          });
+        } catch (error) {
+          console.error("Error creating conversation:", error);
+        }
         console.log("Bỏ ghim tin nhắn thành công");
         socketRef.current.emit("sendMessage", { message: "Tin nhắn ghim đã xóa", room: conversation?._id });
         setModalVisible(false);
@@ -1652,6 +1687,17 @@ export default function ChatScreen({ route }) {
 
       // Kiểm tra xem yêu cầu đã thành công hay không
       if (response.ok) {
+        const memberID = findMemberId();
+        try {
+          const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+            conversationId: conversation._id,
+            content: `${userData.name.split(" ").slice(-1)[0]} đã gỡ ghim 1 tin nhắn.`,
+            memberId: memberID,
+            type: "notify",
+          });
+        } catch (error) {
+          console.error("Error creating conversation:", error);
+        }
         console.log("Bỏ ghim tin nhắn thành công");
         socketRef.current.emit("sendMessage", { message: "Tin nhắn ghim đã xóa", room: conversation?._id });
         setShowAllPinnedMessages(false);
@@ -2229,7 +2275,7 @@ const styles = StyleSheet.create({
     fontSize: 12, // Đặt kích thước chữ mong muốn
     color: "#000", // Đặt màu chữ là màu đen
     textAlign: "center", // Căn giữa nội dung văn bản
-    paddingLeft: 10,
+    paddingLeft: 4,
     fontWeight: "400",
   },
   pinMessage: {
