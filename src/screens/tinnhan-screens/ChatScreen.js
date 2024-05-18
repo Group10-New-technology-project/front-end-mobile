@@ -442,10 +442,7 @@ function MessageBubble({
   const PlayVideo = ({ videoUri }) => {
     // Phát video khi component được render
     React.useEffect(() => {
-      // Tạo một audio instance
       const video = new Video.Sound();
-
-      // Load video từ URI được cung cấp
       video.loadAsync({ uri: videoUri }).then(() => {
         // Phát video sau khi đã được load thành công
         video.playAsync();
@@ -484,8 +481,8 @@ function MessageBubble({
     const mes = message.content;
     const fullName = message.memberId?.userId?.name;
     const firstWord = mes.split(" ")[0];
+
     useEffect(() => {
-      // Chỉ chạy khi component được render lần đầu tiên
       if (!isAdd && !isDelete && !isChange) {
         if (mes.includes("thêm")) {
           setIsAdd(true);
@@ -496,10 +493,11 @@ function MessageBubble({
         }
       }
     }, [mes, isAdd, isDelete, isChange]);
+
     return (
       <View style={styles.notifyContainer}>
         {isChange && <FontAwesome5 name="key" size={20} color="#79B836" />}
-        <Image source={{ uri: message.memberId.userId.avatar }} style={{ width: 18, height: 18, borderRadius: 20 }}></Image>
+        <Image source={{ uri: message?.memberId?.userId?.avatar }} style={{ width: 18, height: 18, borderRadius: 20 }}></Image>
         <Text style={styles.notifyText}>{formatMessageContent(message.content)}</Text>
         {isAdd && <MaterialIcons style={{ paddingLeft: 10 }} name="accessibility-new" size={20} color="#FBC94C" />}
         {isDelete && <FontAwesome style={{ paddingLeft: 10 }} name="sign-out" size={20} color="black" />}
@@ -1115,24 +1113,31 @@ export default function ChatScreen({ route }) {
     }
   };
 
-  const handleScrollBegin = () => {
-    setHasScrolled(true);
-  };
+  useEffect(() => {
+    if (messages.length > 0) {
+      setTimeout(() => {
+        flatListRef.current.scrollToEnd({ animated: false });
+      }, 200);
+    }
+  }, [messages]);
 
   const handleSizeChange = () => {
     if (!hasScrolled && flatListRef.current) {
-      flatListRef.current.scrollToEnd({ animated: true });
+      setTimeout(() => {
+        flatListRef.current.scrollToEnd({ animated: true });
+      }, 200);
     }
   };
 
-  useEffect(() => {
-    flatListRef.current.scrollToEnd({ animated: true });
-  }, [messages]);
+  const handleScrollBegin = () => {
+    console.log("Đã bắt đầu cuộn");
+    console.log(hasScrolled);
+    setHasScrolled(true);
+  };
 
   const findMemberId = () => {
     if (!conversation || !userData) return null;
     const member = conversation.members.find((member) => member.userId._id === userData._id);
-    // console.log("member", member);
     return member ? member._id : null;
   };
 
@@ -1691,7 +1696,7 @@ export default function ChatScreen({ route }) {
         try {
           const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
             conversationId: conversation._id,
-            content: `${userData.name.split(" ").slice(-1)[0]} đã gỡ ghim 1 tin nhắn.`,
+            content: `${userData.name.split(" ").slice(-1)[0]} đã gỡ ghim một tin nhắn.`,
             memberId: memberID,
             type: "notify",
           });
@@ -1840,10 +1845,9 @@ export default function ChatScreen({ route }) {
               );
             }}
             keyExtractor={(_, index) => index.toString()}
-            contentContainerStyle={{ paddingHorizontal: 10, gap: 10 }}
+            contentContainerStyle={{ paddingHorizontal: 10, gap: 5 }}
             onContentSizeChange={handleSizeChange}
             onScrollBeginDrag={handleScrollBegin}
-            onMomentumScrollBegin={handleScrollBegin}
           />
           <View style={styles.header} />
           {messageRepply && (
