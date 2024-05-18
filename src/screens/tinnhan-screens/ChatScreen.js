@@ -68,7 +68,6 @@ function MessageBubble({
   const avatar = message.memberId?.userId?.avatar;
   const modalWidth = Dimensions.get("window").width;
   const modalHeight = Dimensions.get("window").height;
-  // Kích thước cụ thể cho khung zoom và ảnh (ví dụ: 80% của kích thước modal)
   const zoomWidth = modalWidth * 0.8;
   const zoomHeight = modalHeight * 0.8;
 
@@ -969,6 +968,8 @@ function MessageBubble({
 
 export default function ChatScreen({ route }) {
   const flatListRef = useRef(null);
+  const [hasScrolled, setHasScrolled] = useState(false);
+
   const [conversation, setConversation] = useState([]);
   const { conversationId } = route.params;
   const [messages, setMessages] = useState([]);
@@ -1079,10 +1080,18 @@ export default function ChatScreen({ route }) {
     }
   };
 
-  useEffect(() => {
-    if (messages.length > 0) {
+  const handleScrollBegin = () => {
+    setHasScrolled(true);
+  };
+
+  const handleSizeChange = () => {
+    if (!hasScrolled && flatListRef.current) {
       flatListRef.current.scrollToEnd({ animated: true });
     }
+  };
+
+  useEffect(() => {
+    flatListRef.current.scrollToEnd({ animated: true });
   }, [messages]);
 
   const findMemberId = () => {
@@ -1091,8 +1100,6 @@ export default function ChatScreen({ route }) {
     // console.log("member", member);
     return member ? member._id : null;
   };
-
-  // video
 
   const selectVideoFromGallery = async () => {
     try {
@@ -1314,7 +1321,6 @@ export default function ChatScreen({ route }) {
   };
 
   const sendMessage = async () => {
-    Keyboard.dismiss();
     try {
       const imageUrls = await Promise.all(selectedImages.map(uploadImageToS3));
       let fileUrl = "";
@@ -1373,6 +1379,7 @@ export default function ChatScreen({ route }) {
         setMessages((prevMessages) => [...prevMessages, responseData]);
         listenToMessages();
         setTextInputValue("");
+        Keyboard.dismiss();
         setMessageRepply(null);
         setSelectedImages([]);
         socketRef.current.emit("sendMessage", { message: messageContent, room: conversationId });
@@ -1757,9 +1764,7 @@ export default function ChatScreen({ route }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <Text></Text>
-        </View>
+        <View style={styles.header} />
         {conversation.pinMessages && <RenderPinMessage pinnedMessages={conversation.pinMessages} />}
         <KeyboardAvoidingView
           style={{ flex: 1, backgroundColor: "#F2F2F2" }}
@@ -1768,7 +1773,6 @@ export default function ChatScreen({ route }) {
           <FlatList
             ref={flatListRef}
             data={messages}
-            initialScrollIndex={messages.length - 1}
             renderItem={({ item }) => {
               const isCurrentUserMessage = item.memberId?.userId?._id === userData?._id;
               const replyMessage = messageRepply;
@@ -1791,9 +1795,11 @@ export default function ChatScreen({ route }) {
             }}
             keyExtractor={(_, index) => index.toString()}
             contentContainerStyle={{ paddingHorizontal: 10, gap: 10 }}
-            getItemLayout={(data, index) => ({ length: 100, offset: 100 * index, index })}
+            onContentSizeChange={handleSizeChange}
+            onScrollBeginDrag={handleScrollBegin}
+            onMomentumScrollBegin={handleScrollBegin}
           />
-
+          <View style={styles.header} />
           {messageRepply && (
             <View style={styles.Reply}>
               <View style={styles.replyContent}>
@@ -1936,7 +1942,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     height: 12,
-    backgroundColor: "#F9F9F9",
+    backgroundColor: "#F2F2F2",
   },
   title: {
     fontSize: 20,
