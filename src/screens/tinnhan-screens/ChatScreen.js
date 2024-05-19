@@ -12,11 +12,11 @@ import {
   Dimensions,
   TextInput,
   Keyboard,
-  ScrollView,
   TouchableWithoutFeedback,
   Button,
   Alert,
   Animated,
+  ActivityIndicator,
 } from "react-native";
 import Modal from "react-native-modal";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -43,6 +43,7 @@ import { useNavigation } from "@react-navigation/native";
 import { Zocial } from "@expo/vector-icons";
 import ImageZoom from "react-native-image-pan-zoom";
 import axios from "axios";
+import { set } from "firebase/database";
 
 const heightApp = Dimensions.get("window").height;
 const widthApp = Dimensions.get("window").width;
@@ -73,7 +74,6 @@ function MessageBubble({
   // const zoomHeight = modalHeight * 0.8;
 
   const [isPlaying2, setIsPlaying2] = useState(false);
-
   const [modalVisibleReaction, setModalVisibleReaction] = useState(false);
   const slideAnim = useRef(new Animated.Value(heightApp)).current;
   const zoomWidth = Dimensions.get("window").width;
@@ -157,7 +157,16 @@ function MessageBubble({
         </View>
       );
     } else if (message.type === "video") {
-      return <Ionicons name="videocam" size={24} color="black" />;
+      return (
+        <View>
+          <Video
+            source={{ uri: message.content }} // Đường dẫn đến video của bạn
+            style={{ width: 50, height: 50 }} // Kích thước video
+            controls={true} // Hiển thị các điều khiển của video
+            resizeMode="cover" // Chế độ thay đổi kích thước video
+          />
+        </View>
+      );
     } else if (message.type === "file") {
       return (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -179,7 +188,20 @@ function MessageBubble({
       case "audio":
         return <Ionicons name="musical-notes" size={24} color="black" />;
       case "video":
-        return <Ionicons name="videocam" size={24} color="black" />;
+        return (
+          <Video
+            source={{ uri: message.content }}
+            rate={1.0}
+            volume={1.0}
+            isMuted={false}
+            resizeMode="cover"
+            shouldPlay={isPlaying}
+            isLooping
+            style={styles.video}
+            // onPlaybackStatusUpdate={(status) => setIsPlaying(status.isPlaying)}
+            useNativeControls
+          />
+        );
       case "file":
         return (
           <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -650,27 +672,40 @@ function MessageBubble({
   };
   // reaction
   const renderReactions = (reactions) => {
+    // Tạo đối tượng để lưu trữ loại cảm xúc và số lượng của chúng
+    const reactionCounts = {};
+
+    reactions.forEach((reaction) => {
+      reaction.reactions.forEach((reactionDetail) => {
+        const { typeReaction } = reactionDetail;
+        if (reactionCounts.hasOwnProperty(typeReaction)) {
+          reactionCounts[typeReaction] += 1;
+        } else {
+          reactionCounts[typeReaction] = 1;
+        }
+      });
+    });
+
+    // Render các icon cảm xúc dựa trên reactionCounts
     return (
       <View style={{ flexDirection: "row", alignItems: "center" }}>
-        {reactions.map((reaction, index) => {
-          return reaction.reactions.map((reactionDetail, index) => {
-            switch (reactionDetail.typeReaction) {
-              case "Like":
-                return <AntDesign name="like1" size={15} color="#F8B54B" />;
-              case "Love":
-                return <AntDesign name="heart" size={15} color="red" />;
-              case "Smile":
-                return <FontAwesome6 name="smile-beam" size={15} color="#F8B54B" />;
-              case "Wow":
-                return <FontAwesome5 name="surprise" size={15} color="#F8B54B" />;
-              case "Sad":
-                return <FontAwesome5 name="sad-cry" size={15} color="#40D0E8" />;
-              case "Angry":
-                return <MaterialCommunityIcons name="emoticon-angry" size={15} color="#CD462F" />;
-              default:
-                return null; // Trong trường hợp không có phản ứng nào khớp
-            }
-          });
+        {Object.keys(reactionCounts).map((typeReaction) => {
+          switch (typeReaction) {
+            case "Like":
+              return <AntDesign key={typeReaction} name="like1" size={15} color="#F8B54B" />;
+            case "Love":
+              return <AntDesign key={typeReaction} name="heart" size={15} color="red" />;
+            case "Smile":
+              return <FontAwesome6 key={typeReaction} name="smile-beam" size={15} color="#F8B54B" />;
+            case "Wow":
+              return <FontAwesome5 key={typeReaction} name="surprise" size={15} color="#F8B54B" />;
+            case "Sad":
+              return <FontAwesome5 key={typeReaction} name="sad-cry" size={15} color="#40D0E8" />;
+            case "Angry":
+              return <MaterialCommunityIcons key={typeReaction} name="emoticon-angry" size={15} color="#CD462F" />;
+            default:
+              return null; // Trong trường hợp không có phản ứng nào khớp
+          }
         })}
       </View>
     );
@@ -678,22 +713,25 @@ function MessageBubble({
   // đếm số lượng reaction
   const calculateTotalReactions = (message) => {
     const memberReactionCounts = {};
+
     // Lặp qua mỗi phản ứng trong tin nhắn
     message.reaction.forEach((reaction) => {
-      // Lặp qua mỗi thành viên và phản ứng của họ
+      // Lặp qua mỗi phản ứng của thành viên
       reaction.reactions.forEach((react) => {
+        const userId = reaction.memberId._id; // Sử dụng userId thay vì memberId._id
+
         // Nếu thành viên đã tồn tại trong đối tượng memberReactionCounts, cộng dồn số lượng
-        if (memberReactionCounts.hasOwnProperty(reaction.memberId._id)) {
+        if (memberReactionCounts.hasOwnProperty(userId)) {
           // Nếu loại phản ứng đã tồn tại trong thành viên, cộng dồn số lượng
-          if (memberReactionCounts[reaction.memberId._id].hasOwnProperty(react.typeReaction)) {
-            memberReactionCounts[reaction.memberId._id][react.typeReaction] += react.quantity;
+          if (memberReactionCounts[userId].hasOwnProperty(react.typeReaction)) {
+            memberReactionCounts[userId][react.typeReaction] += react.quantity;
           } else {
             // Nếu loại phản ứng chưa tồn tại, thêm vào memberReactionCounts
-            memberReactionCounts[reaction.memberId._id][react.typeReaction] = react.quantity;
+            memberReactionCounts[userId][react.typeReaction] = react.quantity;
           }
         } else {
           // Nếu thành viên chưa tồn tại, thêm vào memberReactionCounts và gán số lượng ban đầu
-          memberReactionCounts[reaction.memberId._id] = { [react.typeReaction]: react.quantity };
+          memberReactionCounts[userId] = { [react.typeReaction]: react.quantity };
         }
       });
     });
@@ -708,6 +746,7 @@ function MessageBubble({
 
     return totalReactions;
   };
+
   // show detail reaction
   const [selectedReactions, setSelectedReactions] = useState([]);
   // modal reaction
@@ -1073,6 +1112,7 @@ export default function ChatScreen({ route }) {
   const [messageRepply, setMessageRepply] = useState("");
   const [selectedVideo, setSelectedVideo] = useState("");
   const [pinMessages, setPinMessages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleShowImage = () => {
     Keyboard.dismiss();
@@ -1247,6 +1287,7 @@ export default function ChatScreen({ route }) {
   };
 
   const sendVideo = async (videoUris) => {
+    setIsLoading(true);
     try {
       const videoUrls = await Promise.all(videoUris.map(uploadVideoToS3));
       let messageType = "text";
@@ -1301,6 +1342,7 @@ export default function ChatScreen({ route }) {
         setTextInputValue("");
         setSelectedVideo([]); // Đặt lại video đã chọn sau khi gửi
         setSelectedImages([]);
+        setIsLoading(false);
         socketRef.current.emit("sendMessage", { message: messageContent, room: conversationId });
       } else {
         console.error("Lỗi khi gửi tin nhắn:", await response.json());
@@ -1415,6 +1457,7 @@ export default function ChatScreen({ route }) {
   };
   // send image
   const sendImage = async (imageUrls) => {
+    setIsLoading(true);
     try {
       // Xác định loại tin nhắn và nội dung
       let messageType = "image";
@@ -1465,6 +1508,7 @@ export default function ChatScreen({ route }) {
         setTextInputValue("");
         setMessageRepply(null);
         setSelectedImages([]);
+        setIsLoading(false);
         socketRef.current.emit("sendMessage", { message: messageContent, room: conversationId });
       } else {
         console.error("Lỗi khi gửi tin nhắn:", await response.json());
@@ -1614,9 +1658,7 @@ export default function ChatScreen({ route }) {
       console.log("Upload to S3 failed:", error);
     }
   }
-  const goXemGhiAm = () => {
-    navigation.navigate("DemoReadFile", { url });
-  };
+  const goXemGhiAm = () => {};
 
   const handlePressIn = async () => {
     try {
@@ -1817,7 +1859,14 @@ export default function ChatScreen({ route }) {
         </View>
       );
     } else if (message.type === "video") {
-      return <Ionicons name="videocam" size={24} color="black" />;
+      return (
+        <Video
+          source={{ uri: message.content }} // Đường dẫn đến video của bạn
+          style={{ width: 50, height: 50 }} // Kích thước video
+          controls={true} // Hiển thị các điều khiển của video
+          resizeMode="cover" // Chế độ thay đổi kích thước video
+        />
+      );
     } else if (message.type === "file") {
       return (
         <View style={{ flexDirection: "row", alignItems: "center" }}>
@@ -2011,6 +2060,15 @@ export default function ChatScreen({ route }) {
       </View>
     );
   };
+
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFF" }}>
+        <ActivityIndicator size="large" color="#0091FF" />
+        <Text style={{ marginTop: 10, fontSize: 16, fontWeight: "400", color: "#0091FF" }}>Đang tải..</Text>
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
       <View style={styles.container}>
