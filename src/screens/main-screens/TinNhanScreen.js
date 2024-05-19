@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, FlatList, Image, Alert } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
+import Loading from "../../components/Loading";
 import { useIsFocused } from "@react-navigation/native";
 import io from "socket.io-client";
 import Modal from "react-native-modal";
@@ -182,10 +183,8 @@ export default function TinNhanScreen({ navigation }) {
 
   return (
     <View style={styles.container}>
-      {loading ? ( // Kiểm tra nếu đang tải dữ liệu
-        <View style={{ alignItems: "center", justifyContent: "center", flex: 1 }}>
-          <Text style={{ fontSize: 18, fontWeight: "500", color: "gray" }}>Loading...</Text>
-        </View>
+      {loading ? (
+        <Loading />
       ) : (
         <FlatList
           data={conversations}

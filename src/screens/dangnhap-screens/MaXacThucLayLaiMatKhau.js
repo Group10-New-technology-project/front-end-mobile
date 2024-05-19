@@ -1,21 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert, ActivityIndicator, LogBox } from "react-native";
+import { View, StyleSheet, Image, Text, TouchableOpacity, TextInput, Alert, ActivityIndicator } from "react-native";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 import { firebaseConfig } from "../../config/FirebaseConfig";
-// Ignore all logs
-LogBox.ignoreAllLogs(true);
-// Or ignore specific logs
-LogBox.ignoreLogs(["FirebaseRecaptcha: Support for defaultProps will be removed"]);
-// Or you can overwrite console.warn
-const originalWarn = console.warn;
-console.warn = (...args) => {
-  if (args[0].includes("FirebaseRecaptcha: Support for defaultProps will be removed")) {
-    return;
-  }
-  originalWarn(...args);
-};
+import { configureLogs } from "../../config/LogConfig";
+configureLogs();
 
 export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
   const { SoDienThoai } = route.params;
