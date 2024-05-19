@@ -1367,37 +1367,47 @@ export default function ChatScreen({ route }) {
       if (selectedFile && nameFile) {
         fileUrl = await uploadFileToS3(selectedFile, nameFile);
       }
+
+      // Xác định loại tin nhắn và nội dung
       let messageType = "text";
       let messageContent = textInputValue;
+
       if (imageUrls.length > 0) {
         messageType = "image";
         messageContent = imageUrls.join(", ");
       } else if (fileUrl) {
         messageType = "file";
         messageContent = fileUrl;
+        // Đặt lại selectedFile và nameFile sau khi gửi tệp
+        setSelectedFile(null);
+        setNameFile("");
       }
+
       let repMessage = messageRepply ? messageRepply : null;
-      // console.log("Nội dung", messageContent);
-      // console.log("ID", conversationId);
-      // console.log("MemberID", findMemberId());
-      // console.log("Type", messageType);
-      // console.log("repMessage", repMessage);
-      // console.log("ID Rep", repMessage?._id);
+      console.log("Nội dung", messageContent);
+      console.log("ID", conversationId);
+      console.log("MemberID", findMemberId());
+      console.log("Type", messageType);
+      console.log("repMessage", repMessage);
+      console.log("ID Rep", repMessage?._id);
+
       let response;
+      const messagePayload = {
+        conversationId: conversationId,
+        content: messageContent,
+        memberId: findMemberId(),
+        type: messageType,
+      };
+
       if (repMessage) {
         console.log("Tin nhắn đã được trả lời");
+        messagePayload.messageRepliedId = repMessage._id;
         response = await fetch(`${API_URL}/api/v1/messages/addReply`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            conversationId: conversationId,
-            content: messageContent,
-            memberId: findMemberId(),
-            type: messageType,
-            messageRepliedId: repMessage?._id,
-          }),
+          body: JSON.stringify(messagePayload),
         });
       } else {
         response = await fetch(`${API_URL}/api/v1/messages/addMessage`, {
@@ -1405,26 +1415,22 @@ export default function ChatScreen({ route }) {
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            conversationId: conversationId,
-            content: messageContent,
-            memberId: findMemberId(),
-            type: messageType,
-          }),
+          body: JSON.stringify(messagePayload),
         });
       }
+
       if (response.ok) {
         const responseData = await response.json();
         console.log("Tin nhắn đã được gửi:", responseData);
         setMessages((prevMessages) => [...prevMessages, responseData]);
         listenToMessages();
-        setTextInputValue("");
         Keyboard.dismiss();
+        setTextInputValue("");
         setMessageRepply(null);
         setSelectedImages([]);
         socketRef.current.emit("sendMessage", { message: messageContent, room: conversationId });
       } else {
-        console.error("Lỗi khi gửi tin nhắn:", responseData);
+        console.error("Lỗi khi gửi tin nhắn:", await response.json());
       }
     } catch (error) {
       console.error("Lỗi khi gửi tin nhắn:", error);

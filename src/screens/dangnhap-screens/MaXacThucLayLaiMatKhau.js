@@ -92,7 +92,7 @@ export default function MaXacThucLayLaiMatKhau({ navigation, route }) {
           <View style={{ height: 45, alignItems: "center", flexDirection: "row" }}>
             <TouchableOpacity onPress={() => navigation.navigate("home")}>
               <Image
-                source={require("../../../assets/img/back.png")}
+                source={require("../../../assets/image/back.png")}
                 resizeMode="contain"
                 style={{ marginLeft: 17, height: 25, width: 25 }}
               />

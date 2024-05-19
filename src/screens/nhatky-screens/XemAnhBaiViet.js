@@ -63,7 +63,11 @@ export default function XemAnhBaiViet({ navigation }) {
             <View style={{ width: "93%", borderWidth: 0.01, borderColor: "#4C4C4C" }}></View>
           </View>
           <View style={{ flexDirection: "row", alignItems: "center", height: 22, marginTop: 10 }}>
-            <Image source={require("../../../assets/img/tym.png")} resizeMode="contain" style={{ height: 18, width: 17, marginLeft: 17 }} />
+            <Image
+              source={require("../../../assets/image/tym.png")}
+              resizeMode="contain"
+              style={{ height: 18, width: 17, marginLeft: 17 }}
+            />
             <Text style={{ fontSize: 13, fontWeight: 500, marginLeft: 5, color: "#ffff" }}>100 người khác</Text>
           </View>
 
@@ -82,7 +86,7 @@ export default function XemAnhBaiViet({ navigation }) {
                     backgroundColor: "#212121",
                   }}>
                   <Image
-                    source={require("../../../assets/img/tymWhite.png")}
+                    source={require("../../../assets/image/tymWhite.png")}
                     resizeMode="contain"
                     style={{ height: 25, width: 23, marginTop: 2 }}
                   />
@@ -101,7 +105,7 @@ export default function XemAnhBaiViet({ navigation }) {
                     backgroundColor: "#212121",
                   }}>
                   <Image
-                    source={require("../../../assets/img/commentWhite1.png")}
+                    source={require("../../../assets/image/commentWhite1.png")}
                     resizeMode="contain"
                     style={{ height: 19, width: 19, marginTop: 2 }}
                   />
@@ -124,7 +128,7 @@ export default function XemAnhBaiViet({ navigation }) {
                     backgroundColor: "#520100",
                   }}>
                   <Image
-                    source={require("../../../assets/img/tym.png")}
+                    source={require("../../../assets/image/tym.png")}
                     resizeMode="contain"
                     style={{ height: 25, width: 19, marginTop: 2 }}
                   />
@@ -144,7 +148,7 @@ export default function XemAnhBaiViet({ navigation }) {
                     backgroundColor: "#212121",
                   }}>
                   <Image
-                    source={require("../../../assets/img/commentWhite1.png")}
+                    source={require("../../../assets/image/commentWhite1.png")}
                     resizeMode="contain"
                     style={{ height: 19, width: 19, marginTop: 2 }}
                   />
@@ -174,7 +178,7 @@ export default function XemAnhBaiViet({ navigation }) {
             <View>
               <View style={{ flexDirection: "row", alignItems: "center", marginTop: 15 }}>
                 <Image
-                  source={require("../../../assets/img/tym.png")}
+                  source={require("../../../assets/image/tym.png")}
                   resizeMode="contain"
                   style={{ height: 15, width: 15, marginLeft: 10 }}
                 />
@@ -182,7 +186,7 @@ export default function XemAnhBaiViet({ navigation }) {
               </View>
               <View style={{ justifyContent: "center" }}>
                 <Image
-                  source={require("../../../assets/img/iconInComment.png")}
+                  source={require("../../../assets/image/iconInComment.png")}
                   resizeMode="contain"
                   style={{
                     height: 100,
@@ -203,7 +207,7 @@ export default function XemAnhBaiViet({ navigation }) {
               }}>
               <TouchableOpacity>
                 <Image
-                  source={require("../../../assets/img/iconcomment.png")}
+                  source={require("../../../assets/image/iconcomment.png")}
                   resizeMode="cover"
                   style={{ height: 30, width: 30, marginLeft: 5 }}
                 />
@@ -227,19 +231,19 @@ export default function XemAnhBaiViet({ navigation }) {
                 onChangeText={(text) => setComment(text)}
               />
               <TouchableOpacity>
-                <Image source={require("../../../assets/img/imageComment.png")} resizeMode="cover" style={{ height: 25, width: 25 }} />
+                <Image source={require("../../../assets/image/imageComment.png")} resizeMode="cover" style={{ height: 25, width: 25 }} />
               </TouchableOpacity>
               {comment.length > 0 ? (
                 <TouchableOpacity>
                   <Image
-                    source={require("../../../assets/img/sendOn.png")}
+                    source={require("../../../assets/image/sendOn.png")}
                     resizeMode="contain"
                     style={{ height: 50, width: 50, transform: [{ rotate: "45deg" }] }}
                   />
                 </TouchableOpacity>
               ) : (
                 <Image
-                  source={require("../../../assets/img/sendOff.png")}
+                  source={require("../../../assets/image/sendOff.png")}
                   resizeMode="contain"
                   style={{ marginLeft: 5, height: 50, width: 50, transform: [{ rotate: "45deg" }] }}
                 />

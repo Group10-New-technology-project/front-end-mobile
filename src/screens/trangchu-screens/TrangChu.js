@@ -1,14 +1,53 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Animated } from "react-native";
 
 export default function TrangChu({ navigation }) {
   const [selectedLanguage, setSelectedLanguage] = useState("Vietnamese");
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const translateX = useRef(new Animated.Value(0)).current;
+
+  const images = [
+    require("../../../assets/baner1.png"),
+    require("../../../assets/baner2.png"),
+    require("../../../assets/baner3.png"),
+    require("../../../assets/baner4.png"),
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      Animated.timing(translateX, {
+        toValue: -Dimensions.get("window").width,
+        duration: 400,
+        useNativeDriver: true,
+      }).start(() => {
+        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+        translateX.setValue(Dimensions.get("window").width);
+        Animated.timing(translateX, {
+          toValue: 0,
+          duration: 800,
+          useNativeDriver: true,
+        }).start();
+      });
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <View style={styles.container}>
-      <View style={[styles.header, {}]}>
+      <View style={styles.header}>
         <Text style={{ fontSize: 52, fontWeight: "700", color: "#0091FF" }}>Zelo</Text>
-        <Image source={require("../../../assets/img/bannerzalo.png")} resizeMode="contain" style={{ height: 356, width: 390 }} />
+        <Animated.Image
+          source={images[currentIndex]}
+          resizeMode="contain"
+          style={[
+            {
+              height: Dimensions.get("window").width,
+              width: Dimensions.get("window").width,
+              transform: [{ translateX }],
+            },
+          ]}
+        />
       </View>
 
       <View style={styles.footer}>
@@ -80,8 +119,8 @@ const styles = StyleSheet.create({
   header: {
     paddingTop: 90,
     alignItems: "center",
-    flex: 5.5,
-    justifyContent: "space-between",
+    flex: 5,
+    backgroundColor: "#FFFFFF",
   },
   footer: {
     flex: 4.5,

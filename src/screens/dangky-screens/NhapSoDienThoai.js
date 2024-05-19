@@ -95,7 +95,7 @@ export default function NhapSoDienThoai({ navigation }) {
                   {DieuKhoan ? (
                     <View>
                       <Image
-                        source={require("../../../assets/img/checkbox.jpg")}
+                        source={require("../../../assets/image/checkbox.jpg")}
                         resizeMode="contain"
                         style={{
                           borderRadius: 5,
@@ -124,7 +124,7 @@ export default function NhapSoDienThoai({ navigation }) {
                 {DieuKhoanMang ? (
                   <View>
                     <Image
-                      source={require("../../../assets/img/checkbox.jpg")}
+                      source={require("../../../assets/image/checkbox.jpg")}
                       resizeMode="contain"
                       style={{
                         borderRadius: 5,

@@ -99,7 +99,7 @@ export default function NhapThongTinCaNhan({ navigation, route }) {
                 )}
                 <TouchableOpacity onPress={toggleDropdown}>
                   <Image
-                    source={require("../../../assets/img/arrowdown.png")}
+                    source={require("../../../assets/image/arrowdown.png")}
                     resizeMode="contain"
                     style={{ height: 25, width: 25, marginRight: 20 }}
                   />

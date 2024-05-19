@@ -93,7 +93,7 @@ export default function NhatKyScreen({ navigation }) {
             <View style={{ height: 55, alignItems: "center", flexDirection: "row" }}>
               <View style={{ height: 45, width: 45, borderRadius: 50, marginLeft: 10 }}>
                 <Image
-                  source={require("../../../assets/img/avt.png")}
+                  source={require("../../../assets/image/avt.png")}
                   resizeMode="cover"
                   style={{ height: 45, width: 45, borderRadius: 50 }}
                 />
@@ -112,7 +112,7 @@ export default function NhatKyScreen({ navigation }) {
                   flexDirection: "row",
                 }}>
                 <Image
-                  source={require("../../../assets/img/album.png")}
+                  source={require("../../../assets/image/album.png")}
                   resizeMode="contain"
                   style={{ height: 17, width: 17, marginLeft: 10 }}
                 />
@@ -129,7 +129,7 @@ export default function NhatKyScreen({ navigation }) {
                   flexDirection: "row",
                 }}>
                 <Image
-                  source={require("../../../assets/img/clip1.png")}
+                  source={require("../../../assets/image/clip1.png")}
                   resizeMode="contain"
                   style={{ height: 17, width: 17, marginLeft: 10 }}
                 />
@@ -146,7 +146,7 @@ export default function NhatKyScreen({ navigation }) {
                   flexDirection: "row",
                 }}>
                 <Image
-                  source={require("../../../assets/img/album.png")}
+                  source={require("../../../assets/image/album.png")}
                   resizeMode="contain"
                   style={{ height: 17, width: 17, marginLeft: 10 }}
                 />
@@ -163,7 +163,7 @@ export default function NhatKyScreen({ navigation }) {
                   flexDirection: "row",
                 }}>
                 <Image
-                  source={require("../../../assets/img/diary.png")}
+                  source={require("../../../assets/image/diary.png")}
                   resizeMode="contain"
                   style={{ height: 17, width: 17, marginLeft: 10 }}
                 />
@@ -386,7 +386,7 @@ export default function NhatKyScreen({ navigation }) {
                   </View>
                   <View style={{ flexDirection: "row", alignItems: "center", height: 22, marginTop: 10 }}>
                     <Image
-                      source={require("../../../assets/img/tym.png")}
+                      source={require("../../../assets/image/tym.png")}
                       resizeMode="contain"
                       style={{ height: 18, width: 17, marginLeft: 17 }}
                     />
@@ -407,7 +407,7 @@ export default function NhatKyScreen({ navigation }) {
                             backgroundColor: "#D9D9D9",
                           }}>
                           <Image
-                            source={require("../../../assets/img/tymblack.png")}
+                            source={require("../../../assets/image/tymblack.png")}
                             resizeMode="contain"
                             style={{ height: 25, width: 19, marginLeft: 5 }}
                           />
@@ -427,7 +427,7 @@ export default function NhatKyScreen({ navigation }) {
                             backgroundColor: "#D9D9D9",
                           }}>
                           <Image
-                            source={require("../../../assets/img/comment1.png")}
+                            source={require("../../../assets/image/comment1.png")}
                             resizeMode="contain"
                             style={{ height: 16, width: 18, marginLeft: 5 }}
                           />
@@ -450,7 +450,7 @@ export default function NhatKyScreen({ navigation }) {
                             backgroundColor: "#F7F7F7",
                           }}>
                           <Image
-                            source={require("../../../assets/img/tym.png")}
+                            source={require("../../../assets/image/tym.png")}
                             resizeMode="contain"
                             style={{ height: 25, width: 19, marginLeft: 5 }}
                           />
@@ -484,7 +484,7 @@ export default function NhatKyScreen({ navigation }) {
                           }}
                         />
                         <Image
-                          source={require("../../../assets/img/iconcomment.png")}
+                          source={require("../../../assets/image/iconcomment.png")}
                           resizeMode="contain"
                           style={{ height: 25, width: 25, marginRight: 14 }}
                         />
@@ -513,7 +513,7 @@ export default function NhatKyScreen({ navigation }) {
             <View>
               <View style={{ flexDirection: "row", alignItems: "center", marginTop: 15 }}>
                 <Image
-                  source={require("../../../assets/img/tym.png")}
+                  source={require("../../../assets/image/tym.png")}
                   resizeMode="contain"
                   style={{ height: 15, width: 15, marginLeft: 10 }}
                 />
@@ -521,7 +521,7 @@ export default function NhatKyScreen({ navigation }) {
               </View>
               <View style={{ justifyContent: "center" }}>
                 <Image
-                  source={require("../../../assets/img/iconInComment.png")}
+                  source={require("../../../assets/image/iconInComment.png")}
                   resizeMode="contain"
                   style={{ height: 100, width: 130, borderRadius: 50, marginTop: 15, alignSelf: "center" }}
                 />
@@ -530,7 +530,7 @@ export default function NhatKyScreen({ navigation }) {
             <View style={{ alignItems: "center", flexDirection: "row", borderTopWidth: 0.1, borderTopColor: "#F5F5F5" }}>
               <TouchableOpacity>
                 <Image
-                  source={require("../../../assets/img/iconcomment.png")}
+                  source={require("../../../assets/image/iconcomment.png")}
                   resizeMode="cover"
                   style={{ height: 30, width: 30, marginLeft: 5 }}
                 />
@@ -553,19 +553,19 @@ export default function NhatKyScreen({ navigation }) {
                 onChangeText={(text) => setComment(text)}
               />
               <TouchableOpacity>
-                <Image source={require("../../../assets/img/imageComment.png")} resizeMode="cover" style={{ height: 25, width: 25 }} />
+                <Image source={require("../../../assets/image/imageComment.png")} resizeMode="cover" style={{ height: 25, width: 25 }} />
               </TouchableOpacity>
               {comment.length > 0 ? (
                 <TouchableOpacity>
                   <Image
-                    source={require("../../../assets/img/sendOn.png")}
+                    source={require("../../../assets/image/sendOn.png")}
                     resizeMode="contain"
                     style={{ height: 50, width: 50, transform: [{ rotate: "45deg" }] }}
                   />
                 </TouchableOpacity>
               ) : (
                 <Image
-                  source={require("../../../assets/img/sendOff.png")}
+                  source={require("../../../assets/image/sendOff.png")}
                   resizeMode="contain"
                   style={{ marginLeft: 5, height: 50, width: 50, transform: [{ rotate: "45deg" }] }}
                 />
