@@ -17,7 +17,7 @@
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/loading.gif",
+      "image": "./assets/loading-new.gif",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },

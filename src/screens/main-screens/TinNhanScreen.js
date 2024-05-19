@@ -131,8 +131,13 @@ export default function TinNhanScreen({ navigation }) {
       fetchData();
     });
   };
+
   const truncateString = (str, maxLength) => {
-    return str.length > maxLength ? str.slice(0, maxLength - 3) + "..." : str;
+    if (str.length <= maxLength) {
+      return str;
+    } else {
+      return str.substring(0, maxLength - 3) + "...";
+    }
   };
 
   const calculateTimeDiff = (createdAt) => {
@@ -219,6 +224,7 @@ export default function TinNhanScreen({ navigation }) {
               lastMsg = lastMessages[item._id] || "Bạn đã trở thành thành viên của nhóm!";
             }
             const messageColor = item.seen ? "black" : "gray";
+
             return (
               <TouchableOpacity
                 onLongPress={() => handleNhanGiu(item._id)}
@@ -229,9 +235,9 @@ export default function TinNhanScreen({ navigation }) {
                     <View style={styles.section_header}>
                       <Text style={styles.text_content}>{nameMem}</Text>
                       <Text style={styles.text_message}>
-                        {item.type === "Direct" && item.messages.length > 0 && item.messages[item.messages.length - 1].type != "notify"
-                          ? TuiGui + truncateString(lastMsg, 35)
-                          : truncateString(lastMsg, 30)}
+                        {item.type === "Direct" && item.messages.length > 0 && item.messages[item.messages.length - 1].type !== "notify"
+                          ? TuiGui + truncateString(lastMsg, 25)
+                          : truncateString(lastMsg, 25)}
                       </Text>
                     </View>
                   </View>
