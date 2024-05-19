@@ -93,7 +93,7 @@ export default function NhatKyScreen({ navigation }) {
             <View style={{ height: 55, alignItems: "center", flexDirection: "row" }}>
               <View style={{ height: 45, width: 45, borderRadius: 50, marginLeft: 10 }}>
                 <Image
-                  source={require("../../../assets/image/avt.png")}
+                  source={{ uri: "https://i.pinimg.com/564x/8b/66/47/8b66470192b33bf7375aaf25cf963a10.jpg" }}
                   resizeMode="cover"
                   style={{ height: 45, width: 45, borderRadius: 50 }}
                 />

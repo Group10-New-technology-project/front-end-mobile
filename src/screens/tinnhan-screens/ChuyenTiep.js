@@ -182,71 +182,40 @@ export default function ChuyenTiep({ route }) {
     }
     return fileTypeIcon;
   };
+  // render file
+  function extractFileNameAndType(url, maxLength) {
+    // Tách đường dẫn file thành các phần bằng '/'
+    const parts = url.split("/");
+
+    // Lấy phần cuối cùng của đường dẫn (tên file)
+    const fileNameWithExtension = parts[parts.length - 1];
+
+    // Tách phần tên file và loại file bằng cách tìm vị trí của dấu '.' trong tên file
+    const dotIndex = fileNameWithExtension.lastIndexOf(".");
+    const fileName = fileNameWithExtension.substring(0, dotIndex); // Tên file
+    const fileType = fileNameWithExtension.substring(dotIndex + 1); // Loại file
+
+    // Kiểm tra độ dài của tên file và cắt nếu quá dài
+    const truncatedFileName = fileName.length > maxLength ? fileName.substring(0, maxLength) + "..." : fileName;
+
+    return { fileName: truncatedFileName, fileType };
+  }
 
   const renderPhanDuoi = (filePath) => {
-    // Tìm vị trí của dấu `_` trong đường dẫn file
-    const underscoreIndex = filePath.indexOf("_");
-    // Kiểm tra xem có dấu "_" không
-    if (underscoreIndex !== -1) {
-      // Lấy phần từ từ đầu đến vị trí của dấu `_`
-      const fileNameWithExtension = filePath.substring(0, underscoreIndex);
-
-      // Xóa phần mở rộng và 10 ký tự đầu
-      const fileNameWithoutPrefix = fileNameWithExtension.slice(50, -5);
-
-      // Tìm vị trí của dấu `.`, đánh dấu phần mở rộng của tệp
-      const dotIndex = fileNameWithExtension.lastIndexOf(".");
-
-      // Kiểm tra xem có dấu "." không
-      if (dotIndex !== -1) {
-        // Lấy phần từ từ đầu đến vị trí của dấu `.`
-        const fileName = fileNameWithoutPrefix.substring(0, dotIndex);
-        // Lấy phần mở rộng của tệp từ vị trí dấu `.`
-        const fileExtension = fileNameWithExtension.substring(dotIndex + 1);
-        // Hiển thị phần tên tệp kèm phần mở rộng
-        return fileExtension;
-      }
-    }
-
-    // Trả về null nếu không tìm thấy dấu "_" hoặc "."
-    return null;
+    const { fileType } = extractFileNameAndType(filePath, 50);
+    return fileType;
   };
 
   const renderFile = (filePath) => {
-    // Tìm vị trí của dấu `_` trong đường dẫn file
-    const underscoreIndex = filePath.indexOf("_");
-
-    // Kiểm tra xem có dấu "_" không
-    if (underscoreIndex !== -1) {
-      // Lấy phần từ từ đầu đến vị trí của dấu `_`
-      const fileNameWithExtension = filePath.substring(0, underscoreIndex);
-
-      // Xóa phần mở rộng và 10 ký tự đầu
-      const fileNameWithoutPrefix = fileNameWithExtension.slice(50, -5);
-
-      // Tìm vị trí của dấu `.`, đánh dấu phần mở rộng của tệp
-      const dotIndex = fileNameWithExtension.lastIndexOf(".");
-
-      // Kiểm tra xem có dấu "." không
-      if (dotIndex !== -1) {
-        // Lấy phần từ từ đầu đến vị trí của dấu `.`
-        const fileName = fileNameWithoutPrefix.substring(0, dotIndex);
-
-        // Lấy phần mở rộng của tệp từ vị trí dấu `.`
-        const fileExtension = fileNameWithExtension.substring(dotIndex + 1);
-
-        // Hiển thị phần tên tệp kèm phần mở rộng
-        return (
-          <Text>
-            {fileName}.{fileExtension}
-          </Text>
-        );
-      }
-    }
-
-    // Trả về null nếu không tìm thấy dấu "_" hoặc "."
-    return null;
+    const { fileName, fileType } = extractFileNameAndType(filePath, 50);
+    // console.log("File name:", fileName);
+    return (
+      <Text>
+        {fileName}.{fileType}
+      </Text>
+    );
   };
+
   // audio
   const sendAudioMessage = async (audioUrl) => {
     try {
