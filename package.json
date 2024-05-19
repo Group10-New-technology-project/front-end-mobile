@@ -1,5 +1,5 @@
 {
-  "name": "zalo",
+  "name": "zelo",
   "version": "1.0.0",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
@@ -43,6 +43,7 @@
     "react-native-image-pan-zoom": "^2.1.12",
     "react-native-modal": "^13.0.1",
     "react-native-modal-datetime-picker": "^17.1.0",
+    "react-native-swiper": "^1.6.0",
     "react-native-switch": "^1.5.1",
     "react-native-vector-icons": "^10.0.3",
     "react-native-web": "~0.19.6",

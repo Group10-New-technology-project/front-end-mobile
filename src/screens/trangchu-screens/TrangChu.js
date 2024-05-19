@@ -1,10 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, Dimensions, Animated } from "react-native";
+import React, { useState } from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Dimensions, Image } from "react-native";
+import Swiper from "react-native-swiper";
 
 export default function TrangChu({ navigation }) {
   const [selectedLanguage, setSelectedLanguage] = useState("Vietnamese");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const translateX = useRef(new Animated.Value(0)).current;
 
   const images = [
     require("../../../assets/baner1.png"),
@@ -13,41 +12,24 @@ export default function TrangChu({ navigation }) {
     require("../../../assets/baner4.png"),
   ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      Animated.timing(translateX, {
-        toValue: -Dimensions.get("window").width,
-        duration: 400,
-        useNativeDriver: true,
-      }).start(() => {
-        setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-        translateX.setValue(Dimensions.get("window").width);
-        Animated.timing(translateX, {
-          toValue: 0,
-          duration: 800,
-          useNativeDriver: true,
-        }).start();
-      });
-    }, 4000);
-
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={{ fontSize: 52, fontWeight: "700", color: "#0091FF" }}>Zelo</Text>
-        <Animated.Image
-          source={images[currentIndex]}
-          resizeMode="contain"
-          style={[
-            {
-              height: Dimensions.get("window").width,
-              width: Dimensions.get("window").width,
-              transform: [{ translateX }],
-            },
-          ]}
-        />
+        <Swiper style={styles.wrapper} showsButtons={false} autoplay={true} autoplayTimeout={4}>
+          {images.map((image, index) => (
+            <View key={index} style={styles.slide}>
+              <Image
+                source={image}
+                resizeMode="contain"
+                style={{
+                  width: Dimensions.get("window").width,
+                  height: Dimensions.get("window").width,
+                }}
+              />
+            </View>
+          ))}
+        </Swiper>
       </View>
 
       <View style={styles.footer}>
@@ -117,15 +99,24 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header: {
-    paddingTop: 90,
+    paddingTop: 80,
     alignItems: "center",
     flex: 5,
     backgroundColor: "#FFFFFF",
+    // backgroundColor: "green",
   },
-  footer: {
-    flex: 4.5,
+  wrapper: {},
+
+  slide: {
+    flex: 0.9,
     justifyContent: "center",
     alignItems: "center",
+  },
+  footer: {
+    flex: 3.2,
+    justifyContent: "center",
+    alignItems: "center",
+    // backgroundColor: "red",
   },
   languageItem: {
     height: 38,

@@ -6,7 +6,6 @@ import { Dimensions, StyleSheet, Text, View, FlatList, Image, SafeAreaView, Touc
 import { FontAwesome, FontAwesome5, Feather, AntDesign, MaterialIcons } from "@expo/vector-icons";
 import { API_URL } from "@env";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { set } from "firebase/database";
 
 export default function DanhBaScreen({ navigation }) {
   const isFocused = useIsFocused();

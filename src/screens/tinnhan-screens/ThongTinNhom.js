@@ -1,12 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView, Alert } from "react-native";
+import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView, Alert, TextInput, Button, Dimensions } from "react-native";
 import { AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons, Feather, FontAwesome6 } from "@expo/vector-icons";
 import { API_URL } from "@env";
 import axios from "axios";
 import io from "socket.io-client";
+import Modal from "react-native-modal";
 
 export default function ThongTinNhom({ navigation, route }) {
   const { conversationId, userId, userName } = route.params;
+  const inputRef = useRef(null);
   const [ConversationData, setConversationData] = useState(null);
   const [userFriendId, setUserFriendId] = useState(null);
   const [type, setType] = useState(null);
@@ -18,6 +20,8 @@ export default function ThongTinNhom({ navigation, route }) {
   const [arrayimage, setArrayImage] = useState([]);
   const [isFirstSelected, setIsFirstSelected] = useState([true, true, true]);
   const [leader, setLeader] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [newGroupName, setNewGroupName] = useState("");
 
   useEffect(() => {
     fetchUserDataLeader();
@@ -178,6 +182,36 @@ export default function ThongTinNhom({ navigation, route }) {
     console.log(userFriendId);
     navigation.navigate("XemTrangCaNhan", { user_id: userFriendId });
   };
+  const handleDoiTenNhom = () => {
+    setModalVisible(true);
+  };
+
+  const toggleBottomSheet = () => {
+    setModalVisible(!modalVisible);
+  };
+
+  const handleCapNhatTenNhom = async () => {
+    console.log("Doi ten nhom", conversationId);
+    if (newGroupName === "") {
+      Alert.alert("Tên nhóm không được để trống");
+    } else if (newGroupName.length > 20) {
+      Alert.alert("Tên nhóm không được dài hơn 20 ký tự");
+    } else {
+      console.log("Đổi tên nhóm thành:", newGroupName);
+      try {
+        const response = await axios.post(`${API_URL}/api/v1/conversation/updateConversationNameById`, {
+          conversationID: conversationId,
+          name: newGroupName,
+        });
+        // console.log(response.data);
+        Alert.alert("Cập nhật tên nhóm thành công");
+        setModalVisible(false);
+        fetchConversationData();
+      } catch (error) {
+        console.error("Error updating conversation name:", error);
+      }
+    }
+  };
 
   return (
     <ScrollView style={{ backgroundColor: "#FFF" }} nestedScrollEnabled={true}>
@@ -187,18 +221,12 @@ export default function ThongTinNhom({ navigation, route }) {
             <View style={{ marginTop: 10, height: 75, width: 75, backgroundColor: "white", borderRadius: 50 }}>
               <Image style={{ height: 75, width: 75, borderRadius: 50 }} source={{ uri: image }} />
             </View>
-            <View>
-              <Text
-                style={{
-                  fontSize: 22,
-                  fontWeight: "500",
-                  color: "#232323",
-                  // fontFamily: "Sans-serif",
-                  marginTop: 15,
-                }}>
-                {name}
-              </Text>
-            </View>
+            <TouchableOpacity
+              style={{ flexDirection: "row", alignItems: "center", justifyContent: "center", paddingTop: 12 }}
+              onPress={handleDoiTenNhom}>
+              <Text style={{ fontSize: 22, fontWeight: "500", color: "#232323", marginRight: 5 }}>{name}</Text>
+              <AntDesign name="edit" size={20} color="black" />
+            </TouchableOpacity>
             <View style={{ marginTop: 18, flexDirection: "row", justifyContent: "space-between" }}>
               <View style={{ marginHorizontal: 11, height: 80, width: 70, alignItems: "center", justifyContent: "center" }}>
                 <TouchableOpacity>
@@ -268,6 +296,34 @@ export default function ThongTinNhom({ navigation, route }) {
               </View>
             </View>
           </View>
+          <Modal
+            style={styles.modal_container}
+            isVisible={modalVisible}
+            swipeDirection={["down"]}
+            animationIn="fadeInDown"
+            animationOut="fadeOutUp"
+            onSwipeComplete={toggleBottomSheet}
+            onBackdropPress={toggleBottomSheet}>
+            <View style={styles.modalContainer}>
+              <View style={styles.modalContent}>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", width: "100%", padding: 8 }}>
+                  <Text style={{ fontSize: 16, fontWeight: "500", marginLeft: 60 }}>Nhập tên nhóm mới</Text>
+                  <AntDesign style={{}} name="close" size={22} color="red" onPress={toggleBottomSheet} />
+                </View>
+                <TextInput
+                  style={styles.input_tennhommoi}
+                  ref={inputRef}
+                  placeholderTextColor="gray"
+                  placeholder=" Nhập tên nhóm mới"
+                  onChangeText={(text) => setNewGroupName(text)}
+                />
+                <View style={{ paddingTop: 8 }}>
+                  <Button title="Đổi tên" onPress={handleCapNhatTenNhom} />
+                </View>
+              </View>
+            </View>
+          </Modal>
+
           <View style={{ height: 8, backgroundColor: "#F7F8FA" }}></View>
           <View style={{ height: 50, flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
             <View style={{ flexDirection: "row", marginLeft: 10 }}>
@@ -993,5 +1049,29 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     flex: 1,
+  },
+  modal_container: {
+    margin: 0,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    backgroundColor: "FFFFFF",
+    paddingTop: 230,
+  },
+  modalContainer: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    height: Dimensions.get("window").height * 0.15,
+    width: Dimensions.get("window").width * 0.7,
+  },
+  modalContent: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  input_tennhommoi: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0E0E0",
+    fontSize: 17,
+    padding: 12,
+    width: "90%",
   },
 });

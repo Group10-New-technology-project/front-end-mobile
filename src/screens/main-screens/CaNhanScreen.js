@@ -26,7 +26,7 @@ export default function CaNhanScreen({ navigation }) {
   const fetchDataUser = async (userID) => {
     try {
       const response = await axios.get(`${API_URL}/api/v1/users/${userID}`);
-      console.log("response", response.data);
+      // console.log("response", response.data);
       setUserData(response.data);
     } catch (error) {
       console.error("Lỗi khi lấy thông tin người dùng:", error);
@@ -53,8 +53,8 @@ export default function CaNhanScreen({ navigation }) {
 
   useEffect(() => {
     if (userData) {
-      console.log("userData", userData.name);
-      console.log("userData", userData.avatar);
+      console.log("Name", userData.name);
+      // console.log("userData", userData.avatar);
     }
   }, [userData]);
 
