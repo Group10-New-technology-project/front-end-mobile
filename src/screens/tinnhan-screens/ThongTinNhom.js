@@ -1,5 +1,18 @@
 import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList, ScrollView, Alert, TextInput, Button, Dimensions } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  FlatList,
+  ScrollView,
+  Alert,
+  TextInput,
+  Button,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 import { AntDesign, MaterialCommunityIcons, MaterialIcons, Ionicons, Feather, FontAwesome6 } from "@expo/vector-icons";
 import { API_URL } from "@env";
 import axios from "axios";
@@ -22,6 +35,7 @@ export default function ThongTinNhom({ navigation, route }) {
   const [leader, setLeader] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
   const [newGroupName, setNewGroupName] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     fetchUserDataLeader();
@@ -191,6 +205,7 @@ export default function ThongTinNhom({ navigation, route }) {
   };
 
   const handleCapNhatTenNhom = async () => {
+    setIsLoading(true);
     console.log("Doi ten nhom", conversationId);
     if (newGroupName === "") {
       Alert.alert("Tên nhóm không được để trống");
@@ -207,12 +222,21 @@ export default function ThongTinNhom({ navigation, route }) {
         Alert.alert("Cập nhật tên nhóm thành công");
         setModalVisible(false);
         fetchConversationData();
+        setIsLoading(false);
       } catch (error) {
         console.error("Error updating conversation name:", error);
       }
     }
   };
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFF" }}>
+        <ActivityIndicator size="large" color="#0091FF" />
+        <Text style={{ marginTop: 10, fontSize: 16, fontWeight: "400", color: "#0091FF" }}>Đang tải..</Text>
+      </View>
+    );
+  }
   return (
     <ScrollView style={{ backgroundColor: "#FFF" }} nestedScrollEnabled={true}>
       {type === "Group" ? (
@@ -843,7 +867,7 @@ export default function ThongTinNhom({ navigation, route }) {
             </View>
           </View>
           <View style={{ height: 8, backgroundColor: "#F7F8FA" }}></View>
-          <View style={{ height: 180, justifyContent: "flex-start", alignItems: "center" }}>
+          <View style={{ height: 170, justifyContent: "flex-start", alignItems: "center" }}>
             <View style={{ width: "100%", height: 50, flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
               <View style={{ flexDirection: "row", marginLeft: 10 }}>
                 <AntDesign name="addusergroup" size={21} color="#7F8284" />
