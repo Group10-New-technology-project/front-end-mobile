@@ -4,7 +4,6 @@ import { TabsComponent } from "./BottomTabs";
 //COMPONENTS
 import SearchBarSelect from "../components/SearchBarSelect";
 import CustomBackButton from "../components/CustomBackButton";
-import Header from "../components/Header";
 import HeaderTinNhan from "../components/HeaderTinNhan";
 import Button from "../utils/Button";
 //SCREENS

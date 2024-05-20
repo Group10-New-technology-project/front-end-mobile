@@ -301,7 +301,7 @@ export default function XemTrangCaNhan({ navigation, route }) {
         )}
       </View>
       <View style={{ alignItems: "center", paddingVertical: 10 }}>
-        <Text style={{ fontSize: 15, fontWeight: "400", color: "gray" }}>Ahihi đồ ngốc 😂</Text>
+        <Text style={{ fontSize: 15, fontWeight: "400", color: "gray" }}>Tiểu sử của User</Text>
       </View>
       {/* Nếu là chính mình thì hiển thị nút cập nhật giới thiệu bản thân */}
       {user_id === user_login && (

@@ -1962,6 +1962,7 @@ export default function ChatScreen({ route }) {
       console.error("Đã xảy ra lỗi khi gửi yêu cầu bỏ ghim tin nhắn:", error.message);
     }
   };
+
   const RenderPinMessage = ({ pinnedMessages }) => {
     const { messages, lastPinnedMessage } = useFetchPinnedMessages(pinnedMessages);
     const renderItem = ({ item }) => (
