@@ -564,40 +564,47 @@ function MessageBubble({
   };
 
   const pushPin = async (messageId) => {
-    try {
-      const response = await fetch(`${API_URL}/api/v1/messages/addPinMessageToConversation`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          messageId: messageId,
-          conversationId: conversation._id,
-        }),
-      });
-
-      // Kiểm tra xem yêu cầu đã thành công hay không
-      if (response.ok) {
-        const memberID = findMemberId();
-        try {
-          const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+    // kiểm tra số lượng trong danh sách được pin nếu = 3 thì không thêm được nữa
+    if (pinnedMessages.length >= 3) {
+      Alert.alert("Thông báo", "Chỉ được ghim tối đa 3 tin nhắn");
+      setModalVisible(false);
+      return;
+    } else {
+      try {
+        const response = await fetch(`${API_URL}/api/v1/messages/addPinMessageToConversation`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messageId: messageId,
             conversationId: conversation._id,
-            content: `${userData.name.split(" ").slice(-1)[0]} đã ghim một tin nhắn`,
-            memberId: memberID,
-            type: "notify",
-          });
-        } catch (error) {
-          console.error("Error creating conversation:", error);
+          }),
+        });
+
+        // Kiểm tra xem yêu cầu đã thành công hay không
+        if (response.ok) {
+          const memberID = findMemberId();
+          try {
+            const response = await axios.post(`${API_URL}/api/v1/messages/addMessageWeb`, {
+              conversationId: conversation._id,
+              content: `${userData.name.split(" ").slice(-1)[0]} đã ghim một tin nhắn`,
+              memberId: memberID,
+              type: "notify",
+            });
+          } catch (error) {
+            console.error("Error creating conversation:", error);
+          }
+          console.log("Ghim tin nhắn thành công");
+          socketRef.current.emit("sendMessage", { message: "Tin nhắn đã được ghim", room: conversation?._id });
+          setModalVisible(false);
+          fetchData();
+        } else {
+          console.error("Ghim tin nhắn thất bại:", response.statusText);
         }
-        console.log("Ghim tin nhắn thành công");
-        socketRef.current.emit("sendMessage", { message: "Tin nhắn đã được ghim", room: conversation?._id });
-        setModalVisible(false);
-        fetchData();
-      } else {
-        console.error("Ghim tin nhắn thất bại:", response.statusText);
+      } catch (error) {
+        console.error("Đã xảy ra lỗi khi gửi yêu cầu ghim tin nhắn:", error.message);
       }
-    } catch (error) {
-      console.error("Đã xảy ra lỗi khi gửi yêu cầu ghim tin nhắn:", error.message);
     }
   };
 
@@ -1787,20 +1794,20 @@ export default function ChatScreen({ route }) {
     switch (phanMoRong) {
       case "doc":
       case "docx":
-        fileTypeIcon = <AntDesign name="wordfile1" size={50} color="blue" />;
+        fileTypeIcon = <AntDesign name="wordfile1" size={20} color="blue" />;
         break;
       case "pdf":
-        fileTypeIcon = <AntDesign name="pdffile1" size={50} color="#F38A02" />;
+        fileTypeIcon = <AntDesign name="pdffile1" size={20} color="#F38A02" />;
         break;
       case "xls":
       case "xlsx":
-        fileTypeIcon = <MaterialCommunityIcons name="file-excel-outline" size={24} color="black" />;
+        fileTypeIcon = <MaterialCommunityIcons name="file-excel-outline" size={20} color="black" />;
         break;
       case "csv":
-        fileTypeIcon = <FontAwesome5 name="file-csv" size={24} color="green" />;
+        fileTypeIcon = <FontAwesome5 name="file-csv" size={20} color="green" />;
         break;
       case "txt":
-        fileTypeIcon = <FontAwesome name="file-text" size={24} color="black" />;
+        fileTypeIcon = <FontAwesome name="file-text" size={20} color="black" />;
         break;
       // Thêm các trường hợp khác ở đây tùy theo nhu cầu
       default:
@@ -1879,6 +1886,134 @@ export default function ChatScreen({ route }) {
     } else {
       return <Text>{message.content}</Text>;
     }
+  };
+  // renderPin Message
+  const renderPin = (message) => {
+    const getMessageContent = () => {
+      if (message.type === "image") {
+        return (
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <View>
+              <Text style={{ fontSize: 16, color: "black" }}>[Hình Ảnh]</Text>
+              <Text style={{ color: "#8C8C8E", fontSize: 13 }}>Tin nhắn của {message?.memberId?.userId?.name}</Text>
+            </View>
+            <Image source={{ uri: message.content }} style={{ width: 30, height: 30, borderRadius: 5 }} />
+          </View>
+        );
+      } else if (message.type === "audio") {
+        return (
+          <View style={{ marginTop: 5 }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons name="musical-notes" size={24} color="black" />
+              <Text style={{ marginLeft: 5, fontSize: 16, color: "black" }}>Ghi âm</Text>
+            </View>
+            <Text style={{ color: "#8C8C8E", fontSize: 13 }}>Tin nhắn của {message?.memberId?.userId?.name}</Text>
+          </View>
+        );
+      } else if (message.type === "video") {
+        return (
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <View>
+              <Text style={{ fontSize: 16, color: "black" }}>[Video]</Text>
+              <Text style={{ color: "#8C8C8E", fontSize: 13 }}>Tin nhắn của {message?.memberId?.userId?.name}</Text>
+            </View>
+            <Video
+              source={{ uri: message.content }} // Đường dẫn đến video của bạn
+              style={{ width: 30, height: 30, borderRadius: 5 }} // Kích thước video
+              controls={true} // Hiển thị các điều khiển của video
+              resizeMode="cover" // Chế độ thay đổi kích thước video
+            />
+          </View>
+        );
+      } else if (message.type === "file") {
+        return (
+          <View>
+            <View style={{ flexDirection: "row", alignItems: "center", padding: 5 }}>
+              {getFileTypeIcon(message.content)}
+              <TouchableOpacity onPress={() => openFile(message.content)}>
+                <Text style={{ marginLeft: 5, fontSize: 16, color: "blue", textDecorationLine: "underline" }}>
+                  {renderFile(message.content)}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={{ color: "#8C8C8E", fontSize: 13 }}>Tin nhắn của {message?.memberId?.userId?.name}</Text>
+          </View>
+        );
+      } else {
+        return (
+          <View style={{ marginTop: 5 }}>
+            <Text style={{ fontSize: 16, color: "black" }}>{message.content}</Text>
+            <Text style={{ color: "#8C8C8E", fontSize: 13 }}>Tin nhắn của {message?.memberId?.userId?.name}</Text>
+          </View>
+        );
+      }
+    };
+
+    return <View style={{ marginBottom: 10 }}>{getMessageContent()}</View>;
+  };
+  // render Pin in modal
+  const renderPinModal = (message) => {
+    const getMessageContent = () => {
+      if (message.type === "image") {
+        return (
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <View>
+              <Text style={{ fontSize: 16, color: "black" }}>[Hình Ảnh]</Text>
+              <Text style={{ color: "#8C8C8E", fontSize: 13 }}>Tin nhắn của {message?.memberId?.userId?.name}</Text>
+            </View>
+            <Image source={{ uri: message.content }} style={{ width: 45, height: 45, borderRadius: 5 }} />
+          </View>
+        );
+      } else if (message.type === "audio") {
+        return (
+          <View style={{ marginTop: 5 }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}>
+              <Ionicons name="musical-notes" size={24} color="black" />
+              <Text style={{ marginLeft: 5, fontSize: 16, color: "black" }}>Ghi âm</Text>
+            </View>
+            <Text style={{ color: "#8C8C8E", fontSize: 13 }}>Tin nhắn của {message?.memberId?.userId?.name}</Text>
+          </View>
+        );
+      } else if (message.type === "video") {
+        return (
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <View>
+              <Text style={{ fontSize: 16, color: "black" }}>[Video]</Text>
+              <Text style={{ color: "#8C8C8E", fontSize: 13 }}>Tin nhắn của {message?.memberId?.userId?.name}</Text>
+            </View>
+            <Video
+              source={{ uri: message.content }} // Đường dẫn đến video của bạn
+              style={{ width: 45, height: 45, borderRadius: 5 }} // Kích thước video
+              controls={true} // Hiển thị các điều khiển của video
+              resizeMode="cover" // Chế độ thay đổi kích thước video
+            />
+          </View>
+        );
+      } else if (message.type === "file") {
+        return (
+          <View>
+            <View style={{ flexDirection: "row", alignItems: "center", padding: 5 }}>
+              {getFileTypeIcon(message.content)}
+              <TouchableOpacity onPress={() => openFile(message.content)}>
+                <Text style={{ marginLeft: 5, fontSize: 16, color: "blue", textDecorationLine: "underline" }}>
+                  {renderFile(message.content)}
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Text style={{ color: "#8C8C8E", fontSize: 13 }}>Tin nhắn của {message?.memberId?.userId?.name}</Text>
+          </View>
+        );
+      } else {
+        return (
+          <View>
+            <Text style={{ fontSize: 16, color: "black" }}>{message.content}</Text>
+            <Text style={{ color: "#8C8C8E", fontSize: 13 }}>Tin nhắn của {message?.memberId?.userId?.name}</Text>
+          </View>
+        );
+      }
+    };
+
+    return <View style={{ marginBottom: 10 }}>{getMessageContent()}</View>;
   };
   // Di chuyển logic vào một custom hook
   const [showAllPinnedMessages, setShowAllPinnedMessages] = useState(false);
@@ -1970,12 +2105,7 @@ export default function ChatScreen({ route }) {
         <View>
           <AntDesign name="message1" size={26} color="#2A89E5" />
         </View>
-        <View style={{ width: 250 }}>
-          <Text style={{ fontSize: 15 }} numberOfLines={1} ellipsizeMode="tail">
-            {item.content}
-          </Text>
-          <Text style={{ color: "#8C8C8E" }}>Tin nhắn của {item?.memberId?.userId?.name}</Text>
-        </View>
+        <View style={{ width: 250 }}>{renderPin(item)}</View>
         <View style={{ height: 40, width: 1, backgroundColor: "#E1E1E1" }}></View>
         <TouchableOpacity
           style={{
@@ -2034,12 +2164,7 @@ export default function ChatScreen({ route }) {
                         <View>
                           <AntDesign name="message1" size={26} color="#2A89E5" style={{ marginLeft: 20 }} />
                         </View>
-                        <View style={{ width: 320 }}>
-                          <Text style={{ fontSize: 15 }} numberOfLines={1} ellipsizeMode="tail">
-                            {item.content}
-                          </Text>
-                          <Text style={{ color: "#8C8C8E" }}>Tin nhắn của {item.memberId.userId.name}</Text>
-                        </View>
+                        <View style={{ width: 320 }}>{renderPinModal(item)}</View>
                         <TouchableOpacity>
                           <MaterialCommunityIcons onPress={() => deletePin(item._id)} name="delete-outline" size={24} color="black" />
                         </TouchableOpacity>

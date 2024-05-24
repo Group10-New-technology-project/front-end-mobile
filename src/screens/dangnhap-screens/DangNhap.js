@@ -1,16 +1,20 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, TouchableOpacity, TextInput, Alert } from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, TextInput, Alert, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_URL } from "@env";
+import { set } from "firebase/database";
 
 export default function DangNhap({ navigation }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = async () => {
+    setIsLoading(true);
     try {
       // Kiểm tra xem username và password đã được nhập hay chưa
       if (!username || !password) {
+        setIsLoading(false);
         Alert.alert("Đăng nhập không thành công", "Vui lòng nhập đầy đủ thông tin đăng nhập");
         return;
       }
@@ -37,6 +41,7 @@ export default function DangNhap({ navigation }) {
       // console.log("Data", data);
       if (data.user) {
         await AsyncStorage.setItem("userData", JSON.stringify(data.user));
+        setIsLoading(false);
         navigation.navigate("Tabs");
       } else {
         console.log("Đăng nhập không thành công");
@@ -49,7 +54,14 @@ export default function DangNhap({ navigation }) {
   const hanlde_layMatKhau = () => {
     navigation.navigate("LayLaiMatKhau");
   };
-
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: "#FFF" }}>
+        <ActivityIndicator size="large" color="#0091FF" />
+        <Text style={{ marginTop: 10, fontSize: 16, fontWeight: "400", color: "#0091FF" }}>Đang kiểm tra đăng nhập..</Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       <View>
