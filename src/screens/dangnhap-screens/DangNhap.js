@@ -14,9 +14,7 @@ export default function DangNhap({ navigation }) {
     try {
       // Kiểm tra xem username và password đã được nhập hay chưa
       if (!username || !password) {
-        setIsLoading(false);
         Alert.alert("Đăng nhập không thành công", "Vui lòng nhập đầy đủ thông tin đăng nhập");
-        return;
       }
       // Tạo đối tượng JSON chứa thông tin đăng nhập
       const userData = {
@@ -36,6 +34,7 @@ export default function DangNhap({ navigation }) {
 
       if (!response.ok) {
         Alert.alert("Sai tên người dùng hoặc mật khẩu");
+        setIsLoading(false);
       }
       const data = await response.json();
       // console.log("Data", data);
